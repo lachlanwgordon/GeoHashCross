@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Plugin.CurrentActivity;
 
 namespace GeohashCross.Droid
 {
@@ -18,6 +19,8 @@ namespace GeohashCross.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
+            //CrossCurrentActivity.Current.Activity.Init(this, bundle);
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());

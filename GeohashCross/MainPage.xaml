@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -10,5 +10,28 @@
             Text="Welcome to Xamarin.Forms!"
             HorizontalOptions="Center"
             VerticalOptions="CenterAndExpand" />
+        <Label
+            Text="Lat"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand" />
+        <Label
+            x:Name="latLabel"
+            Text="..."
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand" />
+        <Label
+            Text="lon"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand" />
+        <Label
+            x:Name="lonLabel"
+            Text="..."
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand" />
+        <Button 
+            Clicked="RefreshClicked"
+            Text="Refresh"
+            />
+        
     </StackLayout>
 </ContentPage>
