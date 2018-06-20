@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,6 +21,10 @@ namespace GeohashCross.Model.Services
         const string BaseUrl = "http://geo.crox.net/djia/";
         const string altUrl = "http://carabiner.peeron.com/xkcd/map/data/";
 
+
+
+        static Dictionary<DateTime, string> Cache = new Dictionary<DateTime, string>();
+
         /// <summary>
         /// Gets the dow jones opening price for a given date.
         /// If no date provided it will use UTC today.
@@ -31,19 +36,26 @@ namespace GeohashCross.Model.Services
             try
             {
                 date = date.HasValue ? date.Value.Date : DateTime.UtcNow.Date;
+                if(Cache.ContainsKey(date.Value))
+                {
+                    return Cache[date.Value];
+                }
+
+
+
                 var dateString = date.Value.ToString("yyyy/MM/dd");
 
-                //remove this
-                //dateString = "2005/05/26";
 
                 var url = $"{BaseUrl}{dateString}";
                 var response = await Client.GetStringAsync(url);
-                var data = JsonConvert.DeserializeObject(response);
+
+                Cache.Add(date.Value, response);
                 return response;
             }
             catch(Exception ex)
             {
                 
+                Debug.WriteLine($"fail to get: \n{ex}\n{ex.StackTrace}");
 
             }
             try
@@ -53,19 +65,16 @@ namespace GeohashCross.Model.Services
                 date = date.HasValue ? date.Value.Date : DateTime.UtcNow.Date;
                 var dateString = date.Value.ToString("yyyy/MM/dd");
 
-                //remove this
-                //dateString = "2005/05/26";
-
-
                 var url = $"{altUrl}{dateString}";
                 var response = await Client.GetStringAsync(url);
-                var data = JsonConvert.DeserializeObject(response);
                 return response;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"REjected using hardcoded 25209.29 \n{ex}");
-                return "10458.68";
+                Cache.Add(date.Value, "25209.29");
+
+                return "25209.29";
             }
         }
     }

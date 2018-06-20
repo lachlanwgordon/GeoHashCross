@@ -3,35 +3,89 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:GeohashCross"
-    x:Class="GeohashCross.MainPage">
-    <StackLayout>
-        <!-- Place new controls here -->
+    xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+    x:Class="GeohashCross.MainPage"
+    Title="Geohasher Cross">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition
+                Width="*" />
+            <ColumnDefinition
+                Width="*" />
+        </Grid.ColumnDefinitions>
         <Label
-            Text="Welcome to Xamarin.Forms!"
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand" />
+            Text="Date" />
+        <DatePicker
+            Date="{Binding Date}"
+            Grid.Column="1" />
         <Label
-            Text="Lat"
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand" />
+            Text="Current Location"
+            VerticalTextAlignment="Center"
+            Grid.Row="1" />
         <Label
-            x:Name="latLabel"
-            Text="..."
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand" />
-        <Label
-            Text="lon"
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand" />
-        <Label
-            x:Name="lonLabel"
-            Text="..."
-            HorizontalOptions="Center"
-            VerticalOptions="CenterAndExpand" />
-        <Button 
-            Clicked="RefreshClicked"
-            Text="Refresh"
-            />
+            Text="{Binding CurrentLocation}"
+            Grid.Row="1"
+            Grid.Column="1" />
         
-    </StackLayout>
+        <Label
+            Text="Nearby Hashes"
+           
+            Grid.Row="2" />
+        <Switch
+            Grid.Row="2"
+            Grid.Column="1"
+            HorizontalOptions="Center" 
+            IsToggled="{Binding LoadNeighbours}"
+        />
+        <Label
+            Text="Future Hashes"
+            Grid.Row="3" />
+        <Switch
+            Grid.Row="3"
+            Grid.Column="1"
+            HorizontalOptions="Center" 
+            IsToggled="{Binding LoadFuture}"
+            
+        />
+        <Label
+            Text="Nearest Hash"
+            VerticalTextAlignment="Center"
+            Grid.Row="4" />
+        <Label
+            Text="{Binding HashLocation}"
+            Grid.Row="4"
+            Grid.Column="1" />
+        <Button
+           Text="Refresh"
+           Clicked="RefreshClicked"
+            Grid.Row="5"
+        />
+        <maps:Map
+            x:Name="map"
+            InitialCameraUpdate="-37.5, 145.5, 8, 0, 0"
+            HeightRequest="500"
+            HasZoomEnabled="true"
+            MapClicked="Handle_MapClicked"
+            HasRotationEnabled="false"
+            MyLocationEnabled="true"
+            HorizontalOptions="FillAndExpand"
+            Grid.Row="6"
+            Grid.ColumnSpan="2" />
+    </Grid>
 </ContentPage>

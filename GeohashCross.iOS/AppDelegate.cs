@@ -24,6 +24,9 @@ namespace GeohashCross.iOS
         {
             Xamarin.Calabash.Start();
             global::Xamarin.Forms.Forms.Init();
+
+            Xamarin.FormsGoogleMaps.Init("AIzaSyCaCkUbw0vNzIkLcrzx2-0URGJ3wPsz1KQ");
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+
 
 namespace GeohashCross.Model.Services
 {
@@ -13,10 +15,11 @@ namespace GeohashCross.Model.Services
 
         public static async Task<Position> GetLocation()
         {
-            
             var position = await CrossGeolocator.Current.GetPositionAsync();
-
+            Debug.WriteLine($"Got current location: {position.Latitude}, {position.Longitude}");
             return position;
         }
+
+
     }
 }

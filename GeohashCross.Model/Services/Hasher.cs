@@ -11,41 +11,70 @@ namespace GeohashCross.Model.Services
 {
     public static class Hasher
     {
-        public static async Task<Position> GetCoordinates(DateTime? date = null, string dija = null)
+        public static async Task<List<Position>> GetCoordinates(DateTime? date = null, double? lat = null, double? lon = null, bool loadNeighbours = false)
         {
             date = date.HasValue ? date.Value.Date : DateTime.UtcNow.Date;
 
-            dija = await Webclient.GetDowJones(date);
+            var dija = await Webclient.GetDowJones(date);
 
-            var appendices = calculateAppendices(date.Value, dija);
+            var offsets = calculateOffsets(date.Value, dija);
 
-            var currentLocation = await LocationService.GetLocation();
-            var lat = currentLocation.Latitude;
+            if (lat == null || lon == null)
+            {
+                var currentLocation = await LocationService.GetLocation();
 
-            lat = lat > 0 ? Math.Floor(lat): Math.Ceiling(lat);
+                lat = currentLocation.Latitude;
 
-            var lon = currentLocation.Longitude;
 
-            lon = lon > 0 ? Math.Floor(lon) : Math.Ceiling(lon);
+                lon = currentLocation.Longitude;
+
+
+            }
+            lat = lat > 0 ? Math.Floor(lat.Value) : Math.Ceiling(lat.Value);
+            lon = lon > 0 ? Math.Floor(lon.Value) : Math.Ceiling(lon.Value);
+
 
             int latInt = Convert.ToInt32(lat);
             var lonInt = Convert.ToInt32(lon);
 
-            var latDecString = $"{latInt}.{appendices[0]}";
-            var lonDecString = $"{lonInt}.{appendices[1]}";
+            var latDecString = $"{latInt}.{offsets[0]}";
+            var lonDecString = $"{lonInt}.{offsets[1]}";
 
             var finalLat = Double.Parse(latDecString);
             var finalLon = Double.Parse(lonDecString);
 
             var pos = new Position(finalLat, finalLon);
-            return pos;
+
+            var locations = new List<Position>{pos};
+
+            if(loadNeighbours)
+            {
+                locations.Add(new Position(pos.Latitude - 1, pos.Longitude - 1));//topLeft
+                locations.Add(new Position(pos.Latitude, pos.Longitude - 1));//middleLeft
+                locations.Add(new Position(pos.Latitude + 1, pos.Longitude - 1));//bottomLeft
+                locations.Add(new Position(pos.Latitude - 1, pos.Longitude));//topCentre
+                locations.Add(new Position(pos.Latitude + 1, pos.Longitude));//bottomCenter
+                locations.Add(new Position(pos.Latitude - 1, pos.Longitude + 1));//topRight
+                locations.Add(new Position(pos.Latitude, pos.Longitude + 1));//RightCenter
+                locations.Add(new Position(pos.Latitude + 1, pos.Longitude + 1));//BottomRight
+            }
+
+
+            return locations;
         }
 
-        private static string[] calculateAppendices(DateTime date, string djia)
+        private static string[] calculateOffsets(DateTime date, string djia)
         {
             string dateString = date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             string fullString = dateString + '-' + djia;
-            byte[] result = MD5.Digest(fullString);
+            var md5 = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(fullString);
+
+            byte[] result = md5.ComputeHash(inputBytes);
+
+
+
+            //byte[] result = MD5Bad.Digest(fullString);
 
             ulong part1 = ((ulong)result[0x0] << 0x38)
                 + ((ulong)result[0x1] << 0x30)
@@ -73,11 +102,11 @@ namespace GeohashCross.Model.Services
         }
     }
 
-    public static class MD5
+    public static class MD5Bad
     {
         private static readonly uint[] T = new uint[65];
 
-        static MD5()
+        static MD5Bad()
         {
             T[0] = 0; // never to be accessed
             for (int i = 1; i <= 64; i++)
