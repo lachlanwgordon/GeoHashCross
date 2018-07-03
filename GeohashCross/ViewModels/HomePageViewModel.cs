@@ -31,7 +31,7 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        public DateTime Date = DateTime.Today;
+        public DateTime Date = DateTime.Today.AddDays(-1);
 
         public HomePageViewModel()
         {
@@ -61,6 +61,7 @@ namespace GeohashCross.ViewModels
             return true;
         }
 
+        bool isLoading = false;
         async void InvokeUpdateLocation()
         {
             var loc = await Xamarin.Essentials.Geolocation.GetLocationAsync();
@@ -69,9 +70,11 @@ namespace GeohashCross.ViewModels
             OnPropertyChanged(nameof(Lat));
             OnPropertyChanged(nameof(Lon));
 
-            if (Offset == null)
+            if (PinLocations.Count == 0 && !isLoading)
             {
+                isLoading = true;
                 await LoadLocation();
+                isLoading = false;
             }
 
         }

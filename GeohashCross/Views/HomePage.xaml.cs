@@ -42,7 +42,7 @@ namespace GeohashCross.Views
 
             if(firstPos.HasValue)
             {
-                await Map.AnimateCamera(CameraUpdateFactory.NewPosition(new Position()), TimeSpan.FromSeconds(0.5));
+                await Map.AnimateCamera(CameraUpdateFactory.NewPosition(firstPos.Value), TimeSpan.FromSeconds(0.5));
             }
         }
     }

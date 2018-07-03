@@ -44,7 +44,6 @@ namespace GeohashCross.Services
                 var url = $"{BaseUrl}{dateString}";
                 var response = await Client.GetStringAsync(url);
 
-
                 Cache.Add(date, response);
                 return response;
             }
@@ -62,12 +61,13 @@ namespace GeohashCross.Services
 
                 var url = $"{altUrl}{dateString}";
                 var response = await Client.GetStringAsync(url);
+                Cache.Add(date, response);
                 return response;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"REjected using hardcoded 25209.29 \n{ex}");
-                Cache.Add(date, "25209.29");
+                //Cache.Add(date, "25209.29");
 
                 return "25209.29";
             }
