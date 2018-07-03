@@ -1,4 +1,5 @@
 using System;
+using GeohashCross.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +12,7 @@ namespace GeohashCross
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new HomePage();
         }
 
         protected override void OnStart()

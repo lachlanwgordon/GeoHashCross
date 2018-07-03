@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
-namespace GeohashCross.Model.Services
+namespace GeohashCross.Services
 {
     public static class Webclient
     {
@@ -15,7 +14,7 @@ namespace GeohashCross.Model.Services
         /// Also prevents crashes in situations where many calls are made in a short period of time.
         /// </summary>
         /// <value>The client.</value>
-        static HttpClient Client { get;} = new HttpClient();
+        static HttpClient Client { get; } = new HttpClient();
 
 
         const string BaseUrl = "http://geo.crox.net/djia/";
@@ -31,30 +30,27 @@ namespace GeohashCross.Model.Services
         /// </summary>
         /// <returns>The dow jones.</returns>
         /// <param name="date">Date.</param>
-        public static async Task<string> GetDowJones(DateTime? date = null)
+        public static async Task<string> GetDjia(DateTime date)
         {
             try
             {
-                date = date.HasValue ? date.Value.Date : DateTime.UtcNow.Date;
-                if(Cache.ContainsKey(date.Value))
+                if (Cache.ContainsKey(date))
                 {
-                    return Cache[date.Value];
+                    return Cache[date];
                 }
 
-
-
-                var dateString = date.Value.ToString("yyyy/MM/dd");
-
+                var dateString = date.ToString("yyyy/MM/dd");
 
                 var url = $"{BaseUrl}{dateString}";
                 var response = await Client.GetStringAsync(url);
 
-                Cache.Add(date.Value, response);
+
+                Cache.Add(date, response);
                 return response;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                
+
                 Debug.WriteLine($"fail to get: \n{ex}\n{ex.StackTrace}");
 
             }
@@ -62,8 +58,7 @@ namespace GeohashCross.Model.Services
             {
                 Debug.WriteLine("using alt url");
 
-                date = date.HasValue ? date.Value.Date : DateTime.UtcNow.Date;
-                var dateString = date.Value.ToString("yyyy/MM/dd");
+                var dateString = date.ToString("yyyy/MM/dd");
 
                 var url = $"{altUrl}{dateString}";
                 var response = await Client.GetStringAsync(url);
@@ -72,7 +67,7 @@ namespace GeohashCross.Model.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"REjected using hardcoded 25209.29 \n{ex}");
-                Cache.Add(date.Value, "25209.29");
+                Cache.Add(date, "25209.29");
 
                 return "25209.29";
             }

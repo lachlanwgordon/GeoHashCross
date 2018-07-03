@@ -33,13 +33,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeohashCross.iOS\GeohashCross.iOS.csproj">
-      <Project>{F4B55E6C-BFAF-4A7B-9E01-F6CB474E1D27}</Project>
+      <Project>{C12BCADA-D672-40B5-BFBA-96B7A48C0F3F}</Project>
       <Name>GeohashCross.iOS</Name>
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\GeohashCross.Android\GeohashCross.Android.csproj">
-      <Project>{DF9E4067-80D4-49E5-85B0-913AB24FD024}</Project>
+      <Project>{045D5E9D-D7A7-46D6-A743-203E1E72B01D}</Project>
       <Name>GeohashCross.Android</Name>
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <Private>False</Private>

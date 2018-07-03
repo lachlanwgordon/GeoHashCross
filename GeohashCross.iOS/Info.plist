@@ -35,6 +35,6 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Calculate your closest geohash.</string>
+	<string>Geohash Cross needs your location to find your nearest geohash.</string>
 </dict>
 </plist>

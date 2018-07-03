@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F4B55E6C-BFAF-4A7B-9E01-F6CB474E1D27}</ProjectGuid>
+    <ProjectGuid>{C12BCADA-D672-40B5-BFBA-96B7A48C0F3F}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{6143fdea-f3c2-4a09-aafa-6e230626515e}</TemplateGuid>
     <OutputType>Exe</OutputType>
@@ -148,26 +148,23 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.TestCloud.Agent" Version="0.21.4" />
-    <PackageReference Include="Xamarin.Essentials">
-      <Version>0.6.0-preview</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms.GoogleMaps">
-      <Version>3.0.0-beta3</Version>
+    <PackageReference Include="Xamarin.Forms">
+      <Version>3.1.0.583944</Version>
     </PackageReference>
     <PackageReference Include="Refractored.MvvmHelpers">
       <Version>1.3.2.47-beta</Version>
     </PackageReference>
-    <PackageReference Include="Xam.Plugin.ExternalMaps">
-      <Version>4.0.1</Version>
+    <PackageReference Include="Xamarin.Essentials">
+      <Version>0.8.0-preview</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms">
-      <Version>3.0.0.550146</Version>
+    <PackageReference Include="Xamarin.Forms.GoogleMaps">
+      <Version>3.0.0-beta3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\GeohashCross\GeohashCross.csproj">
-      <Project>{67C4DCF8-1E25-426F-BFC6-A7B4B376B63E}</Project>
+      <Project>{7D27FFC2-02A6-46B0-B764-D532D5524C72}</Project>
       <Name>GeohashCross</Name>
     </ProjectReference>
   </ItemGroup>
