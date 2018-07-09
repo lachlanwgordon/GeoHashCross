@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
              xmlns:local="clr-namespace:GeohashCross.Models"
+             xmlns:ads="clr-namespace:GeohashCross.Controls"
              x:Class="GeohashCross.Views.HomePage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,7 +16,7 @@
     </ContentPage.Resources>
     
     <ContentPage.Content>
-        <Grid x:Name="TheGrid">
+        <Grid x:Name="TheGrid" Padding="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -24,6 +25,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -107,7 +109,13 @@
                 IsVisible="{Binding ShowAdvanced}"
                 Text="{Binding HashData.DJIA}" 
                 />
-            
+
+            <ads:AdControlView
+                BackgroundColor="Red"
+                Grid.Row="7"
+                Grid.ColumnSpan="3"
+                />
+
         </Grid>
     </ContentPage.Content>
 </ContentPage>
