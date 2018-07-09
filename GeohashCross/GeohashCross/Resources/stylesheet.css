@@ -4,9 +4,9 @@
 
 .header
 {
-    font-size: 40;
+    font-size: 50;
     text-align: center;
-    margin-bottom: 20;
+    margin-bottom: 15;
 }
 
 ^DatePicker
@@ -18,9 +18,15 @@
 
 label
 {
-    font-size: 25;
+    font-size: 22;
+    margin: 5;
 }
 
+label.small
+{
+    font-size: 18;
+    margin: 5;
+}
 
 ^BoxView.FakeBackGround
 {

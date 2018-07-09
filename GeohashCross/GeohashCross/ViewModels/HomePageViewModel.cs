@@ -197,7 +197,7 @@ namespace GeohashCross.ViewModels
 
             }
 
-            HashData = HashData;
+            HashData = hashData;
 
             return hashData;
         }

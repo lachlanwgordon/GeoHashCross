@@ -161,5 +161,10 @@ namespace GeohashCross.Views
             Debug.WriteLine("map clicked");
             VM.TappedLocation = new Location(e.Point.Latitude, e.Point.Longitude);
         }
+
+        private void ShowMoreClicked(object sender, EventArgs e)
+        {
+            VM.ShowAdvanced = !VM.ShowAdvanced;
+        }
     }
 }

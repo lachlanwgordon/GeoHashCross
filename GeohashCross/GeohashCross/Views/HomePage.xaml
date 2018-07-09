@@ -22,72 +22,88 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label
                 Text="Geohash Cross"
                 StyleClass="header"
-                Grid.ColumnSpan="3"
+                Grid.ColumnSpan="4"
                 />
 
             <Label
-                Text="Date"
+                Text="Date:"
                 Grid.Row="1"
                 />
             <DatePicker
                 Date="{Binding Date}"
                 Grid.Column="1"
                 Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Format="yyyy-MM-dd"
                 />
 
             <Label
                 Grid.Row="2"
-                Text="Location" />
+                Text="Location:" />
             <Label
                 Text="{Binding Path=CurrentLocation, Converter={StaticResource locationSummary}}"
+                Grid.ColumnSpan="2"
                 Grid.Column="1"
                 Grid.Row="2"
                 />
 
             <Label
                 Grid.Row="3"
-                Text="Hash Location" />
+                Text="Hash:" />
             <Label
                 Grid.Row="3"
-                StyleClass="p"
                 Grid.Column="1"
+                Grid.ColumnSpan="2"
                 Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" 
                 />
             
             <Button
-                Grid.Column="2"
-                Grid.Row="4"
-                Text="Refresh"
+                Grid.Column="3"
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                Text="⟳"
+                BackgroundColor="Transparent"
+                FontSize="50"
                 Clicked="RefreshClicked"
                 />
-            <Label
-                Grid.Row="4"
-                Text="Show Advanced"
-                />
             
-            <Switch
-                Grid.Row="4"
-                HorizontalOptions="Start"
-                Grid.Column="1"
-                IsToggled="{Binding ShowAdvanced}"
+            <Button
+                Grid.Row="3"
+                BackgroundColor="Transparent"
+                Text="More ▼"
+                Clicked="ShowMoreClicked"
+                HorizontalOptions="CenterAndExpand"
+                Grid.Column="3"
+                />
+
+            <Button
+                Grid.Row="3"
+                Clicked="ShowMoreClicked"
+                BackgroundColor="Transparent"
+                Text="Less ▲"
+                HorizontalOptions="CenterAndExpand"
+                Grid.Column="3"
+                IsVisible="{Binding ShowAdvanced}"
                 />
 
             <maps:Map
                 x:Name="TheMap"
                 Grid.Row="5"
-                Grid.RowSpan="3"
-                Grid.ColumnSpan="3"
+                Grid.RowSpan="4"
+                Grid.ColumnSpan="4"
                 MapClicked="MapClicked"
                 MyLocationEnabled="True"
                 
@@ -95,40 +111,100 @@
             <!--Used as backgroudn for labels when showing advanced options -->
             <BoxView
                 Grid.Row="5"
-                Grid.ColumnSpan="3"
-                Grid.RowSpan="2"
+                Grid.ColumnSpan="4"
+                Grid.RowSpan="3"
                 IsVisible="{Binding ShowAdvanced}"
                 StyleClass="FakeBackGround"
                 />
+
             <Label
                 Grid.Row="5"
-                Text="Show Neighbours"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Text="DJ Date:" />
+            <Label
+                Grid.Row="5"
+                Grid.Column="1"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Text="{Binding HashData.DJDate}" 
+                />
+
+            <Label
+                Grid.Row="5"
+                StyleClass="small"
+                IsVisible="{Binding ShowAdvanced}"
+                Grid.Column="2"
+                Text="DJIA:" />
+            <Label
+                Grid.Row="5"
+                Grid.Column="3"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Text="{Binding HashData.DJIA}" 
+                />
+
+            <Label
+                Grid.Row="6"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Text="Offset:" />
+            <Label
+                Grid.Row="6"
+                Grid.Column="1"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Text="{Binding Path=HashData.Offset, Converter={StaticResource locationSummary}}" 
+                />
+            <Label
+                Grid.Row="6"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Grid.Column="2"
+                Text="30W In Use:" />
+            <Label
+                Grid.Row="6"
+                Grid.Column="3"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="small"
+                Text="{Binding HashData.Use30W}" 
+                />
+
+
+            <Label
+                Grid.Row="7"
+                Text="Neighbours"
+                StyleClass="small"
                 IsVisible="{Binding ShowAdvanced}"
                 />
 
             <Switch
-                Grid.Row="5"
+                Grid.Row="7"
                 Grid.Column="1"
                 IsToggled="{Binding ShowNeighbours}"
                 IsVisible="{Binding ShowAdvanced}"
                 HorizontalOptions="Start"
                 />
 
+            <Label
+                Grid.Row="7"
+                Text="Global Hash"
+                StyleClass="small"
+                IsVisible="{Binding ShowAdvanced}"
+                Grid.Column="2"
+                />
 
-            <Label
-                Grid.Row="6"
+            <Switch
+                Grid.Row="7"
+                Grid.Column="3"
+                IsToggled="{Binding ShowNeighbours}"
                 IsVisible="{Binding ShowAdvanced}"
-                Text="DJIA" />
-            <Label
-                Grid.Row="6"
-                Grid.Column="1"
-                IsVisible="{Binding ShowAdvanced}"
-                Text="{Binding HashData.DJIA}" 
+                HorizontalOptions="Start"
                 />
 
             <ads:AdControlView
-                Grid.Row="8"
-                Grid.ColumnSpan="3"
+                Grid.Row="9"
+                Grid.ColumnSpan="4"
                 />
 
         </Grid>
