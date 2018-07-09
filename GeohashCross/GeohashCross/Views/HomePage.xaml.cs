@@ -166,5 +166,21 @@ namespace GeohashCross.Views
         {
             VM.ShowAdvanced = !VM.ShowAdvanced;
         }
+
+        private async void YouMadeItClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var result = await DisplayActionSheet("Congratulations\nWould you like to take a photo?", "Cancel", null, "Screen shot", "Photo", "Both");
+
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

@@ -30,6 +30,9 @@ namespace GeohashCross.ViewModels
 
                 _CurrentLocation = value;
                 OnPropertyChanged(nameof(CurrentLocation));
+                OnPropertyChanged(nameof(Distance));
+                OnPropertyChanged(nameof(ImHere));
+
             }
         }
 
@@ -65,11 +68,63 @@ namespace GeohashCross.ViewModels
 
                 _HashData = value;
                 OnPropertyChanged(nameof(HashData));
+                OnPropertyChanged(nameof(Distance));
             }
         }
 
         public ObservableRangeCollection<Location> Locations = new ObservableRangeCollection<Location>();
         public ObservableRangeCollection<Location> LocationsToDisplay = new ObservableRangeCollection<Location>();
+
+        Double? _Distance
+        {
+            get
+            {
+                if (CurrentLocation == null || HashData == null || HashData.NearestHashLocation == null)
+                    return null;
+                var distance = Xamarin.Essentials.Location.CalculateDistance(CurrentLocation, HashData.NearestHashLocation, DistanceUnits.Kilometers);
+                return distance;
+            }
+        }
+
+        public String Distance
+        {
+            get
+            {
+                var distance = _Distance;
+                if (!distance.HasValue)
+                    return "Calculating...";
+                if (distance < 1)
+                    return (distance.Value * 1000).ToString("N2") + "m";
+                else
+                    return _Distance.Value.ToString("N2") + "Km";
+            }
+        }
+
+        public bool ImHere
+        {
+            get
+            {
+                var distance = _Distance;
+
+                if (!distance.HasValue)
+                {
+                    return false;
+                }
+
+                if(distance.Value < 0.005)//5 metres
+                {
+                    return true;
+                }
+                if(CurrentLocation.Accuracy.HasValue && CurrentLocation.Accuracy.Value <= 50)//Accuracy greater than 10 metres
+                {
+                    if(distance * 1000 < CurrentLocation.Accuracy.Value)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
         DateTime _Date = DateTime.Today;
         public DateTime Date
@@ -139,6 +194,7 @@ namespace GeohashCross.ViewModels
             return new Response<Location>(loc, true, "Location Loaded successfully") ;
         }
 
+
         private bool Initialised = false;
         private void SetUpTimer()
         {
@@ -146,7 +202,7 @@ namespace GeohashCross.ViewModels
 
             try
             {
-                Device.StartTimer(TimeSpan.FromSeconds(10), TimerInitiatedUpdateLocation);
+                Device.StartTimer(TimeSpan.FromSeconds(3), TimerInitiatedUpdateLocation);
                 Initialised = true;
             }
             catch (Exception ex)

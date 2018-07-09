@@ -37,7 +37,6 @@
                 StyleClass="header"
                 Grid.ColumnSpan="4"
                 />
-
             <Label
                 Text="Date:"
                 Grid.Row="1"
@@ -59,7 +58,6 @@
                 Grid.Column="1"
                 Grid.Row="2"
                 />
-
             <Label
                 Grid.Row="3"
                 Text="Hash:" />
@@ -69,20 +67,36 @@
                 Grid.ColumnSpan="2"
                 Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" 
                 />
-            
+
+            <Label
+                Grid.Row="4"
+                Text="Distance:" />
+            <Label
+                Grid.Row="4"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Text="{Binding Distance}" 
+                />
+            <Button
+                Text="You Made It!"
+                Grid.Row="4"
+                Grid.Column="2"
+                IsVisible="{Binding ImHere}"
+                Clicked="YouMadeItClicked"
+                />
+
             <Button
                 Grid.Column="3"
                 Grid.Row="1"
-                Grid.RowSpan="2"
                 Text="⟳"
-                BackgroundColor="Transparent"
-                FontSize="50"
+                BackgroundColor="DeepSkyBlue"
+                FontSize="45"
                 Clicked="RefreshClicked"
                 />
             
             <Button
-                Grid.Row="3"
-                BackgroundColor="Transparent"
+                Grid.Row="4"
+                BackgroundColor="DeepSkyBlue"
                 Text="More ▼"
                 Clicked="ShowMoreClicked"
                 HorizontalOptions="CenterAndExpand"
@@ -90,9 +104,9 @@
                 />
 
             <Button
-                Grid.Row="3"
+                Grid.Row="4"
                 Clicked="ShowMoreClicked"
-                BackgroundColor="Transparent"
+                BackgroundColor="DeepSkyBlue"
                 Text="Less ▲"
                 HorizontalOptions="CenterAndExpand"
                 Grid.Column="3"
@@ -108,7 +122,7 @@
                 MyLocationEnabled="True"
                 
              />
-            <!--Used as backgroudn for labels when showing advanced options -->
+            <!--Used as background for labels when showing advanced options -->
             <BoxView
                 Grid.Row="5"
                 Grid.ColumnSpan="4"
