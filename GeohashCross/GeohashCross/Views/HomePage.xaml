@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+             xmlns:local="clr-namespace:GeohashCross.Models"
+             x:Class="GeohashCross.Views.HomePage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:LocationSummary x:Key="locationSummary" />
+            <StyleSheet Source="/Resources/stylesheet.css" />
+
+            
+            
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ContentPage.Content>
+        <Grid x:Name="TheGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label
+                Text="Date"
+                />
+            <DatePicker
+                Date="{Binding Date}"
+                Grid.Column="1"
+                />
+
+            <Label
+                Grid.Row="1"
+                Text="Location" />
+            <Label
+                Text="{Binding Path=CurrentLocation, Converter={StaticResource locationSummary}}"
+                Grid.Column="1"
+                Grid.Row="1"
+                
+                />
+
+            <Label
+                Grid.Row="2"
+                Text="Hash Location" />
+            <Label
+                Grid.Row="2"
+                Grid.Column="1"
+                Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" 
+                />
+            
+            <Button
+                Grid.Column="2"
+                
+                Text="Refresh"
+                Clicked="RefreshClicked"
+                />
+            <Label
+                Grid.Row="3"
+                Text="Show Advanced"
+                />
+            
+            <Switch
+                Grid.Row="3"
+                Grid.Column="1"
+                IsToggled="{Binding ShowAdvanced}"
+                />
+
+            <maps:Map
+                x:Name="TheMap"
+                Grid.Row="4"
+                Grid.RowSpan="3"
+                Grid.ColumnSpan="3"
+                MapClicked="MapClicked"
+                MyLocationEnabled="True"
+                
+             />
+            <Label
+                Grid.Row="4"
+                Text="Show Neighbours"
+                IsVisible="{Binding ShowAdvanced}"
+                />
+
+            <Switch
+                Grid.Row="4"
+                Grid.Column="1"
+                IsToggled="{Binding ShowNeighbours}"
+                IsVisible="{Binding ShowAdvanced}"
+                />
+
+
+            <Label
+                Grid.Row="5"
+                IsVisible="{Binding ShowAdvanced}"
+                Text="DJIA" />
+            <Label
+                Grid.Row="5"
+                Grid.Column="1"
+                IsVisible="{Binding ShowAdvanced}"
+                Text="{Binding HashData.DJIA}" 
+                />
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
