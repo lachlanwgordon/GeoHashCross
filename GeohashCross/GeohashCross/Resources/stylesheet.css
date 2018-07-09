@@ -1,3 +1,28 @@
 ﻿^contentpage {
-    background-color: lightgray;
+    background-color: deepskyblue;
+}
+
+.header
+{
+    font-size: 40;
+    text-align: center;
+    margin-bottom: 20;
+}
+
+^DatePicker
+{
+    width: 200;
+    font-size: 25;
+}
+
+
+label
+{
+    font-size: 25;
+}
+
+
+^BoxView.FakeBackGround
+{
+    background-color: deepskyblue;
 }

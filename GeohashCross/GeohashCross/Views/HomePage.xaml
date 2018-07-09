@@ -9,15 +9,13 @@
         <ResourceDictionary>
             <local:LocationSummary x:Key="locationSummary" />
             <StyleSheet Source="/Resources/stylesheet.css" />
-
-            
-            
         </ResourceDictionary>
     </ContentPage.Resources>
     
     <ContentPage.Content>
-        <Grid x:Name="TheGrid" Padding="0">
+        <Grid x:Name="TheGrid" Padding="0" RowSpacing="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -28,91 +26,108 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Label
+                Text="Geohash Cross"
+                StyleClass="header"
+                Grid.ColumnSpan="3"
+                />
+
+            <Label
                 Text="Date"
+                Grid.Row="1"
                 />
             <DatePicker
                 Date="{Binding Date}"
                 Grid.Column="1"
+                Grid.Row="1"
                 />
 
             <Label
-                Grid.Row="1"
+                Grid.Row="2"
                 Text="Location" />
             <Label
                 Text="{Binding Path=CurrentLocation, Converter={StaticResource locationSummary}}"
                 Grid.Column="1"
-                Grid.Row="1"
-                
+                Grid.Row="2"
                 />
 
             <Label
-                Grid.Row="2"
+                Grid.Row="3"
                 Text="Hash Location" />
             <Label
-                Grid.Row="2"
+                Grid.Row="3"
+                StyleClass="p"
                 Grid.Column="1"
                 Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" 
                 />
             
             <Button
                 Grid.Column="2"
-                
+                Grid.Row="4"
                 Text="Refresh"
                 Clicked="RefreshClicked"
                 />
             <Label
-                Grid.Row="3"
+                Grid.Row="4"
                 Text="Show Advanced"
                 />
             
             <Switch
-                Grid.Row="3"
+                Grid.Row="4"
+                HorizontalOptions="Start"
                 Grid.Column="1"
                 IsToggled="{Binding ShowAdvanced}"
                 />
 
             <maps:Map
                 x:Name="TheMap"
-                Grid.Row="4"
+                Grid.Row="5"
                 Grid.RowSpan="3"
                 Grid.ColumnSpan="3"
                 MapClicked="MapClicked"
                 MyLocationEnabled="True"
                 
              />
+            <!--Used as backgroudn for labels when showing advanced options -->
+            <BoxView
+                Grid.Row="5"
+                Grid.ColumnSpan="3"
+                Grid.RowSpan="2"
+                IsVisible="{Binding ShowAdvanced}"
+                StyleClass="FakeBackGround"
+                />
             <Label
-                Grid.Row="4"
+                Grid.Row="5"
                 Text="Show Neighbours"
                 IsVisible="{Binding ShowAdvanced}"
                 />
 
             <Switch
-                Grid.Row="4"
+                Grid.Row="5"
                 Grid.Column="1"
                 IsToggled="{Binding ShowNeighbours}"
                 IsVisible="{Binding ShowAdvanced}"
+                HorizontalOptions="Start"
                 />
 
 
             <Label
-                Grid.Row="5"
+                Grid.Row="6"
                 IsVisible="{Binding ShowAdvanced}"
                 Text="DJIA" />
             <Label
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="1"
                 IsVisible="{Binding ShowAdvanced}"
                 Text="{Binding HashData.DJIA}" 
                 />
 
             <ads:AdControlView
-                BackgroundColor="Red"
-                Grid.Row="7"
+                Grid.Row="8"
                 Grid.ColumnSpan="3"
                 />
 
