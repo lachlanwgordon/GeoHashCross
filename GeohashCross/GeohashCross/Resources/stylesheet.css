@@ -1,5 +1,5 @@
 ﻿^contentpage {
-    background-color: deepskyblue;
+    background-color: white;
 }
 
 .header
@@ -31,5 +31,5 @@ label.small
 
 ^BoxView.FakeBackGround
 {
-    background-color: deepskyblue;
+    background-color: white;
 }

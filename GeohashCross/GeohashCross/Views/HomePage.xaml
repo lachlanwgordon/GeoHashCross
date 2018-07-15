@@ -4,7 +4,9 @@
              xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
              xmlns:local="clr-namespace:GeohashCross.Models"
              xmlns:ads="clr-namespace:GeohashCross.Controls"
-             x:Class="GeohashCross.Views.HomePage">
+             x:Class="GeohashCross.Views.HomePage"
+             Title="Geohash Cross"
+             >
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:LocationSummary x:Key="locationSummary" />
@@ -23,6 +25,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -32,11 +35,11 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label
+            <!--<Label
                 Text="Geohash Cross"
                 StyleClass="header"
                 Grid.ColumnSpan="4"
-                />
+                />-->
             <Label
                 Text="Date:"
                 Grid.Row="1"
@@ -77,26 +80,17 @@
                 Grid.ColumnSpan="2"
                 Text="{Binding Distance}" 
                 />
-            <Button
-                Text="You Made It!"
-                Grid.Row="4"
-                Grid.Column="2"
-                IsVisible="{Binding ImHere}"
-                Clicked="YouMadeItClicked"
-                />
 
             <Button
                 Grid.Column="3"
                 Grid.Row="1"
                 Text="⟳"
-                BackgroundColor="DeepSkyBlue"
                 FontSize="45"
                 Clicked="RefreshClicked"
                 />
             
             <Button
                 Grid.Row="4"
-                BackgroundColor="DeepSkyBlue"
                 Text="More ▼"
                 Clicked="ShowMoreClicked"
                 HorizontalOptions="CenterAndExpand"
@@ -106,7 +100,6 @@
             <Button
                 Grid.Row="4"
                 Clicked="ShowMoreClicked"
-                BackgroundColor="DeepSkyBlue"
                 Text="Less ▲"
                 HorizontalOptions="CenterAndExpand"
                 Grid.Column="3"
@@ -116,11 +109,10 @@
             <maps:Map
                 x:Name="TheMap"
                 Grid.Row="5"
-                Grid.RowSpan="4"
+                Grid.RowSpan="5"
                 Grid.ColumnSpan="4"
                 MapClicked="MapClicked"
                 MyLocationEnabled="True"
-                
              />
             <!--Used as background for labels when showing advanced options -->
             <BoxView
@@ -215,10 +207,27 @@
                 IsVisible="{Binding ShowAdvanced}"
                 HorizontalOptions="Start"
                 />
+            <Button
+                Text="You Made It!"
+                Grid.Row="8"
+                Grid.ColumnSpan="4"
+                WidthRequest="100"
+                Margin="80"
+                VerticalOptions="Center"
+                IsVisible="{Binding ImHere}"
+                Clicked="YouMadeItClicked"
+                />
 
             <ads:AdControlView
-                Grid.Row="9"
+                Grid.Row="10"
                 Grid.ColumnSpan="4"
+                />
+            <Button
+                Text="You Made It!"
+                Grid.Row="10"
+                Grid.ColumnSpan="4"
+                IsVisible="{Binding ImHere}"
+                Clicked="YouMadeItClicked"
                 />
 
         </Grid>

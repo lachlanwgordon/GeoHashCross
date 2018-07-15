@@ -12,7 +12,7 @@ namespace GeohashCross
 		{
 			InitializeComponent();
 
-			MainPage = new HomePage();
+			MainPage = new TabPage();
 		}
 
 		protected override void OnStart ()

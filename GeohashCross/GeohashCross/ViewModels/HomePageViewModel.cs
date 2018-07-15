@@ -33,6 +33,29 @@ namespace GeohashCross.ViewModels
                 OnPropertyChanged(nameof(Distance));
                 OnPropertyChanged(nameof(ImHere));
 
+                OnPropertyChanged(nameof(IsAdVisible));
+            }
+        }
+
+        bool _ShowAdvanced;
+        public bool ShowAdvanced
+        {
+            get
+            {
+                return _ShowAdvanced;
+            }
+            set
+            {
+                _ShowAdvanced = value;
+                OnPropertyChanged(nameof(ShowAdvanced));
+            }
+        }
+
+        public bool IsAdVisible
+        {
+            get
+            {
+                return !ImHere;
             }
         }
 
@@ -311,18 +334,7 @@ namespace GeohashCross.ViewModels
 
         }
 
-        bool _ShowAdvanced;
-        public bool ShowAdvanced
-        {
-            get
-            {
-                return _ShowAdvanced;
-            }
-            set
-            {
-                _ShowAdvanced = value;
-                OnPropertyChanged(nameof(ShowAdvanced));
-            }
-        }
+        
+
     }
 }
