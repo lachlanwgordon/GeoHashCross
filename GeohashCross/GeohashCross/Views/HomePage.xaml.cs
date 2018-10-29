@@ -36,6 +36,9 @@ namespace GeohashCross.Views
                 SetupUI();
                 await SetupLocations();
             });
+
+
+
         }
 
         private async Task SetupLocations()
@@ -46,11 +49,19 @@ namespace GeohashCross.Views
                 await DisplayAlert("Error", "Could not get current location. Please tap a location on the map", "Okay");
                 return;
             }
-            var hashLoc = VM.LoadHashLocation();
+            TheMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(currentLoc.Data.Latitude, currentLoc.Data.Longitude), new Distance(50)));
+
+            var hashLoc = await VM.LoadHashLocation();
             if (hashLoc == null)
             {
                 await DisplayAlert("Error", "Could not load DJIA for today, please check internet connection", "Okay");
+                return;
             }
+            var hashPos = new Position(hashLoc.NearestHashLocation.Latitude, hashLoc.NearestHashLocation.Longitude);
+            var myPos = new Position(currentLoc.Data.Latitude, currentLoc.Data.Longitude);
+            var bounds = new Bounds(myPos, hashPos);
+            var update = CameraUpdateFactory.NewBounds(bounds, 50);
+            await TheMap.AnimateCamera(update);
         }
 
         private async Task<bool> GetPermissions()
@@ -88,10 +99,25 @@ namespace GeohashCross.Views
             //TheGrid.Children.Add(MainMap);
             //Grid.SetRow(MainMap, 6);
             //Grid.SetColumnSpan(MainMap, 3);
+            TheMap.UiSettings.MyLocationButtonEnabled = true;
+            TheMap.UiSettings.ZoomControlsEnabled = true;
             VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
             //var pins = TheMap.Pins as ObservableCollection<Pin>;
             //VM.PinLocations.CollectionChanged += pins.CollectionChanged;
-            
+
+
+            TheMap.UiSettings.CompassEnabled = true;
+            TheMap.UiSettings.MapToolbarEnabled = true;
+            TheMap.UiSettings.IndoorLevelPickerEnabled = true;
+            //TheMap.MapType = MapType.Satellite;
+            if(DeviceDisplay.ScreenMetrics.Height == 1792 || DeviceDisplay.ScreenMetrics.Height == 2436 || DeviceDisplay.ScreenMetrics.Height == 2688)
+            {
+                TheStack.Margin = new Thickness(20, 50, 20, 0);
+            }
+            Debug.WriteLine(DeviceInfo.Model);
+            Debug.WriteLine(DeviceDisplay.ScreenMetrics.Height);
+
+
         }
         //public Map MainMap;
         async void PinLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -126,9 +152,9 @@ namespace GeohashCross.Views
                         var loc = item as Location;
                         var pin = new Xamarin.Forms.GoogleMaps.Pin
                         {
-                            Label = loc.TimestampUtc == DateTime.Today ? "Today's Hash" : loc.TimestampUtc.ToString("yyyy-MM-dd"),
+                            Label = loc.Timestamp == DateTime.Today ? "Today's Hash" : loc.Timestamp.ToString("yyyy-MM-dd"),
                             Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                            Icon = loc.TimestampUtc == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow)
+                            Icon = loc.Timestamp == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow)
                         };
                         TheMap.Pins.Add(pin);
 
@@ -165,6 +191,9 @@ namespace GeohashCross.Views
         private void ShowMoreClicked(object sender, EventArgs e)
         {
             VM.ShowAdvanced = !VM.ShowAdvanced;
+
+
+
         }
 
         private async void YouMadeItClicked(object sender, EventArgs e)

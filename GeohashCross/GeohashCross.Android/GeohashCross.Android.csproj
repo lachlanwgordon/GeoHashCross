@@ -55,9 +55,9 @@
       <Version>1.3.2.47-beta</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
-      <Version>0.8.0-preview</Version>
+      <Version>0.11.0-preview</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.1.0.583944" />
+    <PackageReference Include="Xamarin.Forms" Version="3.3.0.912540" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="27.0.2.1" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2.1" />
@@ -110,7 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeohashCross\GeohashCross.csproj">
-      <Project>{A269E275-E0F0-4D5B-8C59-AC78E8C6DD59}</Project>
+      <Project>{1E386A6F-340A-4551-9C6E-2F714F5299E3}</Project>
       <Name>GeohashCross</Name>
     </ProjectReference>
   </ItemGroup>

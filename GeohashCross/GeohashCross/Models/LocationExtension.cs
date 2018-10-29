@@ -11,16 +11,16 @@ namespace GeohashCross.Models
             {
             var hashes = new List<Location>
                 {
-                    new Location(location.Latitude -1, location.Longitude -1, location.TimestampUtc),
-                    new Location(location.Latitude -1, location.Longitude, location.TimestampUtc),
-                    new Location(location.Latitude -1, location.Longitude + 1, location.TimestampUtc),
+                    new Location(location.Latitude -1, location.Longitude -1, location.Timestamp),
+                    new Location(location.Latitude -1, location.Longitude, location.Timestamp),
+                    new Location(location.Latitude -1, location.Longitude + 1, location.Timestamp),
 
-                    new Location(location.Latitude, location.Longitude -1, location.TimestampUtc),
-                    new Location(location.Latitude, location.Longitude +1, location.TimestampUtc),
+                    new Location(location.Latitude, location.Longitude -1, location.Timestamp),
+                    new Location(location.Latitude, location.Longitude +1, location.Timestamp),
 
-                    new Location(location.Latitude +1, location.Longitude -1, location.TimestampUtc),
-                    new Location(location.Latitude +1, location.Longitude, location.TimestampUtc),
-                    new Location(location.Latitude +1, location.Longitude +1, location.TimestampUtc),
+                    new Location(location.Latitude +1, location.Longitude -1, location.Timestamp),
+                    new Location(location.Latitude +1, location.Longitude, location.Timestamp),
+                    new Location(location.Latitude +1, location.Longitude +1, location.Timestamp),
                 };
             return hashes;
         }

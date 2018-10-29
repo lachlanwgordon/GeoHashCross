@@ -23,9 +23,14 @@ namespace GeohashCross.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            Xamarin.FormsGoogleMaps.Init("AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs"); // initialize for Xamarin.Forms.GoogleMaps
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
         }
     }
 }
+
+//AIzaSyBD6djswOdYzWLzfWNIuYV9eT6TswAdkgg
+//AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs

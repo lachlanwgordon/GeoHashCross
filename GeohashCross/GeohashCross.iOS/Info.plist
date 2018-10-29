@@ -34,5 +34,12 @@
 	<string>GeohashCross</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Geohash Cross needs your location to find the nearest Geohash.</string>
+	<key>App Transport Security Settings</key>
+	<dict>
+		<key>Allow Arbitrary Loads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

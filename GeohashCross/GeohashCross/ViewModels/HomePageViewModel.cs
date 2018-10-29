@@ -37,7 +37,7 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        bool _ShowAdvanced;
+        bool _ShowAdvanced = true;
         public bool ShowAdvanced
         {
             get
@@ -50,7 +50,7 @@ namespace GeohashCross.ViewModels
                 OnPropertyChanged(nameof(ShowAdvanced));
             }
         }
-
+        //public bool ShowAdvanced { get; set; } = true;
         public bool IsAdVisible
         {
             get
@@ -178,7 +178,7 @@ namespace GeohashCross.ViewModels
 
         internal async Task Refresh()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             Locations.Clear();
             LocationsToDisplay.Clear();
@@ -190,7 +190,7 @@ namespace GeohashCross.ViewModels
 
         bool TimerInitiatedUpdateLocation()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             InvokeUpdateCurrentLocation();
             return true;
@@ -198,14 +198,14 @@ namespace GeohashCross.ViewModels
 
         public async void InvokeUpdateCurrentLocation()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             await UpdateCurrentLocation();
         }
 
         public async Task<Response<Location>> UpdateCurrentLocation()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             var loc = await Xamarin.Essentials.Geolocation.GetLocationAsync();
             CurrentLocation = loc;
@@ -221,7 +221,7 @@ namespace GeohashCross.ViewModels
         private bool Initialised = false;
         private void SetUpTimer()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             try
             {
@@ -236,14 +236,14 @@ namespace GeohashCross.ViewModels
 
         public async void InvokeLoadHashLocation()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             try
             {
                 var loc = await LoadHashLocation();
                 if(loc.Success == false)
                 {
-                    await App.Current.MainPage.DisplayAlert("Couldn't load hash", loc.Message, "Okay");
+                    await Application.Current.MainPage.DisplayAlert("Couldn't load hash", loc.Message, "Okay");
                 }
             }
             catch (Exception ex)
@@ -253,9 +253,9 @@ namespace GeohashCross.ViewModels
         }
         public async Task<HashData> LoadHashLocation()
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
-            var loc = TappedLocation != null ? TappedLocation : CurrentLocation;
+            var loc = TappedLocation ?? CurrentLocation;
 
             var hashData = await Hasher.GetHashData(Date, loc);
 
