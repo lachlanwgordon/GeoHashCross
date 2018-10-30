@@ -118,6 +118,8 @@ namespace GeohashCross.Views
             Debug.WriteLine(DeviceDisplay.ScreenMetrics.Height);
 
 
+            TheMap.
+
         }
         //public Map MainMap;
         async void PinLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -191,9 +193,20 @@ namespace GeohashCross.Views
         private void ShowMoreClicked(object sender, EventArgs e)
         {
             VM.ShowAdvanced = !VM.ShowAdvanced;
+        }
 
+        bool SatteliteView = false;
+        void SatteliteClicked(object sender, System.EventArgs e)
+        {
+            try
+            {
+                SatteliteView = !SatteliteView;
+                TheMap.MapType = SatteliteView ? MapType.Satellite : MapType.Street;
+            }
+            catch (Exception ex)
+            {
 
-
+            }
         }
 
         private async void YouMadeItClicked(object sender, EventArgs e)
@@ -201,15 +214,17 @@ namespace GeohashCross.Views
             try
             {
                 var result = await DisplayActionSheet("Congratulations\nWould you like to take a photo?", "Cancel", null, "Screen shot", "Photo", "Both");
-
-
-
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+
+        void DarkNavClicked(object sender, System.EventArgs e)
+        {
+            VM.DarkNavEnabled = !VM.DarkNavEnabled;
         }
     }
 }

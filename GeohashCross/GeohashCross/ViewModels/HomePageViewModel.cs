@@ -123,6 +123,37 @@ namespace GeohashCross.ViewModels
             }
         }
 
+        double _vector = 0;
+        double Vector 
+        {
+            get
+            {
+                Compass.ReadingChanged += Compass_ReadingChanged;
+
+
+
+                if (CurrentLocation == null || HashData == null || HashData.NearestHashLocation == null)
+                    return 0;
+                Xamarin.Essentials.LocationExtensions.
+                var distance = Xamarin.Essentials.Location.(CurrentLocation, HashData.NearestHashLocation, DistanceUnits.Kilometers);
+                return distance;
+
+            }
+        }
+
+        public double Heading
+        {
+            get;
+            set;
+
+        }
+
+        void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
+        {
+            Heading = e.Reading.HeadingMagneticNorth;
+        }
+
+
         public bool ImHere
         {
             get
@@ -292,6 +323,20 @@ namespace GeohashCross.ViewModels
             {
                 _ShowNeighbours = value;
                 InvokeUpdateNeighbouringPins();
+            }
+        }
+
+        bool _DarkNavEnabled;
+        public bool DarkNavEnabled
+        {
+            get
+            {
+                return _DarkNavEnabled;
+            }
+            set
+            {
+                _DarkNavEnabled = value;
+                OnPropertyChanged(nameof(DarkNavEnabled));
             }
         }
 

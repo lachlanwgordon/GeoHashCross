@@ -22,15 +22,14 @@
                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                 AbsoluteLayout.LayoutFlags="All" />
             <StackLayout
+                Padding="0"
                 x:Name="TheStack"
                 Margin="20,20,20,0">
                 <Frame
-                    x:Name="LittleFrame"
-                    AbsoluteLayout.LayoutBounds="0.5,50,0.9,180"
-                    AbsoluteLayout.LayoutFlags="XProportional, WidthProportional">
+                    Margin="0"
+                    x:Name="LittleFrame">
                     <Grid
-                        RowSpacing="0"
-                        >
+                        RowSpacing="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
                                 Width="*" />
@@ -83,7 +82,7 @@
                             Grid.ColumnSpan="2"
                             Text="Reset" />
                         <Label
-                            Style="{StaticResource BigLabel}"
+                            Style="{StaticResource MediumLabel}"
                             Grid.Row="1"
                             Grid.ColumnSpan="6"
                             Text="Location" />
@@ -93,26 +92,26 @@
                             Grid.ColumnSpan="6"
                             Grid.Row="2" />
                         <Label
-                            Style="{StaticResource BigLabel}"
+                            Style="{StaticResource MediumLabel}"
                             Grid.Row="1"
                             Grid.ColumnSpan="6"
-                            Grid.Column="5"
+                            Grid.Column="6"
                             Text="Hash" />
                         <Label
                             Style="{StaticResource SmallLabel}"
                             Grid.Row="2"
                             Grid.ColumnSpan="6"
-                            Grid.Column="5"
+                            Grid.Column="6"
                             Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" />
                         <Label
-                            Style="{StaticResource BigLabel}"
+                            Style="{StaticResource MediumLabel}"
                             Grid.Row="3"
-                            Grid.ColumnSpan="9"
+                            Grid.ColumnSpan="6"
                             Text="Distance" />
                         <Label
                             Style="{StaticResource SmallLabel}"
                             Grid.Row="4"
-                            Grid.ColumnSpan="9"
+                            Grid.ColumnSpan="6"
                             Text="{Binding Distance}" />
                         <Button
                             Grid.Row="2"
@@ -122,9 +121,8 @@
                             Text="▼"
                             HorizontalOptions="End"
                             Clicked="ShowMoreClicked"
-                            Grid.Column="11" 
-                            IsVisible="{Binding Path=ShowAdvanced, Converter={StaticResource NotBool}}"
-                        />
+                            Grid.Column="11"
+                            IsVisible="{Binding Path=ShowAdvanced, Converter={StaticResource NotBool}}" />
                         <BoxView
                             Color="{StaticResource Divider}"
                             IsVisible="{Binding ShowAdvanced}"
@@ -132,12 +130,11 @@
                             Grid.ColumnSpan="12"
                             Margin="0,10,0,5"
                             HeightRequest="1" />
-                        
                         <Label
                             Grid.Row="7"
                             IsVisible="{Binding ShowAdvanced}"
                             Text="Global Hash"
-                            Style="{StaticResource BigLabel}"
+                            Style="{StaticResource MediumLabel}"
                             Grid.ColumnSpan="4"
                             Grid.Column="8"
                             HorizontalTextAlignment="End" />
@@ -153,7 +150,7 @@
                             Text="Neighbours"
                             IsVisible="{Binding ShowAdvanced}"
                             Grid.ColumnSpan="4"
-                            Style="{StaticResource BigLabel}" />
+                            Style="{StaticResource MediumLabel}" />
                         <Switch
                             Grid.ColumnSpan="4"
                             IsVisible="{Binding ShowAdvanced}"
@@ -170,6 +167,73 @@
                     </Grid>
                 </Frame>
             </StackLayout>
+            <Frame
+                AbsoluteLayout.LayoutBounds="0.5,20,1,1"
+                AbsoluteLayout.LayoutFlags="XProportional, SizeProportional"
+                Margin="10,0,10,200"
+                BackgroundColor="{StaticResource DarkBackground}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="4*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="4*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+                    <BoxView
+                        Color="{StaticResource Divider}"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        WidthRequest="10"
+                        Rotation="{Binding Vector}"
+                        RotationX="40"
+                        HeightRequest="100" />
+                    <Label
+                        Style="{StaticResource BigLabel}"
+                        TextColor="{StaticResource Divider}"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Distance}" />
+                </Grid>
+            </Frame>
+            <Frame
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Margin="0,0,10,80"
+                BackgroundColor="Transparent"
+                Padding="0"
+                AbsoluteLayout.LayoutBounds="1,1,62,132">
+                <Button
+                    Text="☽"
+                    Clicked="Handle_Clicked"
+                    FontSize="{StaticResource Large}"
+                    TextColor="{StaticResource Icons}"
+                    BorderRadius="27"
+                    BackgroundColor="{StaticResource Accent}" />
+            </Frame>
+            <Frame
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Margin="10,0,0,80"
+                BackgroundColor="Transparent"
+                Padding="0"
+                AbsoluteLayout.LayoutBounds="0,1,62,132">
+                <Button
+                    Text="🛰"
+                    Clicked="SatteliteClicked"
+                    FontSize="{StaticResource Large}"
+                    TextColor="{StaticResource Icons}"
+                    BorderRadius="27"
+                    BackgroundColor="{StaticResource Accent}" />
+            </Frame>
         </AbsoluteLayout>
     </ContentPage.Content>
     <ContentPage.Resources>
@@ -195,6 +259,8 @@
                 x:Key="Icons">#FFFFFF</Color>
             <Color
                 x:Key="Divider">#BDBDBD</Color>
+            <Color
+                x:Key="DarkBackground">#282828</Color>
             <OnIdiom
                 x:Key="Large"
                 x:TypeArguments="x:Double"
@@ -210,8 +276,24 @@
                 x:TypeArguments="x:Double"
                 Phone="13"
                 Tablet="16" />
-            <Style
+             <Style
                 x:Key="BigLabel"
+                TargetType="Label">
+                <Setter
+                    Property="VerticalTextAlignment"
+                    Value="Center" />
+                <Setter
+                    Property="TextColor"
+                    Value="{StaticResource PrimaryText}" />
+                <Setter
+                    Property="FontSize"
+                    Value="{StaticResource Large}" />
+                <Setter
+                    Property="Margin"
+                    Value="0,2" />
+            </Style>
+            <Style
+                x:Key="MediumLabel"
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
