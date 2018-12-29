@@ -160,6 +160,9 @@
     <PackageReference Include="Xamarin.Forms.GoogleMaps">
       <Version>3.0.0-beta3</Version>
     </PackageReference>
+    <PackageReference Include="SkiaSharp.Views.Forms">
+      <Version>1.60.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
