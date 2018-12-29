@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,32 @@ namespace GeohashCross.Views
 		public Wiki ()
 		{
 			InitializeComponent ();
+            Web.Navigating += Web_Navigating;
+            Web.Navigated += Web_Navigated;
 		}
-	}
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Web.Source = "http://wiki.xkcd.com/geohashing";
+        }
+        bool wiki = true;
+        void Handle_Clicked(object sender, System.EventArgs e)
+        {
+            wiki = !wiki;
+            Web.Source =  wiki ? "http://wiki.xkcd.com/geohashing" : "https://google.com";
+            Debug.WriteLine(Web.Source);
+        }
+
+        void Web_Navigating(object sender, WebNavigatingEventArgs e)
+        {
+            Debug.Write(e.Url);
+        }
+
+        void Web_Navigated(object sender, WebNavigatedEventArgs e)
+        {
+            Debug.WriteLine(e.Url);
+        }
+
+    }
 }
