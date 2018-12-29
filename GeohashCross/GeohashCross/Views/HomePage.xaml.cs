@@ -115,13 +115,13 @@ namespace GeohashCross.Views
             TheMap.UiSettings.MapToolbarEnabled = true;
             TheMap.UiSettings.IndoorLevelPickerEnabled = true;
             //TheMap.MapType = MapType.Satellite;
-            if (DeviceDisplay.ScreenMetrics.Height == 1792 || DeviceDisplay.ScreenMetrics.Height == 2436 || DeviceDisplay.ScreenMetrics.Height == 2688)
+            if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)
             {
                 TheStack.Margin = new Thickness(20, 50, 20, 0);
                 TheDarkFrame.Margin = new Thickness(10, 50, 10, 10);
             }
             Debug.WriteLine(DeviceInfo.Model);
-            Debug.WriteLine(DeviceDisplay.ScreenMetrics.Height);
+            Debug.WriteLine(DeviceDisplay.MainDisplayInfo.Height);
 
             Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
 
