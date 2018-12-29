@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
     xmlns:local="clr-namespace:GeohashCross.Models"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     xmlns:ads="clr-namespace:GeohashCross.Controls"
     x:Class="GeohashCross.Views.HomePage"
     Title="Geohash Cross">
@@ -23,6 +24,7 @@
                 AbsoluteLayout.LayoutFlags="All" />
             <StackLayout
                 Padding="0"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 x:Name="TheStack"
                 Margin="20,20,20,0">
                 <Frame
@@ -130,21 +132,21 @@
                             Grid.ColumnSpan="12"
                             Margin="0,10,0,5"
                             HeightRequest="1" />
-                        <Label
+                        <Button
                             Grid.Row="7"
                             IsVisible="{Binding ShowAdvanced}"
                             Text="Global Hash"
-                            Style="{StaticResource MediumLabel}"
                             Grid.ColumnSpan="4"
+                            Clicked="GlobalHashClicked"
                             Grid.Column="8"
-                            HorizontalTextAlignment="End" />
-                        <Switch
+                            />
+                        <!--<Switch
                             Grid.ColumnSpan="4"
                             Grid.Column="8"
                             Grid.Row="8"
                             IsVisible="{Binding ShowAdvanced}"
                             IsToggled="{Binding ShowGlobal}"
-                            HorizontalOptions="End" />
+                            HorizontalOptions="End" />-->
                         <Label
                             Grid.Row="7"
                             Text="Neighbours"
@@ -168,60 +170,8 @@
                 </Frame>
             </StackLayout>
             <Frame
-                AbsoluteLayout.LayoutBounds="0.5,20,1,1"
-                AbsoluteLayout.LayoutFlags="XProportional, SizeProportional"
-                Margin="10,0,10,200"
-                BackgroundColor="{StaticResource DarkBackground}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="4*" />
-                        <ColumnDefinition
-                            Width="*" />
-                        <ColumnDefinition
-                            Width="4*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-                    <BoxView
-                        Color="{StaticResource Divider}"
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        WidthRequest="10"
-                        Rotation="{Binding Vector}"
-                        RotationX="40"
-                        HeightRequest="100" />
-                    <Label
-                        Style="{StaticResource BigLabel}"
-                        TextColor="{StaticResource Divider}"
-                        Grid.Row="2"
-                        Grid.ColumnSpan="3"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding Distance}" />
-                </Grid>
-            </Frame>
-            <Frame
                 AbsoluteLayout.LayoutFlags="PositionProportional"
-                Margin="0,0,10,80"
-                BackgroundColor="Transparent"
-                Padding="0"
-                AbsoluteLayout.LayoutBounds="1,1,62,132">
-                <Button
-                    Text="☽"
-                    Clicked="Handle_Clicked"
-                    FontSize="{StaticResource Large}"
-                    TextColor="{StaticResource Icons}"
-                    BorderRadius="27"
-                    BackgroundColor="{StaticResource Accent}" />
-            </Frame>
-            <Frame
-                AbsoluteLayout.LayoutFlags="PositionProportional"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Margin="10,0,0,80"
                 BackgroundColor="Transparent"
                 Padding="0"
@@ -234,6 +184,106 @@
                     BorderRadius="27"
                     BackgroundColor="{StaticResource Accent}" />
             </Frame>
+<!--                IsVisible="{Binding DarkNavEnabled}"-->
+            
+            <Frame
+                x:Name="TheDarkFrame"
+                IsVisible="{Binding DarkNavEnabled}"
+                AbsoluteLayout.LayoutBounds="0.5,0,1,1"
+                AbsoluteLayout.LayoutFlags="XProportional, SizeProportional"
+                Margin="10,20,10,20"
+                BackgroundColor="{StaticResource DarkBackground}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="10" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="10" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="50" />
+                        <RowDefinition
+                            Height="4*" />
+                        <RowDefinition
+                            Height="50" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label
+                        Style="{StaticResource BigLabel}"
+                        TextColor="{StaticResource Divider}"
+                        Grid.ColumnSpan="3"
+                        HorizontalTextAlignment="Center"
+                        Text="Hash Direction" />
+                     <skia:SKCanvasView
+                        x:Name="skiaView"
+                        Grid.Column="1"
+                        PaintSurface="Handle_PaintSurface"
+                        Grid.Row="1" />
+                   
+                    <Label
+                        Style="{StaticResource BigLabel}"
+                        TextColor="{StaticResource Divider}"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Distance}" />
+                    <Label
+                        Text="{Binding HeadingMagneticNorth, StringFormat='HeadingMagnetic: {0}'}"
+                        Grid.Row="4"
+                        Grid.ColumnSpan="3"
+                        />
+                    <Label
+                        Text="{Binding Bearing, StringFormat='Bearing(Magnetic): {0}'}"
+                        Grid.Row="5"
+                        Grid.ColumnSpan="3"
+                        />
+                    <Label
+                        Text="{Binding Desire, StringFormat='Desire(Magnetic): {0}'}"
+                        Grid.Row="6"
+                        Grid.ColumnSpan="3"
+                        />
+                    <Label
+                        Text="{Binding TrueNorth, StringFormat='TrueNorth: {0}'}"
+                        Grid.Row="7"
+                        Grid.ColumnSpan="3"
+                        />
+                    <Label 
+                        Text="{Binding BearingToTrueNorth, StringFormat='BearingToTrueNorth: {0}'}"
+                        Grid.ColumnSpan="3"
+                        
+                        Grid.Row="8"
+                        />
+                    <Label
+                        Text="{Binding MagneticNorth, StringFormat='Magnetic North: {0}'}"
+                        Grid.Row="9"
+                        Grid.ColumnSpan="3"
+                        />
+                </Grid>
+            </Frame>
+            <Frame
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Margin="0,0,10,80"
+                BackgroundColor="Transparent"
+                Padding="0"
+                AbsoluteLayout.LayoutBounds="1,1,62,132">
+                <Button
+                    Text="☽"
+                    Clicked="DarkNavClicked"
+                    FontSize="{StaticResource Large}"
+                    TextColor="{StaticResource Icons}"
+                    BorderRadius="27"
+                    BackgroundColor="{StaticResource Accent}" />
+            </Frame>
+            
         </AbsoluteLayout>
     </ContentPage.Content>
     <ContentPage.Resources>
@@ -276,12 +326,13 @@
                 x:TypeArguments="x:Double"
                 Phone="13"
                 Tablet="16" />
-             <Style
+            <Style
                 x:Key="BigLabel"
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
-                    Value="Center" />
+                    Value="Center"
+                    />
                 <Setter
                     Property="TextColor"
                     Value="{StaticResource PrimaryText}" />
@@ -297,7 +348,8 @@
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
-                    Value="Center" />
+                    Value="Center"
+                    />
                 <Setter
                     Property="TextColor"
                     Value="{StaticResource PrimaryText}" />
@@ -313,7 +365,8 @@
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
-                    Value="Center" />
+                    Value="Center"
+                    />
                 <Setter
                     Property="TextColor"
                     Value="{StaticResource SecondaryText}" />

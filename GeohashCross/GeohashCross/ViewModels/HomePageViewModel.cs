@@ -15,7 +15,24 @@ namespace GeohashCross.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
-        
+        public HomePageViewModel()
+        {
+            try
+            {
+                Compass.ReadingChanged += Compass_ReadingChanged;
+                Compass.Start(SensorSpeed.UI);
+            }
+            catch (Exception ex)
+            {
+                HeadingMagneticNorth = 30;
+            }
+
+
+
+
+
+        }
+
         Location _CurrentLocation;
         public Location CurrentLocation
         {
@@ -33,7 +50,6 @@ namespace GeohashCross.ViewModels
                 OnPropertyChanged(nameof(Distance));
                 OnPropertyChanged(nameof(ImHere));
 
-                OnPropertyChanged(nameof(IsAdVisible));
             }
         }
 
@@ -50,14 +66,7 @@ namespace GeohashCross.ViewModels
                 OnPropertyChanged(nameof(ShowAdvanced));
             }
         }
-        //public bool ShowAdvanced { get; set; } = true;
-        public bool IsAdVisible
-        {
-            get
-            {
-                return !ImHere;
-            }
-        }
+
 
         Location _TappedLocation;
         public Location TappedLocation
@@ -102,14 +111,14 @@ namespace GeohashCross.ViewModels
         {
             get
             {
-                if (CurrentLocation == null || HashData == null || HashData.NearestHashLocation == null)
+                if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
                     return null;
-                var distance = Xamarin.Essentials.Location.CalculateDistance(CurrentLocation, HashData.NearestHashLocation, DistanceUnits.Kilometers);
+                var distance = Xamarin.Essentials.Location.CalculateDistance(_CurrentLocation, _HashData.NearestHashLocation, DistanceUnits.Kilometers);
                 return distance;
             }
         }
 
-        public String Distance
+        public string Distance
         {
             get
             {
@@ -123,34 +132,115 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        double _vector = 0;
-        double Vector 
+        //Thanks to http://www.movable-type.co.uk/scripts/latlong.html
+        public double Bearing
         {
             get
             {
-                Compass.ReadingChanged += Compass_ReadingChanged;
 
 
-
-                if (CurrentLocation == null || HashData == null || HashData.NearestHashLocation == null)
+                if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
                     return 0;
-                Xamarin.Essentials.LocationExtensions.
-                var distance = Xamarin.Essentials.Location.(CurrentLocation, HashData.NearestHashLocation, DistanceUnits.Kilometers);
-                return distance;
+
+
+                var bearing = GetBearing(_CurrentLocation, _HashData.NearestHashLocation);
+
+                return bearing;
+
 
             }
         }
 
-        public double Heading
+        public double BearingToTrueNorth
+        {
+            get
+            {
+                var bearing =  HeadingMagneticNorth - TrueNorth;
+
+                return bearing;
+            }
+        }
+
+        public double GetBearing(Location currentLocation, Location destination)
+        {
+            var lat1 = currentLocation.Latitude.ToRadians();
+            var lon1 = currentLocation.Longitude.ToRadians();
+            var lat2 = destination.Latitude.ToRadians();
+            var lon2 = destination.Longitude.ToRadians();
+
+            var dlon = lon2 - lon1;
+
+
+            var y = Math.Sin(dlon) * Math.Cos(lat2);
+            var x = (Math.Cos(lat1) * Math.Sin(lat2)) -
+                                 (Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dlon));
+
+            var bearing = Math.Atan2(y, x);
+            var bearingInDegrees = bearing.ToDegrees();
+
+            var normalisedBearing = (bearingInDegrees + 360) % 360;
+
+            return normalisedBearing;
+
+        }
+
+
+
+
+        public double HeadingMagneticNorth
         {
             get;
             set;
 
         }
 
+        public Location TrueNorthPole { get; } = new Location(90, 0);
+        public Location MagneticNorthPole { get; } = new Location(86, 175.346);
+
+        public double MagneticNorth
+        {
+            get
+            {
+                if (_CurrentLocation == null)
+                    return 0;
+                var bearing = GetBearing(_CurrentLocation, MagneticNorthPole);
+                return bearing;
+            }
+        }
+
+        //A complicated way of returning 0
+        public double TrueNorth
+        {
+            get
+            {
+                if (_CurrentLocation == null)
+                    return 0;
+                var bearing = GetBearing(_CurrentLocation, TrueNorthPole);
+                return bearing;
+            }
+        }
+
+        public double NorthRelativeToHeading
+        {
+            get
+            {
+                return 0 - HeadingMagneticNorth;
+            }
+        }
+
+        public double Desire
+        {
+            get
+            {
+                var desire = Bearing - HeadingMagneticNorth;
+                desire = desire.FixDegreesRange().FixDegreesRange();
+                return desire;
+            }
+        }
+
         void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
         {
-            Heading = e.Reading.HeadingMagneticNorth;
+            HeadingMagneticNorth = e.Reading.HeadingMagneticNorth;
         }
 
 
@@ -165,13 +255,13 @@ namespace GeohashCross.ViewModels
                     return false;
                 }
 
-                if(distance.Value < 0.005)//5 metres
+                if (distance.Value < 0.005)//5 metres
                 {
                     return true;
                 }
-                if(CurrentLocation.Accuracy.HasValue && CurrentLocation.Accuracy.Value <= 50)//Accuracy greater than 10 metres
+                if (_CurrentLocation.Accuracy.HasValue && _CurrentLocation.Accuracy.Value <= 50)//Accuracy greater than 10 metres
                 {
-                    if(distance * 1000 < CurrentLocation.Accuracy.Value)
+                    if (distance * 1000 < _CurrentLocation.Accuracy.Value)
                     {
                         return true;
                     }
@@ -209,7 +299,6 @@ namespace GeohashCross.ViewModels
 
         internal async Task Refresh()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             Locations.Clear();
             LocationsToDisplay.Clear();
@@ -221,7 +310,6 @@ namespace GeohashCross.ViewModels
 
         bool TimerInitiatedUpdateLocation()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             InvokeUpdateCurrentLocation();
             return true;
@@ -229,35 +317,37 @@ namespace GeohashCross.ViewModels
 
         public async void InvokeUpdateCurrentLocation()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             await UpdateCurrentLocation();
         }
 
         public async Task<Response<Location>> UpdateCurrentLocation()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
-            var loc = await Xamarin.Essentials.Geolocation.GetLocationAsync();
+            var loc = await Geolocation.GetLocationAsync();
             CurrentLocation = loc;
 
-            if(!Initialised)
+            if (!Initialised)
             {
                 SetUpTimer();
             }
-            return new Response<Location>(loc, true, "Location Loaded successfully") ;
+            OnPropertyChanged(nameof(Desire));
+            OnPropertyChanged(nameof(Bearing));
+            OnPropertyChanged(nameof(HeadingMagneticNorth));
+            OnPropertyChanged(nameof(NorthRelativeToHeading));
+            OnPropertyChanged(nameof(TrueNorth));
+            return new Response<Location>(loc, true, "Location Loaded successfully");
         }
 
 
         private bool Initialised = false;
         private void SetUpTimer()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             try
             {
-                Device.StartTimer(TimeSpan.FromSeconds(3), TimerInitiatedUpdateLocation);
                 Initialised = true;
+                Device.StartTimer(TimeSpan.FromSeconds(1), TimerInitiatedUpdateLocation);
             }
             catch (Exception ex)
             {
@@ -267,40 +357,40 @@ namespace GeohashCross.ViewModels
 
         public async void InvokeLoadHashLocation()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             try
             {
                 var loc = await LoadHashLocation();
-                if(loc.Success == false)
+                if (loc.Success == false)
                 {
                     await Application.Current.MainPage.DisplayAlert("Couldn't load hash", loc.Message, "Okay");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error invoking load hash: \n{ex}\n{ex.StackTrace}");
+
+
+                Debug.WriteLine($"Error in invoke load hash location{ex}\n{ex.StackTrace}");
             }
         }
         public async Task<HashData> LoadHashLocation()
         {
-            //Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
-            var loc = TappedLocation ?? CurrentLocation;
+            var loc = TappedLocation ?? _CurrentLocation;
 
             var hashData = await Hasher.GetHashData(Date, loc);
 
-            
+
 
             if (hashData.Success)
             {
-                
+
                 var existingPins = Locations.Where(x => x.Latitude == hashData.NearestHashLocation.Latitude
                                                                 && x.Longitude == hashData.NearestHashLocation.Longitude).ToList();
                 Locations.RemoveRange(existingPins);
                 Locations.Add(hashData.NearestHashLocation);
                 LocationsToDisplay.Add(hashData.NearestHashLocation);
-                if(ShowNeighbours)
+                if (ShowNeighbours)
                 {
                     LocationsToDisplay.AddRange(hashData.NearestHashLocation.GetNeighbours());
                 }
@@ -326,7 +416,7 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        bool _DarkNavEnabled;
+        bool _DarkNavEnabled = false;
         public bool DarkNavEnabled
         {
             get
@@ -354,7 +444,7 @@ namespace GeohashCross.ViewModels
 
         private async Task UpdateNeighbouringPins()
         {
-            if(ShowNeighbours)
+            if (ShowNeighbours)
             {
                 foreach (var loc in Locations)
                 {
@@ -363,23 +453,17 @@ namespace GeohashCross.ViewModels
             }
             else
             {
-                //var remove = new List<Location>();
-                //foreach (var loc in LocationsToDisplay)
-                //{
-                //    var keep = Locations.Any(x => x.Latitude == loc.Latitude && x.Longitude == loc.Longitude);
-                //    if(!keep)
-                //    {
-                //        remove.Add(loc);
-                //    }
-                //}
-
                 var removeMe = LocationsToDisplay.Where(x => Locations.Where(y => y.Latitude == x.Latitude && y.Longitude == x.Longitude).Count() == 0).ToList();
                 LocationsToDisplay.RemoveRange(removeMe, System.Collections.Specialized.NotifyCollectionChangedAction.Remove);
             }
 
         }
 
-        
-
+        public Location GetGlobal()
+        {
+            var global = _HashData.GlobalHash;
+            //LocationsToDisplay.Add(global);
+            return global;
+        }
     }
 }

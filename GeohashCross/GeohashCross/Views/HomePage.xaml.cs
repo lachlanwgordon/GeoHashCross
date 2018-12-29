@@ -12,18 +12,23 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
+using static GeohashCross.Views.HomePage;
+using GeohashCross.Models;
 
 namespace GeohashCross.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class HomePage : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class HomePage : ContentPage
+    {
         HomePageViewModel VM { get; set; } = new HomePageViewModel();
         public HomePage()
         {
             BindingContext = VM;
             InitializeComponent();
             Init();
+            UpdateCanvas();
         }
 
         public void Init()
@@ -110,15 +115,15 @@ namespace GeohashCross.Views
             TheMap.UiSettings.MapToolbarEnabled = true;
             TheMap.UiSettings.IndoorLevelPickerEnabled = true;
             //TheMap.MapType = MapType.Satellite;
-            if(DeviceDisplay.ScreenMetrics.Height == 1792 || DeviceDisplay.ScreenMetrics.Height == 2436 || DeviceDisplay.ScreenMetrics.Height == 2688)
+            if (DeviceDisplay.ScreenMetrics.Height == 1792 || DeviceDisplay.ScreenMetrics.Height == 2436 || DeviceDisplay.ScreenMetrics.Height == 2688)
             {
                 TheStack.Margin = new Thickness(20, 50, 20, 0);
+                TheDarkFrame.Margin = new Thickness(10, 50, 10, 10);
             }
             Debug.WriteLine(DeviceInfo.Model);
             Debug.WriteLine(DeviceDisplay.ScreenMetrics.Height);
 
-
-            TheMap.
+            Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
 
         }
         //public Map MainMap;
@@ -133,7 +138,7 @@ namespace GeohashCross.Views
                     return;
                 }
                 Position? lastPos = null;
-                if(e.OldItems != null)
+                if (e.OldItems != null)
                 {
 
                     foreach (var item in e.OldItems)
@@ -147,7 +152,7 @@ namespace GeohashCross.Views
                     }
                 }
 
-                if(e.NewItems != null)
+                if (e.NewItems != null)
                 {
                     foreach (var item in e.NewItems)
                     {
@@ -160,13 +165,13 @@ namespace GeohashCross.Views
                         };
                         TheMap.Pins.Add(pin);
 
-                        if(VM.Locations.Any(x => x.Latitude == loc.Latitude && x.Longitude == loc.Longitude))
+                        if (VM.Locations.Any(x => x.Latitude == loc.Latitude && x.Longitude == loc.Longitude))
                         {
                             lastPos = new Position(loc.Latitude, loc.Longitude);
                         }
                     }
                 }
-                
+
 
                 if (lastPos.HasValue)
                 {
@@ -182,7 +187,8 @@ namespace GeohashCross.Views
         private async void RefreshClicked(object sender, EventArgs e)
         {
             Debug.WriteLine("refresh");
-            await VM.Refresh(); }
+            await VM.Refresh();
+        }
 
         private void MapClicked(object sender, MapClickedEventArgs e)
         {
@@ -205,6 +211,7 @@ namespace GeohashCross.Views
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"Error in satelite changed \n{ex}\n{ex.StackTrace}");
 
             }
         }
@@ -225,6 +232,143 @@ namespace GeohashCross.Views
         void DarkNavClicked(object sender, System.EventArgs e)
         {
             VM.DarkNavEnabled = !VM.DarkNavEnabled;
+        }
+
+
+
+
+        void Handle_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
+        {
+            SKSurface surface = e.Surface;
+            SKCanvas canvas = surface.Canvas;
+            canvas.Clear(SKColors.Transparent);
+
+            var height = e.Info.Height;
+            var width = e.Info.Width;
+
+            //Set transforms
+            //Move circle to centre of canvas
+            canvas.Translate(width / 2, height / 2);
+            canvas.Scale(width / 200);
+
+            //var time = DateTime.Now;
+
+
+            //Hour and minutes
+            for (int angle = 0; angle < 360; angle += 15)
+            {
+                canvas.DrawCircle(0, -90, angle % 90 == 0 ? 5 : 2, Paint.WhiteFill);
+                canvas.RotateDegrees(15);
+            }
+
+            ////hour Hand
+            canvas.Restore();
+            canvas.Save();
+
+            //Direction to hash assumin north is up
+            //canvas.RotateDegrees(VM.Vector);
+
+            //canvas.DrawPath(Paint.NeedlyPath, Paint.GreyFill);
+            //canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
+            //canvas.Restore();
+            //BearingToTrueNorth
+            ////Dirrection I'm facing
+            ////e.g. if I face noth it shows Up
+            ////If I'm facing east it points east
+            //canvas.RotateDegrees((int)VM.Heading);
+            //canvas.DrawPath(Paint.NeedlyPath, Paint.GreyFill);
+            //canvas.Restore();
+
+
+            //Direction to Hash reRelativeLayout to me
+            //if hash is dues west vector angle = 270
+            //If I face northish heading angle = 3
+            //I want angle to get to hash
+            //vector - heading= desired angle
+
+
+            //MagneticNorth
+            canvas.Restore();
+            canvas.RotateDegrees((int)VM.NorthRelativeToHeading);
+            canvas.DrawText("M", 0, -100, Paint.RedPaint);
+            canvas.Restore();
+
+
+            //TrueNorth
+            canvas.Restore();
+            canvas.RotateDegrees((int)VM.BearingToTrueNorth);
+            canvas.DrawText("T", 0, -100, Paint.BlackPaint);
+            canvas.Restore();
+
+
+
+            canvas.RotateDegrees((int)VM.Desire);
+            canvas.DrawPath(Paint.NeedlyPath, Paint.BluePaint);
+            canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
+
+
+
+
+
+
+        }
+
+        bool UpdateCanvas()
+        {
+            skiaView.InvalidateSurface();
+            return true;
+        }
+
+        public static class Paint
+        {
+            public static SKPaint BlackPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColors.Black
+            };
+
+            public static SKPaint RedPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColors.Red
+            };
+
+
+            public static SKPaint BluePaint = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+               Color = SKColors.Blue
+            };
+
+
+            public static SKPath NeedlyPath = SKPath.ParseSvgPathData("M 0 -80 C 0 -30 20 -30 5 -20 L 10 10 C 5 7.5 -5 7.5 -10 10 L -5 -20 C -20 -30 0 -30 0 -80");
+
+            public static SKPaint WhiteFill = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                 Color = SKColors.White,
+            };
+
+            public static SKPaint GreyFill = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColors.DimGray,
+            };
+
+            public static SKPaint WhiteStrokePaint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.White,
+                StrokeWidth = 2,
+                StrokeCap = SKStrokeCap.Round,
+                IsAntialias = true
+            };
+        }
+
+        void GlobalHashClicked(object sender, System.EventArgs e)
+        {
+            var location = VM.GetGlobal();
+
         }
     }
 }
