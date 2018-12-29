@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using Plugin.Permissions;
 using Android.Gms.Ads;
+using Xamarin.Forms;
 
 namespace GeohashCross.Droid
 {
@@ -20,7 +21,7 @@ namespace GeohashCross.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-
+            Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
             global::Xamarin.Forms.Forms.Init(this, bundle);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
             Xamarin.FormsGoogleMaps.Init(this, bundle); // initialize for Xamarin.Forms.GoogleMaps

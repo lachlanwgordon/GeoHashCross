@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Xamarin.Forms;
 
 namespace GeohashCross.iOS
 {
@@ -22,6 +23,7 @@ namespace GeohashCross.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
             global::Xamarin.Forms.Forms.Init();
             Xamarin.FormsGoogleMaps.Init("AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs"); // initialize for Xamarin.Forms.GoogleMaps
 
