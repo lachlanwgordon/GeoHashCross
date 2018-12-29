@@ -11,8 +11,7 @@ namespace GeohashCross
 		public App ()
 		{
 			InitializeComponent();
-
-			MainPage = new TabPage();
+            MainPage = new AppShell();
 		}
 
 		protected override void OnStart ()
