@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using GeohashCross.Models;
 using GeohashCross.Services;
+using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
 using Plugin.Permissions;
 using Xamarin.Essentials;
@@ -25,6 +26,7 @@ namespace GeohashCross.ViewModels
             catch (Exception ex)
             {
                 HeadingMagneticNorth = 30;
+                Crashes.TrackError(ex);
             }
 
 
@@ -352,6 +354,7 @@ namespace GeohashCross.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error in {this.GetType().Name} \n {ex}\n{ex.StackTrace}");
+                Crashes.TrackError(ex);
             }
         }
 
@@ -369,6 +372,7 @@ namespace GeohashCross.ViewModels
             catch (Exception ex)
             {
 
+                Crashes.TrackError(ex);
 
                 Debug.WriteLine($"Error in invoke load hash location{ex}\n{ex.StackTrace}");
             }

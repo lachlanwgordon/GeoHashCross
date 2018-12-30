@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using GeohashCross.Services;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Forms;
 
 namespace GeohashCross.Views
@@ -10,6 +11,15 @@ namespace GeohashCross.Views
         public AboutPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
+            {
+                {"Page", GetType().Name}
+            });
         }
     }
 }

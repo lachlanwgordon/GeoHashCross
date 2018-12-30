@@ -1,4 +1,5 @@
 ﻿using GeohashCross.Models;
+using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -51,6 +52,7 @@ namespace GeohashCross.Services
             }
             catch (Exception ex)
             {
+                Crashes.TrackError(ex);
                 Debug.WriteLine($"fail to get: \n{ex}\n{ex.StackTrace}");
                 if(Xamarin.Essentials.Connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
                 {

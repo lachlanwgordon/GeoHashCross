@@ -18,5 +18,6 @@ namespace GeohashCross.Views
             InitializeComponent();
             On<Xamarin.Forms.PlatformConfiguration.Android>().SetToolbarPlacement(ToolbarPlacement.Bottom);
         }
+
     }
 }

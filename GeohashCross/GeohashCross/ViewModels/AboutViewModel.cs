@@ -2,7 +2,10 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using GeohashCross.Services;
+using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace GeohashCross.ViewModels
@@ -10,6 +13,30 @@ namespace GeohashCross.ViewModels
     public class AboutViewModel : BaseViewModel
     {
         public ICommand WebsiteCommand => new Command<string>(OpenMyWebsite);
+        public bool CrashesEnabled
+        {
+            get
+            {
+                return Preferences.Get(AnalyticsManager.AllowCrashesKey, false);
+            }
+            set
+            {
+                AnalyticsManager.SetCrashesEnabled(value);
+            }
+        }
+
+        public bool AnalyticsEnabled
+        {
+            get
+            {
+                return Preferences.Get(AnalyticsManager.AllowAnalyticsKey, false);
+            }
+            set
+            {
+                AnalyticsManager.SetAnalyticsEnabled(value);
+            }
+        }
+
 
         async void OpenMyWebsite(string url)
         {
@@ -19,7 +46,8 @@ namespace GeohashCross.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"error in opening site\n{ex}\n{ex.StackTrace}");
+                Debug.WriteLine($"error\n{ex}\n{ex.StackTrace}");
+                Crashes.TrackError(ex);
             }
         }
 

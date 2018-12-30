@@ -21,6 +21,8 @@
             <Label Text="Bearing"/>
             <Label x:Name="Bearing"/>
             <Label Text="Log: " x:Name="Log"/>
+            <Button Text="Crash" Clicked="CrashClicked"/>
+            <Button Text="Error" Clicked="ErrorClicked"/>
             
         </StackLayout>
           

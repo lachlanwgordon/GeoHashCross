@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="GeohashCross.Views.AboutPage">
     <ContentPage.BindingContext>
-        <vms:AboutViewModel x:Name="VM"/>
+        <vms:AboutViewModel
+            x:Name="VM" />
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <TableView
@@ -22,14 +23,12 @@
                         Text="Website"
                         Detail="https://lachlanwgordon.com"
                         CommandParameter="https://lachlanwgordon.com"
-                        Command="{Binding WebsiteCommand}"
-                    />
+                        Command="{Binding WebsiteCommand}" />
                     <TextCell
                         Text="Twitter"
-                        Detail="@lachlanwgordon" 
+                        Detail="@lachlanwgordon"
                         Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://twitter.com/lachlanwgordon"
-                    />
+                        CommandParameter="https://twitter.com/lachlanwgordon" />
                     <TextCell
                         Text="Source Code"
                         Command="{Binding WebsiteCommand}"
@@ -65,6 +64,15 @@
                         Command="{Binding WebsiteCommand}"
                         CommandParameter="https://github.com/mono/SkiaSharp"
                         Detail="Mono" />
+                </TableSection>
+                <TableSection
+                    Title="Crash Reports and Analytics">
+                    <SwitchCell
+                        Text="Enable crashes and error reports"
+                        On="{Binding CrashesEnabled}" />
+                    <SwitchCell
+                        Text="Enable analytics reports"
+                        On="{Binding AnalyticsEnabled}" />
                 </TableSection>
             </TableRoot>
         </TableView>

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GeohashCross.Services;
 using GeohashCross.ViewModels;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Xamarin.Essentials;
@@ -93,5 +96,30 @@ namespace GeohashCross.Views
             return false;
         }
 
+        void CrashClicked(object sender, System.EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
+            {
+                {"Page", GetType().Name}
+            });
+        }
+
+        void ErrorClicked(object sender, System.EventArgs e)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
+        }
     }
 }

@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using GeohashCross.Services;
+using Microsoft.AppCenter.Analytics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,6 +25,10 @@ namespace GeohashCross.Views
         {
             base.OnAppearing();
             Web.Source = "http://wiki.xkcd.com/geohashing";
+            Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
+            {
+                {"Page", GetType().Name}
+            });
         }
         bool wiki = true;
         void Handle_Clicked(object sender, System.EventArgs e)
@@ -42,6 +47,7 @@ namespace GeohashCross.Views
         {
             Debug.WriteLine(e.Url);
         }
+
 
     }
 }

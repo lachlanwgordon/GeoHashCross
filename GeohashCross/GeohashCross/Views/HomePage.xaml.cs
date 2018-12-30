@@ -16,6 +16,9 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using static GeohashCross.Views.HomePage;
 using GeohashCross.Models;
+using Microsoft.AppCenter.Analytics;
+using GeohashCross.Services;
+using Microsoft.AppCenter.Crashes;
 
 namespace GeohashCross.Views
 {
@@ -181,6 +184,7 @@ namespace GeohashCross.Views
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error in Pin Collection changed \n{ex}\n{ex.StackTrace}");
+                Crashes.TrackError(ex);
             }
         }
 
@@ -212,6 +216,7 @@ namespace GeohashCross.Views
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error in satelite changed \n{ex}\n{ex.StackTrace}");
+                Crashes.TrackError(ex);
 
             }
         }
@@ -222,10 +227,10 @@ namespace GeohashCross.Views
             {
                 var result = await DisplayActionSheet("Congratulations\nWould you like to take a photo?", "Cancel", null, "Screen shot", "Photo", "Both");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                Crashes.TrackError(ex);
             }
         }
 
@@ -363,6 +368,15 @@ namespace GeohashCross.Views
                 StrokeCap = SKStrokeCap.Round,
                 IsAntialias = true
             };
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
+            {
+                {"Page", GetType().Name}
+            });
         }
 
         void GlobalHashClicked(object sender, System.EventArgs e)
