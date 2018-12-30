@@ -215,7 +215,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label
-                        Style="{StaticResource BigLabel}"
+                        Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
@@ -227,7 +227,7 @@
                         Grid.Row="1" />
                    
                     <Label
-                        Style="{StaticResource BigLabel}"
+                        Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
                         Grid.Row="2"
                         Grid.ColumnSpan="3"

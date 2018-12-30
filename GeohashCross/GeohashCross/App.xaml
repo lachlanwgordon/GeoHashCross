@@ -38,7 +38,7 @@
                 Phone="13"
                 Tablet="16" />
             <Style
-                x:Key="BigLabel"
+                x:Key="LargeLabel"
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"

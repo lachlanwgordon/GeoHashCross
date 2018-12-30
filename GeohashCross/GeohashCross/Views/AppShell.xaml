@@ -11,6 +11,6 @@
         <views:HomePage Title="Home" Shell.NavBarIsVisible="false"/>
         <views:TestsPage Title="Tests" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
         <views:Wiki Title="Wiki"/>
-        <views:Wiki Title="About"/>
+        <views:AboutPage Title="About"/>
     </ShellItem>
 </Shell>

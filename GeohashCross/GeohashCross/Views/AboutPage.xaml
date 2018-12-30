@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="GeohashCross.Views.AboutPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="About"/>
+            
+            
+            <Label Text="Libraries Used"
+                   Style="{StaticResource MediumLabel}"/>
+            <Label Text="Xamarin Forms"
+                   Style="{StaticResource SmallLabel}"/>
+             <Label Text="Xamarin Essentials"
+                   Style="{StaticResource SmallLabel}"/>
+             <Label Text="Mvvm Helpers"
+                   Style="{StaticResource SmallLabel}"/>
+             <Label Text="Skia Sharp"
+                   Style="{StaticResource SmallLabel}"/>
+             <Label Text="Xamarin Forms Google Maps"
+                   Style="{StaticResource SmallLabel}"/>
+            <Label Text="Permissions Plugin"
+                   Style="{StaticResource SmallLabel}"/>
+            
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
