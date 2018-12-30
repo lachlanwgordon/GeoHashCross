@@ -19,6 +19,7 @@ namespace GeohashCross.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+            //Xamarin.Calabash.Start();
 
             base.OnCreate(bundle);
             Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });

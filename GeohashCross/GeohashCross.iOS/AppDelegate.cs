@@ -24,6 +24,12 @@ namespace GeohashCross.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
+#if ENABLE_TEST_CLOUD
+    //Xamarin.Calabash.Start();
+#endif
+
+            Xamarin.Calabash.Start();
+
             global::Xamarin.Forms.Forms.Init();
             Xamarin.FormsGoogleMaps.Init("AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs"); // initialize for Xamarin.Forms.GoogleMaps
 
