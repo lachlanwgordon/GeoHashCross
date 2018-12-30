@@ -1,28 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:vms="clr-namespace:GeohashCross.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="GeohashCross.Views.AboutPage">
+    <ContentPage.BindingContext>
+        <vms:AboutViewModel x:Name="VM"/>
+    </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="About"/>
-            
-            
-            <Label Text="Libraries Used"
-                   Style="{StaticResource MediumLabel}"/>
-            <Label Text="Xamarin Forms"
-                   Style="{StaticResource SmallLabel}"/>
-             <Label Text="Xamarin Essentials"
-                   Style="{StaticResource SmallLabel}"/>
-             <Label Text="Mvvm Helpers"
-                   Style="{StaticResource SmallLabel}"/>
-             <Label Text="Skia Sharp"
-                   Style="{StaticResource SmallLabel}"/>
-             <Label Text="Xamarin Forms Google Maps"
-                   Style="{StaticResource SmallLabel}"/>
-            <Label Text="Permissions Plugin"
-                   Style="{StaticResource SmallLabel}"/>
-            
-        </StackLayout>
+        <TableView
+            Intent="Settings">
+            <TableRoot>
+                <TableSection
+                    Title="About Geohash Cross">
+                    <TextCell
+                        Text="Created By"
+                        Detail="Lachlan Gordon"
+                        CommandParameter="https://lachlanwgordon.com"
+                        Command="{Binding WebsiteCommand}" />
+                    <TextCell
+                        Text="Website"
+                        Detail="https://lachlanwgordon.com"
+                        CommandParameter="https://lachlanwgordon.com"
+                        Command="{Binding WebsiteCommand}"
+                    />
+                    <TextCell
+                        Text="Twitter"
+                        Detail="@lachlanwgordon" 
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://twitter.com/lachlanwgordon"
+                    />
+                    <TextCell
+                        Text="Source Code"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://github.com/lachlanwgordon/GeoHashCross/"
+                        Detail="https://github.com/lachlanwgordon/GeoHashCross/" />
+                    <TextCell
+                        Text="Rate and Review" />
+                    <TextCell
+                        Text="Inspired By"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://xkcd.com/426/"
+                        Detail="https://xkcd.com/426/" />
+                </TableSection>
+                <TableSection
+                    Title="Libraries">
+                    <TextCell
+                        Text="Xamarin Forms"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://docs.microsoft.com/en-us/xamarin/xamarin-forms/"
+                        Detail="Xamarin" />
+                    <TextCell
+                        Text="Xamarin Essentials"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://docs.microsoft.com/en-us/xamarin/essentials/"
+                        Detail="Xamarin" />
+                    <TextCell
+                        Text="Mvvm Helpers"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://github.com/jamesmontemagno/mvvm-helpers"
+                        Detail="James Montemagno" />
+                    <TextCell
+                        Text="Skia Sharp"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://github.com/mono/SkiaSharp"
+                        Detail="Mono" />
+                </TableSection>
+            </TableRoot>
+        </TableView>
     </ContentPage.Content>
 </ContentPage>

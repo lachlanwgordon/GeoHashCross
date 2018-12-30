@@ -88,6 +88,17 @@
                     Property="Margin"
                     Value="0,2" />
             </Style>
+            
+            <Style
+                TargetType="Label"
+                x:Key="HeadingLabel"
+                BasedOn="{StaticResource LargeLabel}"
+                >
+                <Setter
+                    Property="HorizontalTextAlignment"
+                    Value="Center"/>
+                
+            </Style>   
         </ResourceDictionary>
 	</Application.Resources>
 </Application>
