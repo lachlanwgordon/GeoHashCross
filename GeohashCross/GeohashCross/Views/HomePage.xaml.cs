@@ -117,8 +117,8 @@ namespace GeohashCross.Views
             //TheMap.MapType = MapType.Satellite;
             if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)
             {
-                TheStack.Margin = new Thickness(20, 50, 20, 0);
-                TheDarkFrame.Margin = new Thickness(10, 50, 10, 10);
+                LightFrame.Margin = new Thickness(20, 50, 20, 0);
+                TheDarkFrame.Margin = new Thickness(10, 50, 10, 0);
             }
             Debug.WriteLine(DeviceInfo.Model);
             Debug.WriteLine(DeviceDisplay.MainDisplayInfo.Height);

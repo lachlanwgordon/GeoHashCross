@@ -7,188 +7,176 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     xmlns:ads="clr-namespace:GeohashCross.Controls"
     x:Class="GeohashCross.Views.HomePage"
-    Shell.NavBarIsVisible="false"
-    >
-
+    Shell.NavBarIsVisible="false">
     <ContentPage.Content>
-        <AbsoluteLayout>
+        <Grid
+            ColumnSpacing="8">
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="*" />
+                <RowDefinition
+                    Height="58" />
+                <RowDefinition
+                    Height="84" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="58" />
+                <ColumnDefinition
+                    Width="58" />
+                <ColumnDefinition
+                    Width="65" />
+            </Grid.ColumnDefinitions>
             <maps:Map
                 x:Name="TheMap"
+                Grid.ColumnSpan="4"
                 MapClicked="MapClicked"
                 MyLocationEnabled="True"
                 HasZoomEnabled="true"
-                AbsoluteLayout.LayoutBounds="0,0,1,1"
-                AbsoluteLayout.LayoutFlags="All" />
-            <StackLayout
-                Padding="0"
-                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                x:Name="TheStack"
-                Margin="20,20,20,0">
-                <Frame
-                    Margin="0"
-                    x:Name="LittleFrame">
-                    <Grid
-                        RowSpacing="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                            <ColumnDefinition
-                                Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition
-                                Height="Auto" />
-                            <RowDefinition
-                                Height="Auto" />
-                            <RowDefinition
-                                Height="Auto" />
-                            <RowDefinition
-                                Height="Auto" />
-                            <RowDefinition
-                                Height="Auto" />
-                            <RowDefinition
-                                Height="Auto" />
-                            <RowDefinition
-                                Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <DatePicker
-                            Date="{Binding Date}"
-                            Grid.ColumnSpan="10"
-                            Format="yyyy-MM-dd" />
-                        <Button
-                            Grid.Column="10"
-                            HorizontalOptions="End"
-                            Grid.ColumnSpan="2"
-                            Text="Reset" />
-                        <Label
-                            Style="{StaticResource MediumLabel}"
-                            Grid.Row="1"
-                            Grid.ColumnSpan="6"
-                            Text="Location" />
-                        <Label
-                            Style="{StaticResource SmallLabel}"
-                            Text="{Binding Path=CurrentLocation, Converter={StaticResource locationSummary}}"
-                            Grid.ColumnSpan="6"
-                            Grid.Row="2" />
-                        <Label
-                            Style="{StaticResource MediumLabel}"
-                            Grid.Row="1"
-                            Grid.ColumnSpan="6"
-                            Grid.Column="6"
-                            Text="Hash" />
-                        <Label
-                            Style="{StaticResource SmallLabel}"
-                            Grid.Row="2"
-                            Grid.ColumnSpan="6"
-                            Grid.Column="6"
-                            Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" />
-                        <Label
-                            Style="{StaticResource MediumLabel}"
-                            Grid.Row="3"
-                            Grid.ColumnSpan="6"
-                            Text="Distance" />
-                        <Label
-                            Style="{StaticResource SmallLabel}"
-                            Grid.Row="4"
-                            Grid.ColumnSpan="6"
-                            Text="{Binding Distance}" />
-                        <Button
-                            Grid.Row="2"
-                            VerticalOptions="End"
-                            Grid.RowSpan="3"
-                            TextColor="{StaticResource Accent}"
-                            Text="▼"
-                            HorizontalOptions="End"
-                            Clicked="ShowMoreClicked"
-                            Grid.Column="11"
-                            IsVisible="{Binding Path=ShowAdvanced, Converter={StaticResource NotBool}}" />
-                        <BoxView
-                            Color="{StaticResource Divider}"
-                            IsVisible="{Binding ShowAdvanced}"
-                            Grid.Row="5"
-                            Grid.ColumnSpan="12"
-                            Margin="0,10,0,5"
-                            HeightRequest="1" />
-                        <Button
-                            Grid.Row="7"
-                            IsVisible="{Binding ShowAdvanced}"
-                            Text="Global Hash"
-                            Grid.ColumnSpan="4"
-                            Clicked="GlobalHashClicked"
-                            Grid.Column="8"
-                            />
-                        <!--<Switch
-                            Grid.ColumnSpan="4"
-                            Grid.Column="8"
-                            Grid.Row="8"
-                            IsVisible="{Binding ShowAdvanced}"
-                            IsToggled="{Binding ShowGlobal}"
-                            HorizontalOptions="End" />-->
-                        <Label
-                            Grid.Row="7"
-                            Text="Neighbours"
-                            IsVisible="{Binding ShowAdvanced}"
-                            Grid.ColumnSpan="4"
-                            Style="{StaticResource MediumLabel}" />
-                        <Switch
-                            Grid.ColumnSpan="4"
-                            IsVisible="{Binding ShowAdvanced}"
-                            Grid.Row="8"
-                            IsToggled="{Binding ShowNeighbours}" />
-                        <Button
-                            Grid.Row="9"
-                            TextColor="{StaticResource Accent}"
-                            Text="▲"
-                            IsVisible="{Binding ShowAdvanced}"
-                            HorizontalOptions="Start"
-                            Clicked="ShowMoreClicked"
-                            Grid.Column="11" />
-                    </Grid>
-                </Frame>
-            </StackLayout>
+                Grid.RowSpan="4" />
             <Frame
-                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Grid.ColumnSpan="4"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Margin="10,0,0,80"
-                BackgroundColor="Transparent"
-                Padding="0"
-                AbsoluteLayout.LayoutBounds="0,1,62,132">
-                <Button
-                    Text="🛰"
-                    Clicked="SatteliteClicked"
-                    FontSize="{StaticResource Large}"
-                    TextColor="{StaticResource Icons}"
-                    BorderRadius="27"
-                    BackgroundColor="{StaticResource Accent}" />
+                x:Name="LightFrame">
+                <Grid
+                    RowSpacing="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <DatePicker
+                        Date="{Binding Date}"
+                        Grid.ColumnSpan="10"
+                        Format="yyyy-MM-dd" />
+                    <Button
+                        Grid.Column="10"
+                        HorizontalOptions="End"
+                        Grid.ColumnSpan="2"
+                        Text="Reset" />
+                    <Label
+                        Style="{StaticResource MediumLabel}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="6"
+                        Text="Location" />
+                    <Label
+                        Style="{StaticResource SmallLabel}"
+                        Text="{Binding Path=CurrentLocation, Converter={StaticResource locationSummary}}"
+                        Grid.ColumnSpan="6"
+                        Grid.Row="2" />
+                    <Label
+                        Style="{StaticResource MediumLabel}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="6"
+                        Grid.Column="6"
+                        Text="Hash" />
+                    <Label
+                        Style="{StaticResource SmallLabel}"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="6"
+                        Grid.Column="6"
+                        Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" />
+                    <Label
+                        Style="{StaticResource MediumLabel}"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="6"
+                        Text="Distance" />
+                    <Label
+                        Style="{StaticResource SmallLabel}"
+                        Grid.Row="4"
+                        Grid.ColumnSpan="6"
+                        Text="{Binding Distance}" />
+                    <Button
+                        Grid.Row="2"
+                        VerticalOptions="End"
+                        Grid.RowSpan="3"
+                        TextColor="{StaticResource Accent}"
+                        Text="▼"
+                        HorizontalOptions="End"
+                        Clicked="ShowMoreClicked"
+                        Grid.Column="11"
+                        IsVisible="{Binding Path=ShowAdvanced, Converter={StaticResource NotBool}}" />
+                    <BoxView
+                        Color="{StaticResource Divider}"
+                        IsVisible="{Binding ShowAdvanced}"
+                        Grid.Row="5"
+                        Grid.ColumnSpan="12"
+                        Margin="0,10,0,5"
+                        HeightRequest="1" />
+                    <Button
+                        Grid.Row="7"
+                        IsVisible="{Binding ShowAdvanced}"
+                        Text="Global Hash"
+                        Grid.ColumnSpan="4"
+                        Clicked="GlobalHashClicked"
+                        Grid.Column="8" />
+                    <Label
+                        Grid.Row="7"
+                        Text="Neighbours"
+                        IsVisible="{Binding ShowAdvanced}"
+                        Grid.ColumnSpan="4"
+                        Style="{StaticResource MediumLabel}" />
+                    <Switch
+                        Grid.ColumnSpan="4"
+                        IsVisible="{Binding ShowAdvanced}"
+                        Grid.Row="8"
+                        IsToggled="{Binding ShowNeighbours}" />
+                    <Button
+                        Grid.Row="9"
+                        TextColor="{StaticResource Accent}"
+                        Text="▲"
+                        IsVisible="{Binding ShowAdvanced}"
+                        HorizontalOptions="Start"
+                        Clicked="ShowMoreClicked"
+                        Grid.Column="11" />
+                </Grid>
             </Frame>
-<!--                IsVisible="{Binding DarkNavEnabled}"-->
-            
             <Frame
+                Grid.ColumnSpan="4"
+                Grid.RowSpan="3"
                 x:Name="TheDarkFrame"
                 IsVisible="{Binding DarkNavEnabled}"
-                AbsoluteLayout.LayoutBounds="0.5,0,1,1"
-                AbsoluteLayout.LayoutFlags="XProportional, SizeProportional"
-                Margin="10,20,10,20"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -201,18 +189,25 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition
-                            Height="50" />
+                            Height="30" />
                         <RowDefinition
-                            Height="4*" />
+                            Height="*" />
                         <RowDefinition
-                            Height="50" />
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                            Height="30" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
                     </Grid.RowDefinitions>
                     <Label
                         Style="{StaticResource LargeLabel}"
@@ -220,12 +215,11 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="Hash Direction" />
-                     <skia:SKCanvasView
+                    <skia:SKCanvasView
                         x:Name="skiaView"
                         Grid.Column="1"
                         PaintSurface="Handle_PaintSurface"
                         Grid.Row="1" />
-                   
                     <Label
                         Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
@@ -236,52 +230,65 @@
                     <Label
                         Text="{Binding HeadingMagneticNorth, StringFormat='HeadingMagnetic: {0}'}"
                         Grid.Row="4"
-                        Grid.ColumnSpan="3"
-                        />
+                        Grid.ColumnSpan="3" />
                     <Label
                         Text="{Binding Bearing, StringFormat='Bearing(Magnetic): {0}'}"
                         Grid.Row="5"
-                        Grid.ColumnSpan="3"
-                        />
+                        Grid.ColumnSpan="3" />
                     <Label
                         Text="{Binding Desire, StringFormat='Desire(Magnetic): {0}'}"
                         Grid.Row="6"
-                        Grid.ColumnSpan="3"
-                        />
+                        Grid.ColumnSpan="3" />
                     <Label
                         Text="{Binding TrueNorth, StringFormat='TrueNorth: {0}'}"
                         Grid.Row="7"
-                        Grid.ColumnSpan="3"
-                        />
-                    <Label 
+                        Grid.ColumnSpan="3" />
+                    <Label
                         Text="{Binding BearingToTrueNorth, StringFormat='BearingToTrueNorth: {0}'}"
                         Grid.ColumnSpan="3"
-                        
-                        Grid.Row="8"
-                        />
+                        Grid.Row="8" />
                     <Label
                         Text="{Binding MagneticNorth, StringFormat='Magnetic North: {0}'}"
                         Grid.Row="9"
-                        Grid.ColumnSpan="3"
-                        />
+                        Grid.ColumnSpan="3" />
+                    <Button
+                        Text="☽"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="7"
+                        Grid.RowSpan="3"
+                        HeightRequest="60"
+                        WidthRequest="60"
+                        VerticalOptions="End"
+                        HorizontalOptions="End"
+                        Clicked="DarkNavClicked"
+                        FontSize="{StaticResource Large}"
+                        TextColor="{StaticResource Icons}"
+                        BorderRadius="29"
+                        BackgroundColor="{StaticResource Accent}" />
                 </Grid>
             </Frame>
-            <Frame
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                Margin="0,0,10,80"
-                BackgroundColor="Transparent"
-                Padding="0"
-                AbsoluteLayout.LayoutBounds="1,1,62,132">
-                <Button
-                    Text="☽"
-                    Clicked="DarkNavClicked"
-                    FontSize="{StaticResource Large}"
-                    TextColor="{StaticResource Icons}"
-                    BorderRadius="27"
-                    BackgroundColor="{StaticResource Accent}" />
-            </Frame>
-            
-        </AbsoluteLayout>
+            <Button
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Text="☽"
+                Grid.Column="1"
+                Grid.Row="2"
+                Clicked="DarkNavClicked"
+                FontSize="{StaticResource Large}"
+                TextColor="{StaticResource Icons}"
+                BorderRadius="29"
+                BackgroundColor="{StaticResource Accent}" />
+            <Button
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="2"
+                Grid.Row="2"
+                Text="🛰"
+                Clicked="SatteliteClicked"
+                FontSize="{StaticResource Large}"
+                TextColor="{StaticResource Icons}"
+                BorderRadius="29"
+                BackgroundColor="{StaticResource Accent}" />
+        </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
