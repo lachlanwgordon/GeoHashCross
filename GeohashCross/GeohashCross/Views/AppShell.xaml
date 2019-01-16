@@ -9,7 +9,7 @@
     x:Class="GeohashCross.Views.AppShell">
     <ShellItem>
         <views:HomePage Title="Home" Shell.NavBarIsVisible="false"/>
-        <views:TestsPage Title="Tests" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
+<!--        <views:TestsPage Title="Tests" Shell.ShellBackgroundColor="{StaticResource Primary}"/>-->
         <views:Wiki Title="Wiki" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
         <views:AboutPage Title="About" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
     </ShellItem>

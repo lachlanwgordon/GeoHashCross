@@ -35,9 +35,9 @@ namespace GeohashCross.Views
 
         void UseNorthPole(object sender, System.EventArgs e)
         {
-            EndLat.Text = VM.TrueNorthPole.ToString();
-            EndLon.Text = VM.TrueNorthPole.Longitude.ToString();
-            Log.Text += $"\nSet end location to north pole: ({VM.TrueNorthPole.Latitude},{VM.TrueNorthPole.Longitude})";
+            //EndLat.Text = VM.TrueNorthPole.ToString();
+            //EndLon.Text = VM.TrueNorthPole.Longitude.ToString();
+            //Log.Text += $"\nSet end location to north pole: ({VM.TrueNorthPole.Latitude},{VM.TrueNorthPole.Longitude})";
         }
 
 
@@ -53,7 +53,7 @@ namespace GeohashCross.Views
             var endLon = Convert.ToDouble(EndLon.Text);
             var endLoc = new Location(endLat, endLon);
 
-            var bearing = VM.GetBearing(startLoc, endLoc);
+            var bearing = 0;// VM.GetBearing(startLoc, endLoc);
             Bearing.Text = bearing.ToString();
             Log.Text += $"\ncalculate bearing as {bearing}";
         }

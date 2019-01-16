@@ -102,26 +102,25 @@ namespace GeohashCross.Views
 
         private void SetupUI()
         {
-            //MainMap = new Map();
-            //MainMap.MapClicked += MapClicked;
-            //TheGrid.Children.Add(MainMap);
-            //Grid.SetRow(MainMap, 6);
-            //Grid.SetColumnSpan(MainMap, 3);
             TheMap.UiSettings.MyLocationButtonEnabled = true;
             TheMap.UiSettings.ZoomControlsEnabled = true;
             VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
-            //var pins = TheMap.Pins as ObservableCollection<Pin>;
-            //VM.PinLocations.CollectionChanged += pins.CollectionChanged;
-
 
             TheMap.UiSettings.CompassEnabled = true;
             TheMap.UiSettings.MapToolbarEnabled = true;
             TheMap.UiSettings.IndoorLevelPickerEnabled = true;
             //TheMap.MapType = MapType.Satellite;
-            if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)
+            if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)//Notched phones
             {
                 LightFrame.Margin = new Thickness(20, 50, 20, 0);
                 TheDarkFrame.Margin = new Thickness(10, 50, 10, 0);
+                TheGrid.RowDefinitions.Remove(TheGrid.RowDefinitions.LastOrDefault());
+                TheGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(84, GridUnitType.Absolute) });
+            }
+            else
+            {
+                LightFrame.Margin = new Thickness(20, 30, 20, 0);
+                TheDarkFrame.Margin = new Thickness(10, 30, 10, 0);
             }
             Debug.WriteLine(DeviceInfo.Model);
             Debug.WriteLine(DeviceDisplay.MainDisplayInfo.Height);
@@ -129,7 +128,7 @@ namespace GeohashCross.Views
             Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
 
         }
-        //public Map MainMap;
+
         async void PinLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             try
@@ -251,71 +250,43 @@ namespace GeohashCross.Views
             var height = e.Info.Height;
             var width = e.Info.Width;
 
-            //Set transforms
-            //Move circle to centre of canvas
+            //Setup canvas with transforms based at the center
             canvas.Translate(width / 2, height / 2);
-            canvas.Scale(width / 200);
+            canvas.Scale(width / 220);
 
-            //var time = DateTime.Now;
+            canvas.Save();
 
-
-            //Hour and minutes
+            //Markers around circle
             for (int angle = 0; angle < 360; angle += 15)
             {
                 canvas.DrawCircle(0, -90, angle % 90 == 0 ? 5 : 2, Paint.WhiteFill);
                 canvas.RotateDegrees(15);
             }
 
-            ////hour Hand
             canvas.Restore();
+
+
+            //Target Needle
             canvas.Save();
+            canvas.RotateDegrees((int)VM.TargetNeedleDirection);
+            canvas.DrawPath(Paint.NeedlyPath, Paint.BluePaint);
+            canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
+            canvas.Restore();
 
-            //Direction to hash assumin north is up
-            //canvas.RotateDegrees(VM.Vector);
-
-            //canvas.DrawPath(Paint.NeedlyPath, Paint.GreyFill);
-            //canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
-            //canvas.Restore();
-            //BearingToTrueNorth
-            ////Dirrection I'm facing
-            ////e.g. if I face noth it shows Up
-            ////If I'm facing east it points east
-            //canvas.RotateDegrees((int)VM.Heading);
-            //canvas.DrawPath(Paint.NeedlyPath, Paint.GreyFill);
-            //canvas.Restore();
-
-
-            //Direction to Hash reRelativeLayout to me
-            //if hash is dues west vector angle = 270
-            //If I face northish heading angle = 3
-            //I want angle to get to hash
-            //vector - heading= desired angle
 
 
             //MagneticNorth
-            canvas.Restore();
-            canvas.RotateDegrees((int)VM.NorthRelativeToHeading);
+            canvas.Save();
+            canvas.RotateDegrees((int)VM.MagneticNorthNeedleDirection);
             canvas.DrawText("M", 0, -100, Paint.RedPaint);
             canvas.Restore();
 
 
             //TrueNorth
-            canvas.Restore();
-            canvas.RotateDegrees((int)VM.BearingToTrueNorth);
+            canvas.Save();
+            canvas.RotateDegrees((int)VM.TrueNorthNeedleDirection);
             canvas.DrawText("T", 0, -100, Paint.BlackPaint);
             canvas.Restore();
-
-
-
-            canvas.RotateDegrees((int)VM.Desire);
-            canvas.DrawPath(Paint.NeedlyPath, Paint.BluePaint);
-            canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
-
-
-
-
-
-
         }
 
         bool UpdateCanvas()
@@ -382,7 +353,6 @@ namespace GeohashCross.Views
         void GlobalHashClicked(object sender, System.EventArgs e)
         {
             var location = VM.GetGlobal();
-
         }
     }
 }

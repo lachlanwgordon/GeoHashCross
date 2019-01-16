@@ -10,6 +10,7 @@
     Shell.NavBarIsVisible="false">
     <ContentPage.Content>
         <Grid
+            x:Name="TheGrid"
             ColumnSpacing="8">
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -19,7 +20,7 @@
                 <RowDefinition
                     Height="58" />
                 <RowDefinition
-                    Height="84" />
+                    Height="53" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
@@ -178,7 +179,8 @@
                 x:Name="TheDarkFrame"
                 IsVisible="{Binding DarkNavEnabled}"
                 BackgroundColor="{StaticResource DarkBackground}">
-                <Grid>
+                <Grid
+                    RowSpacing="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
                             Width="10" />
@@ -195,19 +197,9 @@
                         <RowDefinition
                             Height="30" />
                         <RowDefinition
-                            Height="Auto" />
+                            Height="30" />
                         <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
+                            Height="60" />
                     </Grid.RowDefinitions>
                     <Label
                         Style="{StaticResource LargeLabel}"
@@ -227,36 +219,44 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Distance}" />
-                    <Label
-                        Text="{Binding HeadingMagneticNorth, StringFormat='HeadingMagnetic: {0}'}"
-                        Grid.Row="4"
-                        Grid.ColumnSpan="3" />
-                    <Label
-                        Text="{Binding Bearing, StringFormat='Bearing(Magnetic): {0}'}"
-                        Grid.Row="5"
-                        Grid.ColumnSpan="3" />
-                    <Label
-                        Text="{Binding Desire, StringFormat='Desire(Magnetic): {0}'}"
-                        Grid.Row="6"
-                        Grid.ColumnSpan="3" />
-                    <Label
-                        Text="{Binding TrueNorth, StringFormat='TrueNorth: {0}'}"
-                        Grid.Row="7"
-                        Grid.ColumnSpan="3" />
-                    <Label
-                        Text="{Binding BearingToTrueNorth, StringFormat='BearingToTrueNorth: {0}'}"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="8" />
-                    <Label
-                        Text="{Binding MagneticNorth, StringFormat='Magnetic North: {0}'}"
-                        Grid.Row="9"
-                        Grid.ColumnSpan="3" />
+                    <!--  This scroll view has usefull debug data, row definitions may need changing to make it visible -->
+                    <!--  <ScrollView
+                        Grid.Row="3"
+                        Grid.ColumnSpan="3">
+                        <StackLayout>
+                            <Label
+                                Text="{Binding HeadingMagneticNorth, StringFormat='HeadMagnNor: {0}'}" />
+                            <Label
+                                Text="{Binding HeadingTrueNorth, StringFormat='HeadTrueNor: {0}'}"
+                                Grid.Row="5"
+                                Grid.ColumnSpan="3" />
+                            <Label
+                                Text="{Binding Declination, StringFormat='Declination: {0}'}"
+                                Grid.Row="6"
+                                Grid.ColumnSpan="3" />
+                            <Label
+                                Text="{Binding TrueNorthNeedleDirection, StringFormat='TrueNorthNeedleDirection: {0}'}"
+                                Grid.Row="7"
+                                Grid.ColumnSpan="3" />
+                            <Label
+                                Text="{Binding MagneticNorthNeedleDirection, StringFormat='MagNorNeedDir: {0}'}"
+                                Grid.ColumnSpan="3"
+                                Grid.Row="8" />
+                            <Label
+                                Text="{Binding Bearing, StringFormat='Bearing: {0}'}"
+                                Grid.Row="9"
+                                Grid.ColumnSpan="3" />
+                            <Label
+                                Text="{Binding TargetNeedleDirection, StringFormat='TargNeedDir: {0}'}"
+                                Grid.Row="9"
+                                Grid.ColumnSpan="3" />
+                        </StackLayout>
+                    </ScrollView>-->
                     <Button
                         Text="☽"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
-                        Grid.Row="7"
-                        Grid.RowSpan="3"
+                        Grid.Row="4"
                         HeightRequest="60"
                         WidthRequest="60"
                         VerticalOptions="End"

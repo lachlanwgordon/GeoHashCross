@@ -4,11 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Geo;
+using Geo.Geomagnetism;
 using GeohashCross.Models;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
 using Plugin.Permissions;
+using TrueNorth.Geographic;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -21,18 +24,32 @@ namespace GeohashCross.ViewModels
             try
             {
                 Compass.ReadingChanged += Compass_ReadingChanged;
-                Compass.Start(SensorSpeed.UI);
+                Compass.Start(SensorSpeed.Fastest);
             }
             catch (Exception ex)
             {
                 HeadingMagneticNorth = 30;
                 Crashes.TrackError(ex);
             }
+        }
 
+        //Direction the devic is facing relative to magnetic north
+        public double HeadingMagneticNorth
+        {
+            get;
+            set;
+        }
 
+        public double HeadingTrueNorth
+        {
+            get
+            {
+                var headingTrueNorth = HeadingMagneticNorth + Declination;
 
-
-
+                if (headingTrueNorth > 360)
+                    headingTrueNorth -= 360;
+                return headingTrueNorth;
+            }
         }
 
         Location _CurrentLocation;
@@ -40,22 +57,19 @@ namespace GeohashCross.ViewModels
         {
             get
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
                 return _CurrentLocation;
             }
             set
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
                 _CurrentLocation = value;
                 OnPropertyChanged(nameof(CurrentLocation));
+                OnPropertyChanged(nameof(Declination));
                 OnPropertyChanged(nameof(Distance));
                 OnPropertyChanged(nameof(ImHere));
-
             }
         }
 
-        bool _ShowAdvanced = true;
+        bool _ShowAdvanced = false;
         public bool ShowAdvanced
         {
             get
@@ -68,7 +82,6 @@ namespace GeohashCross.ViewModels
                 OnPropertyChanged(nameof(ShowAdvanced));
             }
         }
-
 
         Location _TappedLocation;
         public Location TappedLocation
@@ -84,22 +97,19 @@ namespace GeohashCross.ViewModels
                 Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
                 _TappedLocation = value;
-                InvokeLoadHashLocation();
+                Task.Run(LoadHashLocation);
             }
         }
+
         HashData _HashData;
         public HashData HashData
         {
             get
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
                 return _HashData;
             }
             set
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
                 _HashData = value;
                 OnPropertyChanged(nameof(HashData));
                 OnPropertyChanged(nameof(Distance));
@@ -134,36 +144,78 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        //Thanks to http://www.movable-type.co.uk/scripts/latlong.html
+        //This is the difference between True north and magnetic north in degress
+        public double Declination
+        {
+            get
+            {
+                if (_CurrentLocation == null)
+                    return 0;
+                var calc = new WmmGeomagnetismCalculator();
+                var declination = calc.TryCalculate(new Coordinate(_CurrentLocation.Latitude, _CurrentLocation.Longitude), DateTime.Now);
+                return declination.Declination;
+            }
+        }
+
+
+        public double TrueNorthNeedleDirection
+        {
+            get
+            {
+                var headingMag = HeadingMagneticNorth;//If I'm facing magnetic east this will read 90
+                var magNeedleDirection = 0 - headingMag;//This will read 0 when facing magEast but needs to correct for declination
+                var trueNeedleDirection = magNeedleDirection - Declination;
+                return trueNeedleDirection;
+            }
+        }
+
+        //Direction to show N on display
+        public double MagneticNorthNeedleDirection
+        {
+            get
+            {
+                var headingMag = HeadingMagneticNorth;//If I'm facing magnetic east this will read 90
+                var magNeedleDirection = 0 - headingMag;//This will read 0 when facing magEast but needs to correct for declination
+                return magNeedleDirection;
+            }
+        }
+
+
+        //This is the direction to the hash that the needle should show. It updates as the device is rotated and accounts for magnetic declination
+        public double TargetNeedleDirection
+        {
+            get
+            {
+                if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
+                    return 0;
+                var headingMag = HeadingMagneticNorth;
+                var headingTrue = HeadingTrueNorth;
+                //Bearing
+                var bearing = GetBearingRelativeToTrueNorth(_CurrentLocation, _HashData.NearestHashLocation);//Relative to true north ignoring heading
+
+
+
+                var displayBearing =  Bearing - HeadingTrueNorth;
+
+                return displayBearing;
+            }
+        }
+
         public double Bearing
         {
             get
             {
-
-
                 if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
                     return 0;
-
-
-                var bearing = GetBearing(_CurrentLocation, _HashData.NearestHashLocation);
-
-                return bearing;
-
-
-            }
-        }
-
-        public double BearingToTrueNorth
-        {
-            get
-            {
-                var bearing =  HeadingMagneticNorth - TrueNorth;
-
+                var bearing = GetBearingRelativeToTrueNorth(_CurrentLocation, _HashData.NearestHashLocation);//Relative to true north ignoring heading
                 return bearing;
             }
         }
 
-        public double GetBearing(Location currentLocation, Location destination)
+
+        //This bearing is relative to true north and doesn't use declination
+        //Thanks to http://www.movable-type.co.uk/scripts/latlong.html
+        public double GetBearingRelativeToTrueNorth(Location currentLocation, Location destination)
         {
             var lat1 = currentLocation.Latitude.ToRadians();
             var lon1 = currentLocation.Longitude.ToRadians();
@@ -172,10 +224,8 @@ namespace GeohashCross.ViewModels
 
             var dlon = lon2 - lon1;
 
-
             var y = Math.Sin(dlon) * Math.Cos(lat2);
-            var x = (Math.Cos(lat1) * Math.Sin(lat2)) -
-                                 (Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dlon));
+            var x = (Math.Cos(lat1) * Math.Sin(lat2)) - (Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dlon));
 
             var bearing = Math.Atan2(y, x);
             var bearingInDegrees = bearing.ToDegrees();
@@ -183,68 +233,19 @@ namespace GeohashCross.ViewModels
             var normalisedBearing = (bearingInDegrees + 360) % 360;
 
             return normalisedBearing;
-
-        }
-
-
-
-
-        public double HeadingMagneticNorth
-        {
-            get;
-            set;
-
-        }
-
-        public Location TrueNorthPole { get; } = new Location(90, 0);
-        public Location MagneticNorthPole { get; } = new Location(86, 175.346);
-
-        public double MagneticNorth
-        {
-            get
-            {
-                if (_CurrentLocation == null)
-                    return 0;
-                var bearing = GetBearing(_CurrentLocation, MagneticNorthPole);
-                return bearing;
-            }
-        }
-
-        //A complicated way of returning 0
-        public double TrueNorth
-        {
-            get
-            {
-                if (_CurrentLocation == null)
-                    return 0;
-                var bearing = GetBearing(_CurrentLocation, TrueNorthPole);
-                return bearing;
-            }
-        }
-
-        public double NorthRelativeToHeading
-        {
-            get
-            {
-                return 0 - HeadingMagneticNorth;
-            }
-        }
-
-        public double Desire
-        {
-            get
-            {
-                var desire = Bearing - HeadingMagneticNorth;
-                desire = desire.FixDegreesRange().FixDegreesRange();
-                return desire;
-            }
         }
 
         void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
         {
             HeadingMagneticNorth = e.Reading.HeadingMagneticNorth;
+            OnPropertyChanged(nameof(HeadingMagneticNorth));
+            OnPropertyChanged(nameof(HeadingTrueNorth));
+            OnPropertyChanged(nameof(Declination));
+            OnPropertyChanged(nameof(TrueNorthNeedleDirection));
+            OnPropertyChanged(nameof(MagneticNorthNeedleDirection));
+            OnPropertyChanged(nameof(TargetNeedleDirection));
+            OnPropertyChanged(nameof(Bearing));
         }
-
 
         public bool ImHere
         {
@@ -289,8 +290,7 @@ namespace GeohashCross.ViewModels
                 {
                     Debug.WriteLine("Date changed");
                     _Date = value;
-                    //Locations.Clear();
-                    InvokeLoadHashLocation();
+                    Task.Run(LoadHashLocation);
                 }
                 else
                 {
@@ -313,15 +313,10 @@ namespace GeohashCross.ViewModels
         bool TimerInitiatedUpdateLocation()
         {
 
-            InvokeUpdateCurrentLocation();
+            Task.Run(UpdateCurrentLocation);
             return true;
         }
 
-        public async void InvokeUpdateCurrentLocation()
-        {
-
-            await UpdateCurrentLocation();
-        }
 
         public async Task<Response<Location>> UpdateCurrentLocation()
         {
@@ -333,10 +328,14 @@ namespace GeohashCross.ViewModels
             {
                 SetUpTimer();
             }
-            OnPropertyChanged(nameof(Desire));
-            OnPropertyChanged(nameof(Bearing));
             OnPropertyChanged(nameof(HeadingMagneticNorth));
-            OnPropertyChanged(nameof(NorthRelativeToHeading));
+            OnPropertyChanged(nameof(HeadingTrueNorth));
+            OnPropertyChanged(nameof(Declination));
+            OnPropertyChanged(nameof(TargetNeedleDirection));
+            OnPropertyChanged(nameof(TrueNorthNeedleDirection));
+            OnPropertyChanged(nameof(MagneticNorthNeedleDirection));
+
+
             OnPropertyChanged(nameof(TrueNorth));
             return new Response<Location>(loc, true, "Location Loaded successfully");
         }
@@ -349,7 +348,7 @@ namespace GeohashCross.ViewModels
             try
             {
                 Initialised = true;
-                Device.StartTimer(TimeSpan.FromSeconds(1), TimerInitiatedUpdateLocation);
+                Device.StartTimer(TimeSpan.FromSeconds(3), TimerInitiatedUpdateLocation);
             }
             catch (Exception ex)
             {
@@ -358,33 +357,13 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        public async void InvokeLoadHashLocation()
-        {
 
-            try
-            {
-                var loc = await LoadHashLocation();
-                if (loc.Success == false)
-                {
-                    await Application.Current.MainPage.DisplayAlert("Couldn't load hash", loc.Message, "Okay");
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Crashes.TrackError(ex);
-
-                Debug.WriteLine($"Error in invoke load hash location{ex}\n{ex.StackTrace}");
-            }
-        }
         public async Task<HashData> LoadHashLocation()
         {
 
             var loc = TappedLocation ?? _CurrentLocation;
 
             var hashData = await Hasher.GetHashData(Date, loc);
-
-
 
             if (hashData.Success)
             {
@@ -416,7 +395,7 @@ namespace GeohashCross.ViewModels
             set
             {
                 _ShowNeighbours = value;
-                InvokeUpdateNeighbouringPins();
+                UpdateNeighbouringPins();
             }
         }
 
@@ -434,19 +413,7 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        private async void InvokeUpdateNeighbouringPins()
-        {
-            try
-            {
-                await UpdateNeighbouringPins();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"error adding pins \n{ex}\n{ex.StackTrace}");
-            }
-        }
-
-        private async Task UpdateNeighbouringPins()
+        private void UpdateNeighbouringPins()
         {
             if (ShowNeighbours)
             {
@@ -466,7 +433,6 @@ namespace GeohashCross.ViewModels
         public Location GetGlobal()
         {
             var global = _HashData.GlobalHash;
-            //LocationsToDisplay.Add(global);
             return global;
         }
     }
