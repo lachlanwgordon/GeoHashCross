@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace GeohashCross.Services
 {
@@ -20,8 +21,6 @@ namespace GeohashCross.Services
 
         const string BaseUrl = "http://geo.crox.net/djia/";
 
-        static Dictionary<DateTime, string> Cache = new Dictionary<DateTime, string>();
-
         /// <summary>
         /// Gets the dow jones opening price for a given date.
         /// If no date provided it will use UTC today.
@@ -32,11 +31,12 @@ namespace GeohashCross.Services
         {
             try
             {
-                if (Cache.ContainsKey(date))
-                {
-                    Debug.WriteLine($"Got DJIA from cache {Cache[date]}");
 
-                    return new Response<string>(Cache[date], true, "Loaded DJIA from cache.");
+                if (Preferences.ContainsKey(date.ToString()))
+                {
+                    Debug.WriteLine($"Got DJIA from cache {Preferences.Get(date.ToString(), "")}");
+
+                    return new Response<string>(Preferences.Get(date.ToString(), ""), true, "Loaded DJIA from cache.");
                 }
 
                 var dateString = date.ToString("yyyy/MM/dd");
@@ -44,8 +44,7 @@ namespace GeohashCross.Services
                 var url = $"{BaseUrl}{dateString}";
                 Debug.WriteLine($"About to get DJIA from {url}");
                 var response = await Client.GetStringAsync(url);
-
-                Cache.Add(date, response);
+                Preferences.Set(dateString.ToString(), response);
                 Debug.WriteLine($"Got DJIA from web {response}");
 
                 return new Response<string>(response, true, "Loaded data from web");
