@@ -105,6 +105,8 @@ namespace GeohashCross.Views
             TheMap.UiSettings.MyLocationButtonEnabled = true;
             TheMap.UiSettings.ZoomControlsEnabled = true;
             VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
+            TheMap.InfoWindowClicked += TheMap_InfoWindowClicked;
+
 
             TheMap.UiSettings.CompassEnabled = true;
             TheMap.UiSettings.MapToolbarEnabled = true;
@@ -159,11 +161,15 @@ namespace GeohashCross.Views
                     foreach (var item in e.NewItems)
                     {
                         var loc = item as Location;
+
+                        var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
                         var pin = new Xamarin.Forms.GoogleMaps.Pin
                         {
                             Label = loc.Timestamp == DateTime.Today ? "Today's Hash" : loc.Timestamp.ToString("yyyy-MM-dd"),
                             Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                            Icon = loc.Timestamp == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow)
+                            Icon = loc.Timestamp == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow),
+                            Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
+                            //Address = $"{loc.Latitude},{loc.Longitude}"
                         };
                         TheMap.Pins.Add(pin);
 
@@ -186,6 +192,36 @@ namespace GeohashCross.Views
                 Crashes.TrackError(ex);
             }
         }
+
+        async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
+        {
+            Debug.WriteLine($"When am I clicked? {e.Pin.Position.Latitude},{e.Pin.Position.Longitude}");
+
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                var maps = await Shell.CurrentShell.DisplayActionSheet("Open in maps", "cancel", null, "Google Maps", "Apple Maps");//In current preview of Shell you must call actionsheets and alerts like this.
+                if (maps == "Google Maps")
+                {
+                    var uri = new Uri($"https://google.com/maps/place/{e.Pin.Position.Latitude},{e.Pin.Position.Longitude}");
+                    Device.OpenUri(uri);
+
+                }
+                else if (maps == "Apple Maps")
+                {
+                    await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
+                }
+            }
+
+            else
+            {
+                await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
+            }
+
+
+
+
+        }
+
 
         private async void RefreshClicked(object sender, EventArgs e)
         {
@@ -313,7 +349,7 @@ namespace GeohashCross.Views
             public static SKPaint BluePaint = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
-               Color = SKColors.Blue
+                Color = SKColors.Blue
             };
 
 
@@ -322,7 +358,7 @@ namespace GeohashCross.Views
             public static SKPaint WhiteFill = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
-                 Color = SKColors.White,
+                Color = SKColors.White,
             };
 
             public static SKPaint GreyFill = new SKPaint
