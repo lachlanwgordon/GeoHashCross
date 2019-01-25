@@ -25,10 +25,8 @@ namespace GeohashCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
-        HomePageViewModel VM { get; set; } = new HomePageViewModel();
         public HomePage()
         {
-            BindingContext = VM;
             InitializeComponent();
             Init();
             UpdateCanvas();
@@ -131,66 +129,72 @@ namespace GeohashCross.Views
 
         }
 
-        async void PinLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        void PinLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            try
+            Device.BeginInvokeOnMainThread(async() =>
             {
 
-                if (VM.LocationsToDisplay?.Count == 0)
-                {
-                    TheMap.Pins.Clear();
-                    return;
-                }
-                Position? lastPos = null;
-                if (e.OldItems != null)
+                try
                 {
 
-                    foreach (var item in e.OldItems)
+                    if (VM.LocationsToDisplay?.Count == 0)
                     {
-                        var loc = item as Location;
-                        var pin = TheMap.Pins.FirstOrDefault(x => x.Position.Latitude == loc.Latitude && x.Position.Longitude == loc.Longitude);
-                        if (pin != null)
+                        TheMap.Pins.Clear();
+                        return;
+                    }
+                    Position? lastPos = null;
+                    if (e.OldItems != null)
+                    {
+
+                        foreach (var item in e.OldItems)
                         {
-                            TheMap.Pins.Remove(pin);
+                            var loc = item as Location;
+                            var pin = TheMap.Pins.FirstOrDefault(x => x.Position.Latitude == loc.Latitude && x.Position.Longitude == loc.Longitude);
+                            if (pin != null)
+                            {
+                                TheMap.Pins.Remove(pin);
+                            }
                         }
                     }
-                }
 
-                if (e.NewItems != null)
-                {
-                    foreach (var item in e.NewItems)
+                    if (e.NewItems != null)
                     {
-                        var loc = item as Location;
-
-                        var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
-                        var pin = new Xamarin.Forms.GoogleMaps.Pin
+                        foreach (var item in e.NewItems)
                         {
-                            Label = loc.Timestamp == DateTime.Today ? "Today's Hash" : loc.Timestamp.ToString("yyyy-MM-dd"),
-                            Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                            Icon = loc.Timestamp == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow),
-                            Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
-                            //Address = $"{loc.Latitude},{loc.Longitude}"
-                        };
-                        TheMap.Pins.Add(pin);
+                            var loc = item as Location;
 
-                        if (VM.Locations.Any(x => x.Latitude == loc.Latitude && x.Longitude == loc.Longitude))
-                        {
-                            lastPos = new Position(loc.Latitude, loc.Longitude);
+                            var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
+                            var pin = new Xamarin.Forms.GoogleMaps.Pin
+                            {
+                                Label = loc.Timestamp == DateTime.Today ? "Today's Hash" : loc.Timestamp.ToString("yyyy-MM-dd"),
+                                Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
+                                Icon = loc.Timestamp == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow),
+                                Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
+                                //Address = $"{loc.Latitude},{loc.Longitude}"
+                            };
+                            TheMap.Pins.Add(pin);
+
+                            if (VM.Locations.Any(x => x.Latitude == loc.Latitude && x.Longitude == loc.Longitude))
+                            {
+                                lastPos = new Position(loc.Latitude, loc.Longitude);
+                            }
                         }
                     }
+
+
+                    if (lastPos.HasValue)
+                    {
+                        await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos.Value), TimeSpan.FromSeconds(1));
+                    }
                 }
-
-
-                if (lastPos.HasValue)
+                catch (Exception ex)
                 {
-                    await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos.Value), TimeSpan.FromSeconds(1));
+                    Debug.WriteLine($"Error in Pin Collection changed \n{ex}\n{ex.StackTrace}");
+                    Crashes.TrackError(ex);
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in Pin Collection changed \n{ex}\n{ex.StackTrace}");
-                Crashes.TrackError(ex);
-            }
+            });
+
+
         }
 
         async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
@@ -222,23 +226,13 @@ namespace GeohashCross.Views
 
         }
 
-
-        private async void RefreshClicked(object sender, EventArgs e)
-        {
-            Debug.WriteLine("refresh");
-            await VM.Refresh();
-        }
-
         private void MapClicked(object sender, MapClickedEventArgs e)
         {
             Debug.WriteLine("map clicked");
             VM.TappedLocation = new Location(e.Point.Latitude, e.Point.Longitude);
         }
 
-        private void ShowMoreClicked(object sender, EventArgs e)
-        {
-            VM.ShowAdvanced = !VM.ShowAdvanced;
-        }
+
 
         bool SatteliteView = false;
         void SatteliteClicked(object sender, System.EventArgs e)
@@ -268,14 +262,6 @@ namespace GeohashCross.Views
                 Crashes.TrackError(ex);
             }
         }
-
-        void DarkNavClicked(object sender, System.EventArgs e)
-        {
-            VM.DarkNavEnabled = !VM.DarkNavEnabled;
-        }
-
-
-
 
         void Handle_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
         {
@@ -384,6 +370,18 @@ namespace GeohashCross.Views
             {
                 {"Page", GetType().Name}
             });
+        }
+
+        async void DateChanged(object sender, Xamarin.Forms.FocusEventArgs e)
+        {
+            try
+            {
+                await VM.ChangeDate();
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
         }
 
         void GlobalHashClicked(object sender, System.EventArgs e)

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Geo;
 using Geo.Geomagnetism;
 using GeohashCross.Models;
@@ -30,7 +31,7 @@ namespace GeohashCross.ViewModels
             {
                 HeadingMagneticNorth = 30;
                 Crashes.TrackError(ex);
-            }
+            }       
         }
 
         //Direction the devic is facing relative to magnetic north
@@ -278,24 +279,20 @@ namespace GeohashCross.ViewModels
         {
             get
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
                 return _Date;
             }
             set
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
                 if (value != _Date)
                 {
                     Debug.WriteLine("Date changed");
                     _Date = value;
-                    Task.Run(LoadHashLocation);
                 }
                 else
                 {
                     _Date = value;
                 }
+                OnPropertyChanged(nameof(Date));
             }
         }
 
@@ -396,6 +393,7 @@ namespace GeohashCross.ViewModels
             {
                 _ShowNeighbours = value;
                 UpdateNeighbouringPins();
+                OnPropertyChanged(nameof(ShowNeighbours));
             }
         }
 
@@ -430,10 +428,38 @@ namespace GeohashCross.ViewModels
 
         }
 
+        public async Task ChangeDate()
+        {
+            await LoadHashLocation();
+        }
+
         public Location GetGlobal()
         {
             var global = _HashData.GlobalHash;
             return global;
+        }
+
+        public ICommand ShowMoreCommand => new Command(ToggleShowMore);
+        public ICommand ResetCommand => new Command(Reset);
+        public ICommand DarkNavCommand => new Command(ToggleDarkNav);
+
+        public async void Reset()
+        {
+            Date = DateTime.Today;
+            ShowNeighbours = false;
+            LocationsToDisplay.Clear();
+            Locations.Clear();
+            await LoadHashLocation();
+        }
+
+        public void ToggleShowMore()
+        {
+            ShowAdvanced = !ShowAdvanced;
+        }
+
+        public void ToggleDarkNav()
+        {
+            DarkNavEnabled = !DarkNavEnabled;
         }
     }
 }

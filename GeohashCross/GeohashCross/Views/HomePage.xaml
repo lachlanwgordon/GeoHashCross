@@ -4,10 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
     xmlns:local="clr-namespace:GeohashCross.Models"
+    xmlns:vm="clr-namespace:GeohashCross.ViewModels"
     xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     xmlns:ads="clr-namespace:GeohashCross.Controls"
     x:Class="GeohashCross.Views.HomePage"
+    
     Shell.NavBarIsVisible="false">
+    <ContentPage.BindingContext>
+        <vm:HomePageViewModel x:Name="VM"/>
+        </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid
             x:Name="TheGrid"
@@ -90,11 +95,13 @@
                     <DatePicker
                         Date="{Binding Date}"
                         Grid.ColumnSpan="10"
+                        Unfocused="DateChanged"
                         Format="yyyy-MM-dd" />
                     <Button
                         Grid.Column="10"
                         HorizontalOptions="End"
                         Grid.ColumnSpan="2"
+                        Command="{Binding ResetCommand}"
                         Text="Reset" />
                     <Label
                         Style="{StaticResource MediumLabel}"
@@ -135,7 +142,7 @@
                         TextColor="{StaticResource Accent}"
                         Text="▼"
                         HorizontalOptions="End"
-                        Clicked="ShowMoreClicked"
+                        Command="{Binding ShowMoreCommand}"
                         Grid.Column="11"
                         IsVisible="{Binding Path=ShowAdvanced, Converter={StaticResource NotBool}}" />
                     <BoxView
@@ -169,7 +176,7 @@
                         Text="▲"
                         IsVisible="{Binding ShowAdvanced}"
                         HorizontalOptions="Start"
-                        Clicked="ShowMoreClicked"
+                        Command="{Binding ShowMoreCommand}"
                         Grid.Column="11" />
                 </Grid>
             </Frame>
@@ -261,7 +268,7 @@
                         WidthRequest="60"
                         VerticalOptions="End"
                         HorizontalOptions="End"
-                        Clicked="DarkNavClicked"
+                        Command="{Binding DarkNavCommand}"
                         FontSize="{StaticResource Large}"
                         TextColor="{StaticResource Icons}"
                         BorderRadius="29"
@@ -273,7 +280,7 @@
                 Text="☽"
                 Grid.Column="1"
                 Grid.Row="2"
-                Clicked="DarkNavClicked"
+                Command="{Binding DarkNavCommand}"
                 FontSize="{StaticResource Large}"
                 TextColor="{StaticResource Icons}"
                 BorderRadius="29"
