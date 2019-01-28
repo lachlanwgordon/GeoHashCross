@@ -157,7 +157,7 @@
                         IsVisible="{Binding ShowAdvanced}"
                         Text="Global Hash"
                         Grid.ColumnSpan="4"
-                        Clicked="GlobalHashClicked"
+                        Clicked="GlobalClicked"
                         Grid.Column="8" />
                     <Label
                         Grid.Row="7"

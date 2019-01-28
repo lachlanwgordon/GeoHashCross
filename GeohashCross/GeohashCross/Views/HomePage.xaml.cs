@@ -1,21 +1,15 @@
-﻿using GeohashCross.ViewModels;
-using Plugin.Permissions;
+﻿using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 using SkiaSharp;
-using SkiaSharp.Views.Forms;
-using static GeohashCross.Views.HomePage;
-using GeohashCross.Models;
 using Microsoft.AppCenter.Analytics;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
@@ -384,9 +378,22 @@ namespace GeohashCross.Views
             }
         }
 
-        void GlobalHashClicked(object sender, System.EventArgs e)
+        public async void GlobalClicked(object sender, EventArgs e)
         {
-            var location = VM.GetGlobal();
+            var loc = VM.HashData.GlobalHash;
+            var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
+            var pin = new Xamarin.Forms.GoogleMaps.Pin
+            {
+                Label = loc.Timestamp == DateTime.Today ? "Today's Global Hash" : "Global Hash for " + loc.Timestamp.ToString("yyyy-MM-dd"),
+                Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
+                Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green),
+                Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
+            };
+            TheMap.Pins.Add(pin);
+            var lastPos = new Position(loc.Latitude, loc.Longitude);
+            await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos), TimeSpan.FromSeconds(1));
+
         }
+
     }
 }

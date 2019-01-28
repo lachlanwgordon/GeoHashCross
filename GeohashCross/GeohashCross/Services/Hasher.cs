@@ -41,13 +41,24 @@ namespace GeohashCross.Services
             hash.DJIA = djia.Data;
             hash.Offset = CalculateOffset(date, djia.Data);
             hash.NearestHashLocation = CalculateHashLocation(currentLocation, hash.Offset, date);
+            hash.GlobalHash = CalculateGlobalHash(hash.Offset);//This will only work in w30 regions. Will need to think about america etc. TODO
 
             hash.Success = true;
             hash.Message = "Hashes calculated successfully";
             return hash;
         }
 
-        
+        private static Location CalculateGlobalHash(Location offset)
+        {
+            var latDecimalPart = offset.Latitude;
+            var lonDecimalPart = offset.Longitude;
+
+            var globalLat = latDecimalPart * 180 - 90;
+            var globalLon = lonDecimalPart * 360 - 180;
+
+            var loc = new Location(globalLat, globalLon);
+            return loc;
+        }
 
         public static Location CalculateHashLocation(Location currentLocation, Location offset, DateTime date)
         {

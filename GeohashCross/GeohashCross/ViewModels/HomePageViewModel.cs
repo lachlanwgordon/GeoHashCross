@@ -433,12 +433,6 @@ namespace GeohashCross.ViewModels
             await LoadHashLocation();
         }
 
-        public Location GetGlobal()
-        {
-            var global = _HashData.GlobalHash;
-            return global;
-        }
-
         public ICommand ShowMoreCommand => new Command(ToggleShowMore);
         public ICommand ResetCommand => new Command(Reset);
         public ICommand DarkNavCommand => new Command(ToggleDarkNav);
