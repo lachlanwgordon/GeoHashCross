@@ -32,8 +32,6 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>GeohashCross</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Geohash Cross needs your location to find the nearest Geohash.</string>
 	<key>App Transport Security Settings</key>
@@ -41,5 +39,7 @@
 		<key>Allow Arbitrary Loads</key>
 		<true/>
 	</dict>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
 </dict>
 </plist>
