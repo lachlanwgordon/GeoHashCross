@@ -73,6 +73,10 @@
                     <SwitchCell
                         Text="Enable analytics reports"
                         On="{Binding AnalyticsEnabled}" />
+                    <TextCell 
+                        Text="Job Log"
+                         Command="{Binding LogCommand}"
+                    />
                 </TableSection>
             </TableRoot>
         </TableView>

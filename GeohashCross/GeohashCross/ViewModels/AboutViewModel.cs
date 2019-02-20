@@ -13,6 +13,28 @@ namespace GeohashCross.ViewModels
     public class AboutViewModel : BaseViewModel
     {
         public ICommand WebsiteCommand => new Command<string>(OpenMyWebsite);
+
+        public ICommand LogCommand => new Command(OpenLog);
+
+        private async void OpenLog(object obj)
+        {
+            try
+            {
+                var defaultLog = $"New log in About page {DateTime.Now}\n";
+                var log = Preferences.Get(Keys.log, "");
+                if(string.IsNullOrEmpty(log))
+                {
+                    log = defaultLog;
+                    Xamarin.Essentials.Preferences.Set(Keys.log, log);
+                }
+                await Shell.CurrentShell.DisplayAlert("Log", log, "Okay");
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
+        }
+
         public bool CrashesEnabled
         {
             get
