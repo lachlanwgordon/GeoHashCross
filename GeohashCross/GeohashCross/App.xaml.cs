@@ -15,7 +15,7 @@ namespace GeohashCross
 	{
 		public App ()
 		{
-			InitializeComponent();
+            InitializeComponent();
             MainPage = new AppShell();
 		}
 
@@ -23,6 +23,7 @@ namespace GeohashCross
 		{
             // Handle when your app starts
             await AnalyticsManager.Initialize();
+            await DB.Initialize();
         }
 
 		protected override void OnSleep ()

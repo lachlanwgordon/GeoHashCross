@@ -3,23 +3,81 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
-    Padding="100"
+    Padding="0,90,0,85"
     x:Class="GeohashCross.Views.Notifications">
     <ContentPage.BindingContext>
-        <vm:NotificationsViewModel />
+        <vm:NotificationsViewModel x:Name="VM" />
     </ContentPage.BindingContext>
+<!--    <ContentPage.ToolbarItems>
+        <ToolbarItem  Command="{Binding SubscribeCommand}" Text="Subscribe"/>
+        <ToolbarItem  Command="{Binding RunNowCommand}" Text="Run"/>
+    </ContentPage.ToolbarItems>  -->
     <ContentPage.Content>
-        <ScrollView>
+        <Grid
+            BackgroundColor="Orange"
+            HorizontalOptions="FillAndExpand">
+            <CollectionView
+                BackgroundColor="LightGray"
+                SelectionChanged="Handle_SelectionChanged"
+                ItemsSource="{Binding Subscriptions}">
+                <CollectionView.ItemsSource>
+                </CollectionView.ItemsSource>
+                <CollectionView.EmptyView>
+                    <Button
+                        Text="No notifactions yet, click here to get started"
+                        Command="{Binding AddSubscriptionCommand}" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid BackgroundColor="White" Padding="10" Margin="10" HeightRequest="{Binding HeightRequest}">
+                            <Label
+                                VerticalTextAlignment="Center"
+                                Text="{Binding Latitude}" />
+                            <Label
+                                VerticalTextAlignment="Center"
+                                Text="{Binding Longitude}"
+                                Grid.Column="1" />
+                            <Label
+                                VerticalTextAlignment="Center"
+                                Text="{Binding RadiusInKilometers}"
+                                Grid.Column="2" />
+                            <Label
+                                VerticalTextAlignment="Center"
+                                Text="{Binding AlarmTime, StringFormat='{}{0:hh\\:mm}'}"
+                                Grid.Column="3" />
+                            <Button Text="x" Grid.Column="4"/>
+                            
+                                
+                                
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button
+                HeightRequest="50"
+                WidthRequest="50"
+                CornerRadius="25"
+                VerticalOptions="End"
+                HorizontalOptions="End"
+                Margin="20"
+                BorderColor="White"
+                BorderWidth="1"
+                TextColor="White"
+                Command="{Binding AddSubscriptionCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                Text="+" />
+        </Grid>
+        <!-- <ScrollView>
             <StackLayout
                 HorizontalOptions="EndAndExpand">
-                <!--<Label Text="Lat1"/>
+                <Label Text="Lat1"/>
             <Entry/>
             <Label Text="Lon1"/>
             <Entry/>
             <Label Text="Lat2"/>
             <Entry/>
             <Label Text="Lon2"/>
-            <Entry/>-->
+            <Entry/>
                 <Label
                     Text="{Binding Log}"
                     LineBreakMode="WordWrap" />
@@ -29,7 +87,11 @@
                 <Button
                     Text="Run Now"
                     Command="{Binding RunNowCommand}" />
+                <Button 
+                    Text="Notify"
+                    Command="{Binding NotifyCommand}"
+                    />
             </StackLayout>
-        </ScrollView>
+        </ScrollView>-->
     </ContentPage.Content>
 </ContentPage>

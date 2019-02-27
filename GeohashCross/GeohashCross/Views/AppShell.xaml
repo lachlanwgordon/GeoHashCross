@@ -13,5 +13,6 @@
         <views:Wiki Title="Wiki" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
         <views:AboutPage Title="About" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
         <views:Notifications Title="Notifications" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
+        <views:LogPage Title="Log" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
     </ShellItem>
 </Shell>

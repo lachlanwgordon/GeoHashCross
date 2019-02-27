@@ -15,8 +15,13 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="1.12.0" />
     <PackageReference Include="Geo" Version="0.14.1" />
     <PackageReference Include="Plugin.Jobs" Version="1.4.1" />
+    <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Remove="Pages\AutoLinkedPage.xaml" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Views\HomePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -27,5 +32,16 @@
     <EmbeddedResource Update="Views\Wiki.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Views\LogPage.cs" />
+    <Compile Remove="ViewModels\AutoLinkedViewModel.cs" />
+    <Compile Remove="Pages\AutoLinkedPage.xaml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ViewModels\AutoLinkedViewModel.cs" />
   </ItemGroup>
 </Project>

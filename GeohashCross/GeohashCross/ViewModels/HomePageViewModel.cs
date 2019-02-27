@@ -318,23 +318,46 @@ namespace GeohashCross.ViewModels
         public async Task<Response<Location>> UpdateCurrentLocation()
         {
 
-            var loc = await Geolocation.GetLocationAsync();
-            CurrentLocation = loc;
-
-            if (!Initialised)
+            try
             {
-                SetUpTimer();
+                Debug.WriteLine("About to get Location");
+                Location loc = null;
+                int failCount = 0;
+                while(loc == null)
+                {
+                    failCount++;
+                    var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(failCount * 500));
+                    Debug.WriteLine($"try location for {failCount * 500}ms");
+                    loc = await Geolocation.GetLocationAsync(locationRequest);
+
+                }
+
+
+
+                Debug.WriteLine("Got Location");
+                CurrentLocation = loc;
+
+                if (!Initialised)
+                {
+                    SetUpTimer();
+                }
+                OnPropertyChanged(nameof(HeadingMagneticNorth));
+                OnPropertyChanged(nameof(HeadingTrueNorth));
+                OnPropertyChanged(nameof(Declination));
+                OnPropertyChanged(nameof(TargetNeedleDirection));
+                OnPropertyChanged(nameof(TrueNorthNeedleDirection));
+                OnPropertyChanged(nameof(MagneticNorthNeedleDirection));
+
+
+                OnPropertyChanged(nameof(TrueNorth));
+                return new Response<Location>(loc, true, "Location Loaded successfully");
             }
-            OnPropertyChanged(nameof(HeadingMagneticNorth));
-            OnPropertyChanged(nameof(HeadingTrueNorth));
-            OnPropertyChanged(nameof(Declination));
-            OnPropertyChanged(nameof(TargetNeedleDirection));
-            OnPropertyChanged(nameof(TrueNorthNeedleDirection));
-            OnPropertyChanged(nameof(MagneticNorthNeedleDirection));
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+                return new Response<Location>(new Location(), false, "Location Loaded successfully");
 
-
-            OnPropertyChanged(nameof(TrueNorth));
-            return new Response<Location>(loc, true, "Location Loaded successfully");
+            }
         }
 
 
@@ -439,11 +462,23 @@ namespace GeohashCross.ViewModels
 
         public async void Reset()
         {
-            Date = DateTime.Today;
-            ShowNeighbours = false;
-            LocationsToDisplay.Clear();
-            Locations.Clear();
-            await LoadHashLocation();
+            try
+            {
+                Date = DateTime.Today;
+                ShowNeighbours = false;
+                LocationsToDisplay.Clear();
+                Locations.Clear();
+                if(CurrentLocation == null)
+                {
+                    await UpdateCurrentLocation();
+                }
+
+                await LoadHashLocation();
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
         }
 
         public void ToggleShowMore()

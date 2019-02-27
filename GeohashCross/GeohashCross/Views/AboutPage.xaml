@@ -20,9 +20,9 @@
                         CommandParameter="https://lachlanwgordon.com"
                         Command="{Binding WebsiteCommand}" />
                     <TextCell
-                        Text="Website"
+                        Text="Development Blog Post"
                         Detail="https://lachlanwgordon.com"
-                        CommandParameter="https://lachlanwgordon.com"
+                        CommandParameter="https://lachlanwgordon.com/"
                         Command="{Binding WebsiteCommand}" />
                     <TextCell
                         Text="Twitter"
@@ -64,6 +64,18 @@
                         Command="{Binding WebsiteCommand}"
                         CommandParameter="https://github.com/mono/SkiaSharp"
                         Detail="Mono" />
+                     <TextCell
+                        Text="Geo"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://github.com/sibartlett/Geo"
+                        Detail="Simon Bartlett" />
+                    <TextCell
+                        Text="Jobs Plugin"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://github.com/aritchie/jobs"
+                        Detail="Allan Ritchie" />
+                    
+                   
                 </TableSection>
                 <TableSection
                     Title="Crash Reports and Analytics">
