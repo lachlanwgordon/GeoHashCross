@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GeohashCross.Services;
@@ -30,11 +32,27 @@ namespace GeohashCross.Models
 
                 foreach (var sub in subscriptionsSync)
                 {
-                    CrossLocalNotifications.Current.Show("Location Notification", $"There is a hash within {sub.RadiusInKilometers}km of {sub.Latitude},{sub.Longitude}", 100 + sub.Id);
+                    var subLocation = new Location(sub.Latitude, sub.Longitude);
+                    var hash = await Hasher.GetHashData(DateTime.Today, subLocation);
+
+                    var nearBy = new List<Location>(hash.NearestHashLocation.GetNeighbours()) { hash.NearestHashLocation  };
+                    var closest = nearBy.OrderBy(x => x.CalculateDistance(subLocation, DistanceUnits.Kilometers) < sub.RadiusInKilometers).FirstOrDefault();
+
+                    var distance = closest.CalculateDistance(subLocation, DistanceUnits.Kilometers);
+
+                    var message = $"Today's hash is {distance}km from {sub.Name} at ({sub.Latitude.ToString("0.###")},{sub.Longitude.ToString("0.###")})";
+                    if (distance < sub.RadiusInKilometers)
+                    {
+                        CrossLocalNotifications.Current.Show($"Hash is close to {sub.Name}", message + $". Alarm set for {sub.AlarmTime.TimeOfDay}", 100 + sub.Id);
+                        CrossLocalNotifications.Current.Show($"ALARM Hash is close to {sub.Name}", message , 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime.TimeOfDay));
+
+                    }
+                    else
+                    {
+                        CrossLocalNotifications.Current.Show("No hash today", message + $". Alarm set for {sub.AlarmTime.TimeOfDay}", 100 + sub.Id);
+                        CrossLocalNotifications.Current.Show($"ALARM No hash today", message, 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime.TimeOfDay));
+                    }
                 }
-
-
-
 
             }
             catch (Exception ex)
