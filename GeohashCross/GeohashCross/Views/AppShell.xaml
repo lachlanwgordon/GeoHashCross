@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Shell
     xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:local="clr-namespace:GeohashCross"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:GeohashCross.Views"
     BackgroundColor="Teal"
@@ -8,11 +9,61 @@
     FlyoutBackgroundColor="Red"
     x:Class="GeohashCross.Views.AppShell">
     <ShellItem>
-        <views:HomePage Title="Home" Shell.NavBarIsVisible="false"/>
-<!--        <views:TestsPage Title="Tests" Shell.ShellBackgroundColor="{StaticResource Primary}"/>-->
-        <views:Wiki Title="Wiki" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
-        <views:AboutPage Title="About" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
-        <views:Notifications Title="Notifications" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
-        <views:LogPage Title="Log" Shell.ShellBackgroundColor="{StaticResource Primary}"/>
+        <ShellContent
+            Title="Home">
+            <views:HomePage
+                Title="Home"
+                Shell.NavBarIsVisible="false" />
+            <ShellContent.Icon>
+                <FontImageSource
+                    Glyph="{x:Static local:IconFont.Home}"
+                    FontFamily="{OnPlatform iOS=&quot;Font Awesome 5 Free&quot;, Android=&quot;fa-solid-900.ttf#Font Awesome 5 Free&quot;}"
+                    Color="{StaticResource Primary}"
+                    Size="18" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <!--        <views:TestsPage Title="Tests" Shell.ShellBackgroundColor="{StaticResource Primary}"/>-->
+        <ShellContent
+            Title="Wiki">
+            <views:Wiki
+                Title="Wiki"
+                Shell.ShellBackgroundColor="{StaticResource Primary}" />
+            <ShellContent.Icon>
+                <FontImageSource
+                    Glyph=""
+                    FontFamily="Font Awesome 5 Brands"
+                    Color="{StaticResource Primary}"
+                    Size="18" />
+                    
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent
+                Title="About"
+            
+            >
+            <views:AboutPage
+                Title="About"
+                Shell.ShellBackgroundColor="{StaticResource Primary}" />
+            <ShellContent.Icon>
+                <FontImageSource
+                    Glyph="{x:Static local:IconFont.InfoCircle}"
+                    FontFamily="Font Awesome 5 Free"
+                    Color="{StaticResource Primary}"
+                    Size="18" />
+            </ShellContent.Icon>
+        </ShellContent>
+        <ShellContent
+            Title="Notifications">
+            <views:Notifications
+                Shell.ShellBackgroundColor="{StaticResource Primary}" />
+            <ShellContent.Icon>
+                <FontImageSource
+                    Glyph="{x:Static local:IconFont.Bell}"
+                    FontFamily="Font Awesome 5 Free"
+                    Color="{StaticResource Primary}"
+                    Size="18" />
+            </ShellContent.Icon>
+        </ShellContent>
+      
     </ShellItem>
 </Shell>

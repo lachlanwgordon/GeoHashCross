@@ -8,11 +8,11 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     xmlns:ads="clr-namespace:GeohashCross.Controls"
     x:Class="GeohashCross.Views.HomePage"
-    
     Shell.NavBarIsVisible="false">
     <ContentPage.BindingContext>
-        <vm:HomePageViewModel x:Name="VM"/>
-        </ContentPage.BindingContext>
+        <vm:HomePageViewModel
+            x:Name="VM" />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid
             x:Name="TheGrid"
@@ -35,17 +35,20 @@
                 <ColumnDefinition
                     Width="58" />
                 <ColumnDefinition
+                    Width="58" />
+                <ColumnDefinition
+                    Width="58" />
+                <ColumnDefinition
                     Width="65" />
             </Grid.ColumnDefinitions>
             <maps:Map
                 x:Name="TheMap"
-                Grid.ColumnSpan="4"
+                Grid.ColumnSpan="6"
                 MapClicked="MapClicked"
                 MyLocationEnabled="True"
-                HasZoomEnabled="true"
                 Grid.RowSpan="4" />
             <Frame
-                Grid.ColumnSpan="4"
+                Grid.ColumnSpan="6"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 x:Name="LightFrame">
                 <Grid
@@ -91,18 +94,18 @@
                             Height="Auto" />
                         <RowDefinition
                             Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
                     </Grid.RowDefinitions>
                     <DatePicker
                         Date="{Binding Date}"
-                        Grid.ColumnSpan="10"
+                        Grid.ColumnSpan="11"
                         Unfocused="DateChanged"
                         Format="yyyy-MM-dd" />
-                    <Button
-                        Grid.Column="10"
-                        HorizontalOptions="End"
-                        Grid.ColumnSpan="2"
-                        Command="{Binding ResetCommand}"
-                        Text="Reset" />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="1"
@@ -152,13 +155,6 @@
                         Grid.ColumnSpan="12"
                         Margin="0,10,0,5"
                         HeightRequest="1" />
-                    <Button
-                        Grid.Row="7"
-                        IsVisible="{Binding ShowAdvanced}"
-                        Text="Global Hash"
-                        Grid.ColumnSpan="4"
-                        Clicked="GlobalClicked"
-                        Grid.Column="8" />
                     <Label
                         Grid.Row="7"
                         Text="Neighbours"
@@ -181,7 +177,7 @@
                 </Grid>
             </Frame>
             <Frame
-                Grid.ColumnSpan="4"
+                Grid.ColumnSpan="6"
                 Grid.RowSpan="3"
                 x:Name="TheDarkFrame"
                 IsVisible="{Binding DarkNavEnabled}"
@@ -260,45 +256,69 @@
                         </StackLayout>
                     </ScrollView>-->
                     <Button
-                        Text="☽"
+                        Text=""
+                        Style="{StaticResource BottomButton}"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
                         Grid.Row="4"
-                        HeightRequest="60"
-                        WidthRequest="60"
+                        HeightRequest="58"
+                        WidthRequest="58"
                         VerticalOptions="End"
                         HorizontalOptions="End"
-                        Command="{Binding DarkNavCommand}"
-                        FontSize="{StaticResource Large}"
-                        TextColor="{StaticResource Icons}"
-                        BorderRadius="29"
-                        BackgroundColor="{StaticResource Accent}" />
+                        Command="{Binding DarkNavCommand}" />
                 </Grid>
             </Frame>
             <Button
+                Grid.Row="2"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Text="☽"
+                Style="{StaticResource BottomButton}"
+                Text=""
+                Clicked="GlobalClicked"
+                Grid.Column="4" />
+            <Button
+                Style="{StaticResource BottomButton}"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Text=""
                 Grid.Column="1"
                 Grid.Row="2"
-                Command="{Binding DarkNavCommand}"
-                FontSize="{StaticResource Large}"
-                TextColor="{StaticResource Icons}"
-                BorderRadius="29"
-                BackgroundColor="{StaticResource Accent}" />
+                Command="{Binding DarkNavCommand}" />
             <Button
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Grid.Column="2"
                 Grid.Row="2"
-                Text="🛰"
+                Text=""
                 Clicked="SatteliteClicked"
-                FontSize="{StaticResource Large}"
-                TextColor="{StaticResource Icons}"
-                BorderRadius="29"
-                BackgroundColor="{StaticResource Accent}" />
+                Style="{StaticResource BottomButton}" />
+            <Button
+                Grid.Row="2"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="3"
+                Style="{StaticResource BottomButton}"
+                Command="{Binding ResetCommand}"
+                Text="" />
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
+            <Style
+                x:Key="BottomButton"
+                TargetType="Button">
+                <Setter
+                    Property="CornerRadius"
+                    Value="29" />
+                <Setter
+                    Property="TextColor"
+                    Value="{StaticResource Icons}" />
+                <Setter
+                    Property="FontFamily"
+                    Value="Font Awesome 5 Free" />
+                <Setter
+                    Property="FontSize"
+                    Value="{StaticResource Medium}" />
+                <Setter
+                    Property="BackgroundColor"
+                    Value="{StaticResource Accent}" />
+            </Style>
             <local:LocationSummary
                 x:Key="locationSummary" />
             <local:NotBoolConverter

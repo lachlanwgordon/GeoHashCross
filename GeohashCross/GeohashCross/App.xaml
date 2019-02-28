@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GeohashCross.App">
-	<Application.Resources>
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="GeohashCross.App">
+    <Application.Resources>
         <ResourceDictionary>
             <Color
                 x:Key="Primary">#3F51B5</Color>
@@ -42,8 +43,7 @@
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
-                    Value="Center"
-                    />
+                    Value="Center" />
                 <Setter
                     Property="TextColor"
                     Value="{StaticResource PrimaryText}" />
@@ -59,8 +59,7 @@
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
-                    Value="Center"
-                    />
+                    Value="Center" />
                 <Setter
                     Property="TextColor"
                     Value="{StaticResource PrimaryText}" />
@@ -76,8 +75,7 @@
                 TargetType="Label">
                 <Setter
                     Property="VerticalTextAlignment"
-                    Value="Center"
-                    />
+                    Value="Center" />
                 <Setter
                     Property="TextColor"
                     Value="{StaticResource SecondaryText}" />
@@ -88,17 +86,24 @@
                     Property="Margin"
                     Value="0,2" />
             </Style>
-            
             <Style
                 TargetType="Label"
                 x:Key="HeadingLabel"
-                BasedOn="{StaticResource LargeLabel}"
-                >
+                BasedOn="{StaticResource LargeLabel}">
                 <Setter
                     Property="HorizontalTextAlignment"
-                    Value="Center"/>
-                
-            </Style>   
+                    Value="Center" />
+            </Style>
+            <OnPlatform
+                x:TypeArguments="x:String"
+                x:Key="FontAwesome5FreeSolid">
+                <On
+                    Platform="iOS"
+                    Value="FontAwesome5Free-Solid" />
+                <On
+                    Platform="Android"
+                    Value="fa-solid-900.ttf#Solid" />
+            </OnPlatform>
         </ResourceDictionary>
-	</Application.Resources>
+    </Application.Resources>
 </Application>

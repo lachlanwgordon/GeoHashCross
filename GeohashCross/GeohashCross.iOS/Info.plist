@@ -45,5 +45,11 @@
 	<array>
 		<string>fetch</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Font Awesome 5 Free-Solid-900.otf</string>
+		<string>fa-solid-900.ttf</string>
+		<string>fa-brands-400.ttf</string>
+	</array>
 </dict>
 </plist>
