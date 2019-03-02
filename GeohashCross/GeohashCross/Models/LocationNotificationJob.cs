@@ -43,15 +43,20 @@ namespace GeohashCross.Models
                     var message = $"Today's hash is {distance}km from {sub.Name} at ({sub.Latitude.ToString("0.###")},{sub.Longitude.ToString("0.###")})";
                     if (distance < sub.RadiusInKilometers)
                     {
-                        CrossLocalNotifications.Current.Show($"Hash is close to {sub.Name}", message + $". Alarm set for {sub.AlarmTime.TimeOfDay}", 100 + sub.Id);
-                        CrossLocalNotifications.Current.Show($"ALARM Hash is close to {sub.Name}", message , 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime.TimeOfDay));
+                        CrossLocalNotifications.Current.Show($"Hash is close to {sub.Name}", message + $". Alarm set for {sub.AlarmTime}", 100 + sub.Id);
+                        CrossLocalNotifications.Current.Show($"ALARM Hash is close to {sub.Name}", message , 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime));
 
                     }
                     else
                     {
-                        CrossLocalNotifications.Current.Show("No hash today", message + $". Alarm set for {sub.AlarmTime.TimeOfDay}", 100 + sub.Id);
-                        CrossLocalNotifications.Current.Show($"ALARM No hash today", message, 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime.TimeOfDay));
+                        CrossLocalNotifications.Current.Show("No hash today", message + $". Alarm set for {sub.AlarmTime}", 100 + sub.Id);
+                        CrossLocalNotifications.Current.Show($"ALARM No hash today", message, 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime));
                     }
+                }
+                if(!subscriptionsSync.Any())
+                {
+                    CrossLocalNotifications.Current.Show("Hello", "No subscriptions", 3);
+
                 }
 
             }

@@ -23,7 +23,7 @@ namespace GeohashCross.ViewModels
         {
             await DB.Initialize();
             var subs = DB.Connection.Table<NotificationSubscription>();
-            if(await subs.CountAsync() > 0)
+            if (await subs.CountAsync() > 0)
             {
                 Subscriptions.AddRange(await subs.ToListAsync());
 
@@ -94,7 +94,7 @@ namespace GeohashCross.ViewModels
                     Latitude = loc.Latitude,
                     Longitude = loc.Longitude,
                     RadiusInKilometers = 50,
-                    AlarmTime = new DateTime(1, 1, 1, 8, 0, 0)
+                    AlarmTime = new TimeSpan(8,0,0)//new DateTime(1, 1, 1, 8, 0, 0)
                 };
                 Subscriptions.Add(subscription);
                 var id = await DB.Connection.InsertAsync(subscription);
@@ -106,6 +106,29 @@ namespace GeohashCross.ViewModels
             }
         }
 
+        public ICommand DeleteCommand => new Command(Delete);
+
+        void Delete(object obj)
+        {
+
+            var grid = obj as View;
+            var sub = grid.BindingContext as NotificationSubscription;
+
+            Subscriptions.Remove(sub);
+            DB.Connection.DeleteAsync(sub);
+
+        }
+
+
+        //{
+        //    get
+        //    {
+        //        return new Command(() =>
+        //        {
+        //            throw new NotImplementedException();
+        //        });
+        //    }
+        //}
     }
 }
 

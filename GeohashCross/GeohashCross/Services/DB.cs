@@ -18,8 +18,8 @@ namespace GeohashCross.Services
         static string Folder => Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "gc");
         static string DatabaseName => System.IO.Path.Combine(Folder, "gc.db");
 
-        public static SQLiteAsyncConnection Connection { get; private set; } = new SQLiteAsyncConnection(DatabaseName);
-        public static SQLiteConnection ConnectionSync { get; set; } = new SQLiteConnection(DatabaseName);
+        public static SQLiteAsyncConnection Connection { get; private set; }// = new SQLiteAsyncConnection(DatabaseName);
+        public static SQLiteConnection ConnectionSync { get; set; }// = new SQLiteConnection(DatabaseName);
         internal static async Task Initialize()
         {
             var folder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "gc");
@@ -29,6 +29,7 @@ namespace GeohashCross.Services
             string databaseFileName = System.IO.Path.Combine(folder, "gc.db");
 
             Connection = new SQLiteAsyncConnection(databaseFileName);
+            ConnectionSync = new SQLiteConnection(databaseFileName);
 
             await Connection.CreateTableAsync<NotificationSubscription>();
             Subscribe();
