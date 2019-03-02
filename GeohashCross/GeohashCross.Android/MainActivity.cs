@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Android.App;
 using Android.Content.PM;
@@ -22,10 +22,10 @@ namespace GeohashCross.Droid
 
             base.OnCreate(bundle);
             Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
+            Plugin.Jobs.CrossJobs.Init(this, bundle); // activity
             global::Xamarin.Forms.Forms.Init(this, bundle);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
             Xamarin.FormsGoogleMaps.Init(this, bundle); // initialize for Xamarin.Forms.GoogleMaps
-            MobileAds.Initialize(ApplicationContext, "ca-app-pub-7124080599643764~9849090583");
             LoadApplication(new App());
         }
 

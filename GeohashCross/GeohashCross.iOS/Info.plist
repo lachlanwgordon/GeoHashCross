@@ -34,11 +34,7 @@
 	<string>GeohashCross</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Geohash Cross needs your location to find the nearest Geohash.</string>
-	<key>App Transport Security Settings</key>
-	<dict>
-		<key>Allow Arbitrary Loads</key>
-		<true/>
-	</dict>
+
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIBackgroundModes</key>
@@ -51,5 +47,35 @@
 		<string>fa-solid-900.ttf</string>
 		<string>fa-brands-400.ttf</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>cookingthebooks.com.au</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSTemporaryExceptionMinimumTLSVersion</key>
+				<string>TLSv1.1</string>
+				<key> NSAllowsArbitraryLoadsInWebContent</key>
+				<true/>
+			</dict>
+			<key>192.168.0.11</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSTemporaryExceptionMinimumTLSVersion</key>
+				<string>TLSv1.1</string>
+				<key> NSAllowsArbitraryLoadsInWebContent</key>
+				<true/>
+			</dict>
+		</dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
