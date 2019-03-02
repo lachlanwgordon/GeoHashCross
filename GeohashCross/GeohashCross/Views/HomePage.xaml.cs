@@ -30,11 +30,19 @@ namespace GeohashCross.Views
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
-                var granted = await GetPermissions();
-                if (!granted)
-                    return;
-                SetupUI();
-                await SetupLocations();
+                try
+                {
+                    var granted = await GetPermissions();
+                    if (!granted)
+                        return;
+                    SetupUI();
+                    await SetupLocations();
+                }
+                catch (Exception ex)
+                {
+                    Crashes.TrackError(ex);
+                    await Shell.CurrentShell.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
+                }
             });
 
 
@@ -364,6 +372,8 @@ namespace GeohashCross.Views
             {
                 {"Page", GetType().Name}
             });
+            Debug.WriteLine($"Notifications appearing {DateTime.Now}");
+
         }
 
         async void DateChanged(object sender, Xamarin.Forms.FocusEventArgs e)
@@ -380,18 +390,25 @@ namespace GeohashCross.Views
 
         public async void GlobalClicked(object sender, EventArgs e)
         {
-            var loc = VM.HashData.GlobalHash;
-            var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
-            var pin = new Xamarin.Forms.GoogleMaps.Pin
+            try
             {
-                Label = loc.Timestamp == DateTime.Today ? "Today's Global Hash" : "Global Hash for " + loc.Timestamp.ToString("yyyy-MM-dd"),
-                Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green),
-                Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
-            };
-            TheMap.Pins.Add(pin);
-            var lastPos = new Position(loc.Latitude, loc.Longitude);
-            await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos), TimeSpan.FromSeconds(1));
+                var loc = VM.HashData.GlobalHash;
+                var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
+                var pin = new Xamarin.Forms.GoogleMaps.Pin
+                {
+                    Label = loc.Timestamp == DateTime.Today ? "Today's Global Hash" : "Global Hash for " + loc.Timestamp.ToString("yyyy-MM-dd"),
+                    Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
+                    Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green),
+                    Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
+                };
+                TheMap.Pins.Add(pin);
+                var lastPos = new Position(loc.Latitude, loc.Longitude);
+                await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos), TimeSpan.FromSeconds(1));
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
 
         }
 
