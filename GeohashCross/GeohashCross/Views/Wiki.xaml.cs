@@ -23,18 +23,18 @@ namespace GeohashCross.Views
 
         protected override void OnAppearing()
         {
-            base.OnAppearing();
-            Web.Source = "http://wiki.xkcd.com/geohashing";
-            Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
-            {
-                {"Page", GetType().Name}
-            });
+            //base.OnAppearing();
+            //Web.Source = "http://wiki.xkcd.com/geohashing";
+            //Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
+            //{
+            //    {"Page", GetType().Name}
+            //});
         }
         bool wiki = true;
         void Handle_Clicked(object sender, System.EventArgs e)
         {
             wiki = !wiki;
-            Web.Source =  wiki ? "http://wiki.xkcd.com/geohashing" : "https://google.com";
+            Web.Source = "http://wiki.xkcd.com/geohashing";// : "https://google.com";
             Debug.WriteLine(Web.Source);
         }
 
