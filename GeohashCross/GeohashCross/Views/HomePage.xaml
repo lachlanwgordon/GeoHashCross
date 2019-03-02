@@ -45,7 +45,7 @@
                 x:Name="TheMap"
                 Grid.ColumnSpan="6"
                 MapClicked="MapClicked"
-                MyLocationEnabled="True"
+                MyLocationEnabled="false"
                 Grid.RowSpan="4" />
             <Frame
                 Grid.ColumnSpan="6"
@@ -110,7 +110,6 @@
                     <Entry     
                         Placeholder="Date"
                         Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}', Mode=OneWay}"
-                        Visual="Material"
                         Grid.ColumnSpan="11"
                         InputTransparent="true"
                         

@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
     Padding="0,90,0,85"
-    Visual="Material"
     
     x:Class="GeohashCross.Views.Notifications">
     <ContentPage.BindingContext>
@@ -17,7 +16,6 @@
     </ContentPage.ToolbarItems>  -->
     <ContentPage.Content>
         <Grid
-                                Visual="Material"
             
             BackgroundColor="Orange"
             HorizontalOptions="FillAndExpand">
@@ -37,12 +35,10 @@
                     <DataTemplate>
                         <Grid
                             x:Name="Item"
-                                Visual="Material"
                             BackgroundColor="White"
                             Padding="10"
                             Margin="10">
                             <Entry
-                                Visual="Material"
                                 Placeholder="Latitude"
                                 Text="{Binding Latitude}" />
                             <Entry

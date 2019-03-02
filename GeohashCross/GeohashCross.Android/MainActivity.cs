@@ -21,7 +21,7 @@ namespace GeohashCross.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-            Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
+            Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental"});
             Plugin.Jobs.CrossJobs.Init(this, bundle); // activity
             global::Xamarin.Forms.Forms.Init(this, bundle);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
