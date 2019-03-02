@@ -3,12 +3,14 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:vms="clr-namespace:GeohashCross.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Padding="{OnPlatform iOS=0,83, Android=0}"
     x:Class="GeohashCross.Views.AboutPage">
     <ContentPage.BindingContext>
         <vms:AboutViewModel
             x:Name="VM" />
     </ContentPage.BindingContext>
-    <ContentPage.Content>
+    <ContentPage.Content>   
+        <ScrollView>
         <TableView
             Intent="Settings">
             <TableRoot>
@@ -92,5 +94,6 @@
                 </TableSection>
             </TableRoot>
         </TableView>
+            </ScrollView>
     </ContentPage.Content>
 </ContentPage>
