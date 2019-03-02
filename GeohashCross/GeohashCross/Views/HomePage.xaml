@@ -104,8 +104,17 @@
                     <DatePicker
                         Date="{Binding Date}"
                         Grid.ColumnSpan="11"
+                        TextColor="Transparent"
                         Unfocused="DateChanged"
                         Format="yyyy-MM-dd" />
+                    <Entry     
+                        Placeholder="Date"
+                        Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}', Mode=OneWay}"
+                        Visual="Material"
+                        Grid.ColumnSpan="11"
+                        InputTransparent="true"
+                        
+                    />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="1"
@@ -143,6 +152,7 @@
                         VerticalOptions="End"
                         Grid.RowSpan="3"
                         TextColor="{StaticResource Accent}"
+                        BackgroundColor="Transparent"
                         Text="▼"
                         HorizontalOptions="End"
                         Command="{Binding ShowMoreCommand}"
@@ -173,7 +183,10 @@
                         IsVisible="{Binding ShowAdvanced}"
                         HorizontalOptions="Start"
                         Command="{Binding ShowMoreCommand}"
-                        Grid.Column="11" />
+                        Grid.Column="11" 
+                        BackgroundColor="Transparent"
+                    />
+                    
                 </Grid>
             </Frame>
             <Frame
