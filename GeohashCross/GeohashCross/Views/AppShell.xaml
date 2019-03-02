@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:GeohashCross.Views"
     BackgroundColor="Teal"
+    Visual="Material"
     FlyoutBehavior="Disabled"
     FlyoutBackgroundColor="Red"
     x:Class="GeohashCross.Views.AppShell">
@@ -55,6 +56,7 @@
         <ShellContent
             Title="Notifications">
             <views:Notifications
+                Title="Notification Subscriptions"
                 Shell.ShellBackgroundColor="{StaticResource Primary}" />
             <ShellContent.Icon>
                 <FontImageSource
