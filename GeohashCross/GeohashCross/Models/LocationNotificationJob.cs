@@ -36,12 +36,12 @@ namespace GeohashCross.Models
                     var hash = await Hasher.GetHashData(DateTime.Today, subLocation);
 
                     var nearBy = new List<Location>(hash.NearestHashLocation.GetNeighbours()) { hash.NearestHashLocation  };
-                    var closest = nearBy.OrderBy(x => x.CalculateDistance(subLocation, DistanceUnits.Kilometers) < sub.RadiusInKilometers).FirstOrDefault();
+                    var closest = nearBy.OrderBy(x => x.CalculateDistance(subLocation, DistanceUnits.Kilometers) < sub.Radius).FirstOrDefault();
 
                     var distance = closest.CalculateDistance(subLocation, DistanceUnits.Kilometers);
 
                     var message = $"Today's hash is {distance}km from {sub.Name} at ({sub.Latitude.ToString("0.###")},{sub.Longitude.ToString("0.###")})";
-                    if (distance < sub.RadiusInKilometers)
+                    if (distance < sub.Radius)
                     {
                         CrossLocalNotifications.Current.Show($"Hash is close to {sub.Name}", message + $". Alarm set for {sub.AlarmTime}", 100 + sub.Id);
                         CrossLocalNotifications.Current.Show($"ALARM Hash is close to {sub.Name}", message , 200 + sub.Id, DateTime.Today.Add(sub.AlarmTime));

@@ -114,7 +114,7 @@
     <PackageReference Include="Xamarin.Essentials">
       <Version>1.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.0.0.169046-pre5" />
+    <PackageReference Include="Xamarin.Forms" Version="4.0.1.305340-nightly" />
     <PackageReference Include="Xamarin.Forms.GoogleMaps">
       <Version>3.0.0-beta3</Version>
     </PackageReference>
@@ -140,7 +140,7 @@
       <Version>72.2.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Visual.Material">
-      <Version>4.0.0.169046-pre5</Version>
+      <Version>4.0.1.305340-nightly</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

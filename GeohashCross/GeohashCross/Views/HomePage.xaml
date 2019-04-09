@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:GeohashCross.Models"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
     xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-    xmlns:ads="clr-namespace:GeohashCross.Controls"
     x:Class="GeohashCross.Views.HomePage"
     Shell.NavBarIsVisible="false">
     <ContentPage.BindingContext>
@@ -334,8 +333,7 @@
             </Style>
             <local:LocationSummary
                 x:Key="locationSummary" />
-            <local:NotBoolConverter
-                x:Key="NotBool" />
+            
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

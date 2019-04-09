@@ -16,7 +16,8 @@ namespace GeohashCross.ViewModels
     {
         public NotificationsViewModel()
         {
-            Init();
+            if(!DesignMode.IsDesignModeEnabled)
+                Init();
         }
 
         private async void Init()
@@ -32,22 +33,6 @@ namespace GeohashCross.ViewModels
 
         }
 
-        //public string Log
-        //{
-        //    get
-        //    {
-        //        var defaultMessage = $"New log from notifications page {DateTime.Now}\n";
-        //        var log = Xamarin.Essentials.Preferences.Get(Keys.log, "");
-        //        if(string.IsNullOrEmpty(log))
-        //        {
-        //            log = defaultMessage;
-        //            Xamarin.Essentials.Preferences.Set(Keys.log, log);
-        //        }
-        //        return log;
-        //    }
-        //}
-
-        //public ICommand SubscribeCommand => new Command(Subscribe);
 
         public ObservableRangeCollection<NotificationSubscription> Subscriptions
         {
@@ -55,31 +40,7 @@ namespace GeohashCross.ViewModels
             set;
         } = new ObservableRangeCollection<NotificationSubscription>();
 
-        //private async void Subscribe()
-        //{
-        //    var log = Xamarin.Essentials.Preferences.Get(Keys.log, "");
-
-        //    var loc = await Xamarin.Essentials.Geolocation.GetLocationAsync();
-        //    var location = new LocationRadius { Latitude = loc.Latitude, Longitude = loc.Longitude, Radius = 20 };
-        //    var job = new JobInfo
-        //    {
-        //        Name = "Distance",
-        //        Type = typeof(LocationNotificationJob),
-        //        BatteryNotLow = false,
-        //        DeviceCharging = false,
-        //        RequiredNetwork = NetworkType.Any,
-
-
-        //    };
-        //    log += "subscribing to job\n";
-        //    Xamarin.Essentials.Preferences.Set(Keys.log, log);
-        //    OnPropertyChanged(nameof(Log));
-        //    await CrossJobs.Current.Schedule(job);
-
-
-
-        //}
-
+  
 
 
         public ICommand AddSubscriptionCommand => new Command(AddSubscription);
@@ -93,8 +54,9 @@ namespace GeohashCross.ViewModels
                 {
                     Latitude = loc.Latitude,
                     Longitude = loc.Longitude,
-                    RadiusInKilometers = 50,
-                    AlarmTime = new TimeSpan(8,0,0)//new DateTime(1, 1, 1, 8, 0, 0)
+                    Radius = 50,
+                    AlarmTime = new TimeSpan(8,0,0),//new DateTime(1, 1, 1, 8, 0, 0)
+                    IsEditing = true
                 };
                 Subscriptions.Add(subscription);
                 var id = await DB.Connection.InsertAsync(subscription);
@@ -119,16 +81,6 @@ namespace GeohashCross.ViewModels
 
         }
 
-
-        //{
-        //    get
-        //    {
-        //        return new Command(() =>
-        //        {
-        //            throw new NotImplementedException();
-        //        });
-        //    }
-        //}
     }
 }
 

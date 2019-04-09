@@ -2,6 +2,7 @@
 <Application
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:GeohashCross.Models"
     x:Class="GeohashCross.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -104,6 +105,8 @@
                     Platform="Android"
                     Value="fa-solid-900.ttf#Solid" />
             </OnPlatform>
+            <local:NotBoolConverter
+                x:Key="NotBool" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
