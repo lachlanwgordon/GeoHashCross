@@ -36,7 +36,7 @@ namespace GeohashCross.Models
                     var hash = await Hasher.GetHashData(DateTime.Today, subLocation);
 
                     var nearBy = new List<Location>(hash.NearestHashLocation.GetNeighbours()) { hash.NearestHashLocation  };
-                    var closest = nearBy.OrderBy(x => x.CalculateDistance(subLocation, DistanceUnits.Kilometers) < sub.Radius).FirstOrDefault();
+                    var closest = nearBy.OrderBy(x => x.CalculateDistance(subLocation, DistanceUnits.Kilometers)).FirstOrDefault();
 
                     var distance = closest.CalculateDistance(subLocation, DistanceUnits.Kilometers);
 
