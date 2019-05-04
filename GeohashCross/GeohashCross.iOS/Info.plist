@@ -45,7 +45,8 @@
 		<string>Font Awesome 5 Free-Solid-900.otf</string>
 		<string>fa-solid-900.ttf</string>
 		<string>fa-brands-400.ttf</string>
-	</array>
+	    <string>materialdesignicons-webfont.ttf</string>
+</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>

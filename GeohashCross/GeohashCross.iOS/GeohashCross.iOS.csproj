@@ -178,5 +178,6 @@
   <ItemGroup>
     <BundleResource Include="Resources\fa-solid-900.ttf" />
     <BundleResource Include="Resources\fa-brands-400.ttf" />
+    <BundleResource Include="Resources\materialdesignicons-webfont.ttf" />
   </ItemGroup>
 </Project>
