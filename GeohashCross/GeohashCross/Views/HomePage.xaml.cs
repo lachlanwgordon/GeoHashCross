@@ -32,10 +32,11 @@ namespace GeohashCross.Views
             {
                 try
                 {
+                    SetupUI();
+
                     var granted = await GetPermissions();
                     if (!granted)
                         return;
-                    SetupUI();
                     await SetupLocations();
                 }
                 catch (Exception ex)
@@ -80,7 +81,7 @@ namespace GeohashCross.Views
             {
                 if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
                 {
-                    await DisplayAlert("Need location", "GeohashCross needs your location to find the nearest hash", "OK");
+                    //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
                 }
 
                 var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);

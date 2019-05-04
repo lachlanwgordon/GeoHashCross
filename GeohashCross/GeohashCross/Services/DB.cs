@@ -33,10 +33,17 @@ namespace GeohashCross.Services
 
             await Connection.CreateTableAsync<NotificationSubscription>();
             Subscribe();
+
         }
 
-        private static async void Subscribe()
+        public static async Task Subscribe()
         {
+
+            if (await Connection.Table<NotificationSubscription>().CountAsync() == 0)
+            {
+                return;
+            }
+
             var job = new JobInfo
             {
                 Name = "Distance",

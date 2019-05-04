@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using MvvmHelpers;
 using Xamarin.Essentials;
 using System.Windows.Input;
@@ -6,11 +6,35 @@ using SQLite;
 using Xamarin.Forms;
 using System.Diagnostics;
 using GeohashCross.Services;
+using Microsoft.AppCenter.Crashes;
+using GeohashCross.ViewModels;
+using System.Linq;
+using Xamarin.Forms.Internals;
 
 namespace GeohashCross.Models
 {
     public class NotificationSubscription : ObservableObject
     {
+        public ICommand SaveCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    try
+                    {
+                        IsEditing = !IsEditing;
+                        OnPropertyChanged(nameof(IsEditing));
+                        await DB.Connection.UpdateAsync(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        Crashes.TrackError(ex);
+                    }
+                });
+            }
+        }
+
         private int radius;
         private TimeSpan alarmTime;
 
@@ -48,26 +72,38 @@ namespace GeohashCross.Models
                 {
                     try
                     {
-                        var view = sender as CollectionView;
+                        var view = sender as StackLayout;
                         if (view != null)
                         {
-                            var items = view.ItemsSource as ObservableRangeCollection<NotificationSubscription>;
-                            items.Remove(this);
-                            await DB.Connection.DeleteAsync(this);
+                            var vm = view.BindingContext as NotificationsViewModel;
+                            await vm.Delete(this);
+                            
+
+
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Oject disposed exception here if you navigate to the ListView page then back to the CollectionViewPage and click add or delete. Android only, iOS is fine. CollectionViewOnly, listview is fine. \n{ex}\n{ex.StackTrace}");
+                        Crashes.TrackError(ex);
                     }
                 });
             }
         }
-        public bool IsEditing { get; set; }
-        public double Height
+
+        bool isEditing;
+        public bool IsEditing
         {
-            get => IsEditing ? 100 : 50;
+            get
+            {
+                return isEditing;
+            }
+            set
+            {
+                isEditing = value;
+                OnPropertyChanged(nameof(IsEditing));
+            }
         }
+
 
         public ICommand EditCommand
         {
@@ -77,21 +113,23 @@ namespace GeohashCross.Models
                 {
                     try
                     {
-                        var view = sender as CollectionView;
-                        if (view != null)
+
+
+                        if (sender is StackLayout view)
                         {
-                            var items = view.ItemsSource as ObservableRangeCollection<NotificationSubscription>;
-                            var index = items.IndexOf(this);
-                            items.Remove(this);
+                            var vm = view.BindingContext as NotificationsViewModel;
+                            var items = vm.Subscriptions;// as ObservableRangeCollection<NotificationSubscription>;
 
-                            IsEditing = !IsEditing;
-                            items.Insert(index, this);
+                            var itemsBeingEdited = items.FirstOrDefault(x => x.IsEditing);//Should always be one
+
+                            itemsBeingEdited?.SaveCommand.Execute(null);
+
                         }
-
+                        IsEditing = !IsEditing;
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Oject disposed exception here if you navigate to the ListView page then back to the CollectionViewPage and click add or delete. Android only, iOS is fine. CollectionViewOnly, listview is fine. \n{ex}\n{ex.StackTrace}");
+                        Crashes.TrackError(ex);
                     }
                 });
             }

@@ -33,8 +33,7 @@
 	<key>CFBundleName</key>
 	<string>GeohashCross</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Geohash Cross needs your location to find the nearest Geohash.</string>
-
+	<string>Geohash Cross works best with access to location information.</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>UIBackgroundModes</key>

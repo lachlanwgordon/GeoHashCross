@@ -44,7 +44,6 @@
                 x:Name="TheMap"
                 Grid.ColumnSpan="6"
                 MapClicked="MapClicked"
-                MyLocationEnabled="True"
                 Grid.RowSpan="4" />
             <Frame
                 Grid.ColumnSpan="6"

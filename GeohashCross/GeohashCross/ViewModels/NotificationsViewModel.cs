@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Input;
 using GeohashCross.Models;
 using GeohashCross.Services;
@@ -9,11 +9,22 @@ using Plugin.LocalNotifications;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GeohashCross.ViewModels
 {
     public class NotificationsViewModel : BaseViewModel
     {
+        public bool ShowEmptyView
+        {
+            get
+            {
+                return Subscriptions.Count == 0;
+            }
+        }
+
+
         public NotificationsViewModel()
         {
             if(!DesignMode.IsDesignModeEnabled)
@@ -27,10 +38,8 @@ namespace GeohashCross.ViewModels
             if (await subs.CountAsync() > 0)
             {
                 Subscriptions.AddRange(await subs.ToListAsync());
-
             }
-
-
+            OnPropertyChanged(nameof(ShowEmptyView));
         }
 
 
@@ -49,18 +58,33 @@ namespace GeohashCross.ViewModels
         {
             try
             {
+                var notificationsAllowed = await GetNotificationsPermissions();
+                if(!notificationsAllowed)
+                {
+                    await Shell.CurrentShell.DisplayAlert("Notification Permission Needed", "You can only subscribe to notifications if you have the permission enabled", "Okay");
+                    return;
+                }
+                 await DB.Subscribe();
+
                 var loc = await Xamarin.Essentials.Geolocation.GetLocationAsync();
                 var subscription = new NotificationSubscription
                 {
                     Latitude = loc.Latitude,
                     Longitude = loc.Longitude,
-                    Radius = 50,
+                    Radius = 20,
                     AlarmTime = new TimeSpan(8,0,0),//new DateTime(1, 1, 1, 8, 0, 0)
-                    IsEditing = true
+
                 };
                 Subscriptions.Add(subscription);
+                OnPropertyChanged(nameof(ShowEmptyView));
+
                 var id = await DB.Connection.InsertAsync(subscription);
                 subscription.Id = id;
+                var itemsBeingEdited = Subscriptions.FirstOrDefault(x => x.IsEditing);//Should always be one
+
+                itemsBeingEdited?.SaveCommand.Execute(null);
+                subscription.IsEditing = true;
+
             }
             catch (Exception ex)
             {
@@ -68,17 +92,16 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        public ICommand DeleteCommand => new Command(Delete);
-
-        void Delete(object obj)
+        private Task<bool> GetNotificationsPermissions()
         {
+            var permission = Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.)
+        }
 
-            var grid = obj as View;
-            var sub = grid.BindingContext as NotificationSubscription;
-
+        public async Task Delete(NotificationSubscription sub)
+        {
             Subscriptions.Remove(sub);
-            DB.Connection.DeleteAsync(sub);
-
+            await DB.Connection.DeleteAsync(sub);
+            OnPropertyChanged(nameof(ShowEmptyView));
         }
 
     }
