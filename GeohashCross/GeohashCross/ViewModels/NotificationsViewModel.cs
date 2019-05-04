@@ -92,9 +92,10 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        private Task<bool> GetNotificationsPermissions()
+        private async Task<bool> GetNotificationsPermissions()
         {
-            var permission = Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.)
+            //var permission = Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.noti)
+            return true;
         }
 
         public async Task Delete(NotificationSubscription sub)

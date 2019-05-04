@@ -39,6 +39,8 @@
                                     <ColumnDefinition
                                         Width="Auto" />
                                     <ColumnDefinition
+                                        Width="2*" />
+                                    <ColumnDefinition
                                         Width="*" />
                                     <ColumnDefinition
                                         Width="*" />
@@ -49,7 +51,7 @@
                                     BackgroundColor="White"
                                     Grid.RowSpan="4"
                                     CornerRadius="1"
-                                    Grid.ColumnSpan="4"
+                                    Grid.ColumnSpan="5"
                                     Margin="-5" />
                                 <Label
                                     IsVisible="{Binding IsEditing, Converter={StaticResource NotBool}}"
@@ -94,6 +96,7 @@
                                     IsVisible="{Binding IsEditing}" />
                                 <Entry
                                     Grid.Column="2"
+                                    Grid.ColumnSpan="2"
                                     Visual="Material"
                                     Text="{Binding Longitude}"
                                     Keyboard="Numeric"
@@ -115,6 +118,7 @@
                                     TextColor="Transparent" />
                                 <Entry
                                     Grid.Column="2"
+                                    Grid.ColumnSpan="2"
                                     Grid.Row="1"
                                     Text="{Binding AlarmTime, StringFormat='{}{0:hh\\:mm}'}}"
                                     Placeholder="Alarm Time"
@@ -125,41 +129,64 @@
                                     HorizontalOptions="Center"
                                     HorizontalTextAlignment="End"
                                     Style="{StaticResource CellLabel}"
+                                    Grid.ColumnSpan="2"
                                     Grid.Column="2"
                                     IsVisible="{Binding IsEditing, Converter={StaticResource NotBool}}" />
                                 <Label
                                     IsVisible="{Binding IsEditing, Converter={StaticResource NotBool}}"
                                     Grid.Column="2"
+                                    Grid.ColumnSpan="2"
                                     HorizontalOptions="Center"
                                     HorizontalTextAlignment="End"
                                     Grid.Row="1"
                                     Style="{StaticResource CellLabel}"
                                     Text="{Binding Radius, StringFormat='{}{0}km'}" />
-                                <Button
-                                    Grid.RowSpan="4"
-                                    IsVisible="{Binding IsEditing, Converter={StaticResource NotBool}}"
-                                    Text="✎"
-                                    Grid.Column="3"
-                                    Rotation="90"
-                                    Command="{Binding EditCommand}"
-                                    CommandParameter="{x:Reference TheStack}"
-                                    Style="{StaticResource ButtonStyle}" />
-                                <Button
+                                
+                              
+                                <Label      
+                                    Text="Global Hash"
                                     Grid.Column="1"
                                     Grid.Row="3"
                                     IsVisible="{Binding IsEditing}"
-                                    Text=""
-                                    BackgroundColor="DarkRed"
-                                    Style="{StaticResource ButtonStyle}"
-                                    Command="{Binding DeleteCommand}"
-                                    CommandParameter="{x:Reference TheStack}" />
+                                    Style="{StaticResource CellLabel}"
+                                    
+                                    />
+                                <Switch
+                                    Grid.Column="1"
+                                    Grid.Row="3"
+                                    IsVisible="{Binding IsEditing}"
+                                    VerticalOptions="Center"
+                                    Margin="90,0,0,0"
+                                />
+                                
+                                <Button
+                                    Grid.RowSpan="4"
+                                    IsVisible="{Binding IsEditing, Converter={StaticResource NotBool}}"
+                                    Text="{StaticResource chevronRight}"
+                                    FontFamily="{StaticResource MaterialDesignIcons}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource SecondaryText}"
+                                    Grid.Column="4"
+                                    Visual="Default"
+                                    Command="{Binding EditCommand}"
+                                    CommandParameter="{x:Reference TheStack}"
+                                    Style="{StaticResource SmallButtonStyle}" />
                                 <Button
                                     Grid.Column="2"
                                     Grid.Row="3"
                                     IsVisible="{Binding IsEditing}"
-                                    Text=""
+                                    Text="{StaticResource trash}"
+                                    BackgroundColor="DarkRed"
+                                    Style="{StaticResource SmallButtonStyle}"
+                                    Command="{Binding DeleteCommand}"
+                                    CommandParameter="{x:Reference TheStack}" />
+                                <Button
+                                    Grid.Column="3"
+                                    Grid.Row="3"
+                                    IsVisible="{Binding IsEditing}"
+                                    Text="{StaticResource tick}"
                                     BackgroundColor="{StaticResource Accent}"
-                                    Style="{StaticResource ButtonStyle}"
+                                    Style="{StaticResource SmallButtonStyle}"
                                     Command="{Binding SaveCommand}"
                                     CommandParameter="{x:Reference TheStack}" />
                             </Grid>
@@ -184,18 +211,22 @@
             </StackLayout>
             <Button
                 FontSize="Large"
-                HeightRequest="50"
+                HeightRequest="54"
+                Padding="0"
                 Margin="20"
-                WidthRequest="50"
-                CornerRadius="25"
+                WidthRequest="54"
+                CornerRadius="27"
                 Style="{StaticResource ButtonStyle}"
                 VerticalOptions="End"
+                Text="+"
+                FontFamily="{StaticResource MaterialDesignIcons}"
                 HorizontalOptions="End"
                 Command="{Binding AddSubscriptionCommand}" />
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
+            
             <Style
                 x:Key="CellLabel"
                 TargetType="Label">
@@ -219,40 +250,7 @@
                     Property="HorizontalTextAlignment"
                     Value="Center" />
             </Style>
-            <Style
-                x:Key="ButtonStyle"
-                TargetType="Button">
-                <Setter
-                    Property="FontFamily"
-                    Value="Font Awesome 5 Free" />
-                <Setter
-                    Property="HorizontalOptions"
-                    Value="Center" />
-                <Setter
-                    Property="VerticalOptions"
-                    Value="Center" />
-                <Setter
-                    Property="CornerRadius"
-                    Value="23" />
-                <Setter
-                    Property="Text"
-                    Value="+" />
-                <Setter
-                    Property="TextColor"
-                    Value="White" />
-                <Setter
-                    Property="BackgroundColor"
-                    Value="{StaticResource Primary}" />
-                <Setter
-                    Property="HeightRequest"
-                    Value="46" />
-                <Setter
-                    Property="WidthRequest"
-                    Value="46" />
-                <Setter
-                    Property="FontSize"
-                    Value="Medium" />
-            </Style>
+
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

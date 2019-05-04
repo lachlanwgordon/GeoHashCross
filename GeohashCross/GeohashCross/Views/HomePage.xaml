@@ -267,8 +267,8 @@
                         </StackLayout>
                     </ScrollView>-->
                     <Button
-                        Text=""
-                        Style="{StaticResource BottomButton}"
+                        Text="{StaticResource night}"
+                        Style="{StaticResource ButtonStyle}"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
                         Grid.Row="4"
@@ -282,14 +282,14 @@
             <Button
                 Grid.Row="2"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Style="{StaticResource BottomButton}"
-                Text=""
+                Style="{StaticResource ButtonStyle}"
+                Text="{StaticResource globe}"
                 Clicked="GlobalClicked"
                 Grid.Column="4" />
             <Button
-                Style="{StaticResource BottomButton}"
+                Style="{StaticResource ButtonStyle}"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Text=""
+                Text="{StaticResource night}"
                 Grid.Column="1"
                 Grid.Row="2"
                 Command="{Binding DarkNavCommand}" />
@@ -297,39 +297,22 @@
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Grid.Column="2"
                 Grid.Row="2"
-                Text=""
+                Text="{StaticResource layers}"
                 Clicked="SatteliteClicked"
-                Style="{StaticResource BottomButton}" />
+                Style="{StaticResource ButtonStyle}" />
             <Button
                 Grid.Row="2"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Grid.Column="3"
-                Style="{StaticResource BottomButton}"
+                Style="{StaticResource ButtonStyle}"
                 Command="{Binding ResetCommand}"
-                Text="" />
+                FontFamily="{StaticResource MaterialDesignIcons}"
+                Text="{StaticResource refresh}" />
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style
-                x:Key="BottomButton"
-                TargetType="Button">
-                <Setter
-                    Property="CornerRadius"
-                    Value="29" />
-                <Setter
-                    Property="TextColor"
-                    Value="{StaticResource Icons}" />
-                <Setter
-                    Property="FontFamily"
-                    Value="Font Awesome 5 Free" />
-                <Setter
-                    Property="FontSize"
-                    Value="{StaticResource Medium}" />
-                <Setter
-                    Property="BackgroundColor"
-                    Value="{StaticResource Accent}" />
-            </Style>
+
             <local:LocationSummary
                 x:Key="locationSummary" />
             

@@ -17,10 +17,10 @@
                 Shell.NavBarIsVisible="false" />
             <ShellContent.Icon>
                 <FontImageSource
-                    Glyph="{x:Static local:IconFont.Home}"
-                    FontFamily="{OnPlatform iOS=&quot;Font Awesome 5 Free&quot;, Android=&quot;fa-solid-900.ttf#Font Awesome 5 Free&quot;}"
+                    Glyph="{x:StaticResource home}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
                     Color="{StaticResource Primary}"
-                    Size="18" />
+                    Size="{StaticResource TabIconSize}"/>
             </ShellContent.Icon>
         </ShellContent>
         <!--        <views:TestsPage Title="Tests" Shell.ShellBackgroundColor="{StaticResource Primary}"/>-->
@@ -31,10 +31,10 @@
                 Shell.ShellBackgroundColor="{StaticResource Primary}" />
             <ShellContent.Icon>
                 <FontImageSource
-                    Glyph=""
-                    FontFamily="Font Awesome 5 Brands"
+                    Glyph="{StaticResource wiki}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
                     Color="{StaticResource Primary}"
-                    Size="18" />
+                    Size="{StaticResource TabIconSize}" />
                     
             </ShellContent.Icon>
         </ShellContent>
@@ -47,10 +47,10 @@
                 Shell.ShellBackgroundColor="{StaticResource Primary}" />
             <ShellContent.Icon>
                 <FontImageSource
-                    Glyph="{x:Static local:IconFont.InfoCircle}"
-                    FontFamily="Font Awesome 5 Free"
+                    Glyph="{StaticResource info}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
                     Color="{StaticResource Primary}"
-                    Size="18" />
+                    Size="{StaticResource TabIconSize}"/>
             </ShellContent.Icon>
         </ShellContent>
         <ShellContent
@@ -60,10 +60,10 @@
                 Shell.ShellBackgroundColor="{StaticResource Primary}" />
             <ShellContent.Icon>
                 <FontImageSource
-                    Glyph="{x:Static local:IconFont.Bell}"
-                    FontFamily="Font Awesome 5 Free"
+                    Glyph="{StaticResource bell}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
                     Color="{StaticResource Primary}"
-                    Size="18" />
+                    Size="{StaticResource TabIconSize}" />
             </ShellContent.Icon>
         </ShellContent>
       

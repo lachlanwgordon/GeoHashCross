@@ -24,6 +24,16 @@
                 x:Key="Divider">#BDBDBD</Color>
             <Color
                 x:Key="DarkBackground">#282828</Color>
+            <OnPlatform
+                x:TypeArguments="x:String"
+                x:Key="MaterialDesignIcons">
+                <On
+                    Platform="iOS"
+                    Value="Material Design Icons" />
+                <On
+                    Platform="Android"
+                    Value="materialdesignicons-webfont.ttf#Regular" />
+            </OnPlatform>
             <OnIdiom
                 x:Key="Large"
                 x:TypeArguments="x:Double"
@@ -95,18 +105,61 @@
                     Property="HorizontalTextAlignment"
                     Value="Center" />
             </Style>
-            <OnPlatform
-                x:TypeArguments="x:String"
-                x:Key="FontAwesome5FreeSolid">
-                <On
-                    Platform="iOS"
-                    Value="FontAwesome5Free-Solid" />
-                <On
-                    Platform="Android"
-                    Value="fa-solid-900.ttf#Solid" />
-            </OnPlatform>
+            <Style
+                x:Key="ButtonStyle"
+                TargetType="Button">
+                <Setter
+                    Property="CornerRadius"
+                    Value="29" />
+                <Setter Property="HeightRequest" Value="58"/>
+                <Setter Property="WidthRequest" Value="58"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter
+                    Property="TextColor"
+                    Value="{StaticResource Icons}" />
+                <Setter
+                    Property="FontFamily"
+                    Value="{StaticResource MaterialDesignIcons}" />
+                <Setter
+                    Property="FontSize"
+                    Value="{StaticResource Large}" />
+                <Setter
+                    Property="BackgroundColor"
+                    Value="{StaticResource Accent}" />
+            </Style>
+            
+            <Style
+                x:Key="SmallButtonStyle"
+                BasedOn="{StaticResource ButtonStyle}"
+                TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="HeightRequest" Value="48"/>
+                <Setter Property="WidthRequest" Value="48"/>
+                <Setter Property="CornerRadius" Value="24"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
             <local:NotBoolConverter
                 x:Key="NotBool" />
+
+             <x:String x:Key="pencil">&#xF3EB;</x:String>
+            <x:String x:Key="bell">&#xF09e;</x:String>
+            <x:String x:Key="trash">&#xFa78;</x:String>
+            <x:String x:Key="wiki">&#xf5ac;</x:String>
+            <x:String x:Key="home">&#xF2DC;</x:String>
+            <x:String x:Key="info">&#xF2FC;</x:String>
+            <x:String x:Key="refresh">&#xf06a;</x:String>
+            <x:String x:Key="layers">&#xf619;</x:String>
+            <x:String x:Key="compass">&#xf18b;</x:String>
+            <x:String x:Key="globe">&#xf1e7;</x:String>
+            <x:String x:Key="tick">&#xf12c;</x:String>
+            <x:String x:Key="night">&#xf594;</x:String>
+            <x:String x:Key="chevronRight">&#xf142;</x:String>
+
+            <x:Double
+                x:Key="TabIconSize">25</x:Double>
+            
+  
         </ResourceDictionary>
     </Application.Resources>
 </Application>
