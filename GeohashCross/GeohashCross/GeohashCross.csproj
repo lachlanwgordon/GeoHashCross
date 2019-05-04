@@ -17,6 +17,7 @@
     <PackageReference Include="Plugin.Jobs" Version="1.4.1" />
     <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
+    <PackageReference Include="LiveXAML" Version="2.1.72" />
   </ItemGroup>
 
   <ItemGroup>
