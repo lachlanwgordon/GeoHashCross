@@ -1,3 +1,4 @@
+using GeohashCross.Resources;
 using GeohashCross.Services;
 using GeohashCross.Views;
 using Microsoft.AppCenter;
@@ -24,6 +25,10 @@ namespace GeohashCross
             // Handle when your app starts
             await AnalyticsManager.Initialize();
             await DB.Initialize();
+            if (!APIKeys.MapsKeyInitialized)
+            {
+                await Shell.CurrentShell.DisplayAlert("Maps API Key", "Please add a google maps API Key to APIKeys.cs", "Okay");
+            }
         }
 
 		protected override void OnSleep ()

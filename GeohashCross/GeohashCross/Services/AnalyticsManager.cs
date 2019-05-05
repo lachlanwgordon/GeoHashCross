@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GeohashCross.Resources;
+using GeohashCross.Views;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace GeohashCross.Services
 {
@@ -14,42 +17,62 @@ namespace GeohashCross.Services
         public const string AllowCrashesKey = "ALLOW_CRASHES";
         public const string PageOpened = "Page Opened";
 
-        public static async Task Initialize()
+        static bool IsInitialized;
+
+        public static async Task<bool> Initialize()
         {
+            if(IsInitialized)
+                return true;
             var allowAnalytics = Preferences.Get(AllowAnalyticsKey, false);
             var allowCrashes = Preferences.Get(AllowCrashesKey, false);
 
-            AppCenter.Start("ios=c5b0f61c-8af9-4135-9644-37708b280ff0;" +
-                "uwp={Your UWP App secret here};" +
-                "android={Your Android App secret here}",
-                typeof(Analytics), typeof(Crashes));
+            if (allowAnalytics || allowCrashes)
+            {
+                if (APIKeys.AnalyticsIOSKey == APIKeys.PlaceHolder)
+                {
+                    await Shell.CurrentShell.DisplayAlert("APIKey missing", "Please set analytics key in APIKeys.cs", "Okay");
+                    return false;
+                }
+                IsInitialized = true;
+                AppCenter.Start($"ios={APIKeys.AnalyticsIOSKey};android={APIKeys.AnalyticsAndroidKey}", typeof(Analytics), typeof(Crashes));
 
-            AppCenter.LogLevel = LogLevel.Verbose;
+                AppCenter.LogLevel = LogLevel.Verbose;
 
-            await Analytics.SetEnabledAsync(allowAnalytics);
-            await Crashes.SetEnabledAsync(allowCrashes);
+                await Analytics.SetEnabledAsync(allowAnalytics);
+                await Crashes.SetEnabledAsync(allowCrashes);
+
+
+
+            }
+            return true;
+
         }
 
-        public static async Task SetAnalyticsEnabled(bool allowAnalytics)
+        public static async Task<bool> SetAnalyticsEnabled(bool allowAnalytics)
         {
             Preferences.Set(AllowAnalyticsKey, allowAnalytics);
+
+            var success = await Initialize();
             await Analytics.SetEnabledAsync(allowAnalytics);
 
             Analytics.TrackEvent("SetAnalyticsEnabled", new Dictionary<string, string>
             {
                 { "allowAnalytics", $"{allowAnalytics}"}
             });
+            return success;
         }
 
-        public static async Task SetCrashesEnabled(bool allowCrashes)
+        public static async Task<bool> SetCrashesEnabled(bool allowCrashes)
         {
             Preferences.Set(AllowCrashesKey, allowCrashes);
+            var success = await Initialize();
             await Crashes.SetEnabledAsync(allowCrashes);
 
             Analytics.TrackEvent("SetCrashesEnabled", new Dictionary<string, string>
             {
                 { "allowCrashes", $"{allowCrashes}"}
             });
+            return success;
         }
     }
 }

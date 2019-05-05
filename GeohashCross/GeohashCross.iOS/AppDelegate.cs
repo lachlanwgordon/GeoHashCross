@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
+using GeohashCross.Resources;
 using UIKit;
 using UserNotifications;
 using Xamarin.Forms;
@@ -27,7 +29,22 @@ namespace GeohashCross.iOS
             Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();
-            Xamarin.FormsGoogleMaps.Init("AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs"); // initialize for Xamarin.Forms.GoogleMaps
+
+
+
+            var mapsKey = APIKeys.MapsKey;
+            if(mapsKey != APIKeys.PlaceHolder)
+            {
+                //Xamarin.FormsGoogleMaps.Init("AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs"); //This key has been deactivated but not removed from source. Those who edit git history are doomed to repeat it. https://twitter.com/TheOnlyMego/status/918326739952160769
+                Xamarin.FormsGoogleMaps.Init(mapsKey); // initialize for Xamarin.Forms.GoogleMaps
+                APIKeys.MapsKeyInitialized = true;
+            }
+            else
+            {
+                Debug.WriteLine("Please register for a free google maps api key https://developers.google.com/maps/documentation/ios-sdk/get-api-key");
+            }
+
+
             Plugin.Jobs.CrossJobs.Init();
             LoadApplication(new App());
 
@@ -59,6 +76,3 @@ namespace GeohashCross.iOS
 
     }
 }
-
-//AIzaSyBD6djswOdYzWLzfWNIuYV9eT6TswAdkgg
-//AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs

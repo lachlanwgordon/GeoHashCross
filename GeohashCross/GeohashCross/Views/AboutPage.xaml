@@ -76,6 +76,11 @@
                         Command="{Binding WebsiteCommand}"
                         CommandParameter="https://github.com/aritchie/jobs"
                         Detail="Allan Ritchie" />
+                    <TextCell
+                        Text="SQLite-net"
+                        Command="{Binding WebsiteCommand}"
+                        CommandParameter="https://github.com/praeclarum/sqlite-net"
+                        Detail="Frank Krueger" />
                     
                    
                 </TableSection>
