@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
-echo "hello"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
 
 echo "$MAPS_KEY"
 
