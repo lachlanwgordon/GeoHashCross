@@ -141,7 +141,7 @@
       <Version>72.2.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Visual.Material">
-      <Version>4.0.1.305340-nightly</Version>
+      <Version>4.0.0.394984-pre10</Version>
     </PackageReference>
     <PackageReference Include="LiveXAML">
       <Version>2.1.72</Version>
