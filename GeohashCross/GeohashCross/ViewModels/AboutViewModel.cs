@@ -27,7 +27,7 @@ namespace GeohashCross.ViewModels
                     log = defaultLog;
                     Xamarin.Essentials.Preferences.Set(Keys.log, log);
                 }
-                await Shell.CurrentShell.DisplayAlert("Log", log, "Okay");
+                await Shell.Current.DisplayAlert("Log", log, "Okay");
             }
             catch (Exception ex)
             {

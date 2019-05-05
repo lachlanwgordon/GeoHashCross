@@ -61,7 +61,7 @@ namespace GeohashCross.ViewModels
                 var notificationsAllowed = await GetNotificationsPermissions();
                 if(!notificationsAllowed)
                 {
-                    await Shell.CurrentShell.DisplayAlert("Notification Permission Needed", "You can only subscribe to notifications if you have the permission enabled", "Okay");
+                    await Shell.Current.DisplayAlert("Notification Permission Needed", "You can only subscribe to notifications if you have the permission enabled", "Okay");
                     return;
                 }
                  await DB.Subscribe();

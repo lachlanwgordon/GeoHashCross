@@ -19,6 +19,23 @@ namespace GeohashCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
+        public async void Handle_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+
+                var pos = VM.CurrentLocation;
+
+                var update = CameraUpdateFactory.NewPosition(new Position(pos.Latitude, pos.Longitude));
+
+                await TheMap.AnimateCamera(update, TimeSpan.FromMilliseconds(200));
+            }
+            catch(Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
+        }
+
         public HomePage()
         {
             InitializeComponent();
@@ -42,7 +59,7 @@ namespace GeohashCross.Views
                 catch (Exception ex)
                 {
                     Crashes.TrackError(ex);
-                    await Shell.CurrentShell.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
+                    await Shell.Current.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
                 }
             });
 
@@ -103,28 +120,29 @@ namespace GeohashCross.Views
 
         private void SetupUI()
         {
-            TheMap.UiSettings.MyLocationButtonEnabled = true;
-            TheMap.UiSettings.ZoomControlsEnabled = true;
+            TheMap.IsShowingUser = true;
+            //TheMap.UiSettings.
+            //TheMap.UiSettings.MyLocationButtonEnabled = true;
+            //TheMap.UiSettings.ZoomControlsEnabled = true;
             VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
-            TheMap.InfoWindowClicked += TheMap_InfoWindowClicked;
+            //TheMap.InfoWindowClicked += TheMap_InfoWindowClicked;
 
-
-            TheMap.UiSettings.CompassEnabled = true;
-            TheMap.UiSettings.MapToolbarEnabled = true;
-            TheMap.UiSettings.IndoorLevelPickerEnabled = true;
+            //TheMap.UiSettings.CompassEnabled = true;
+            //TheMap.UiSettings.MapToolbarEnabled = true;
+            //TheMap.UiSettings.IndoorLevelPickerEnabled = true;
             //TheMap.MapType = MapType.Satellite;
-            if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)//Notched phones
-            {
-                LightFrame.Margin = new Thickness(20, 50, 20, 0);
-                TheDarkFrame.Margin = new Thickness(10, 50, 10, 0);
-                TheGrid.RowDefinitions.Remove(TheGrid.RowDefinitions.LastOrDefault());
-                TheGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(84, GridUnitType.Absolute) });
-            }
-            else
-            {
-                LightFrame.Margin = new Thickness(20, 30, 20, 0);
-                TheDarkFrame.Margin = new Thickness(10, 30, 10, 0);
-            }
+            //if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)//Notched phones
+            //{
+            //    LightFrame.Margin = new Thickness(20, 50, 20, 0);
+            //    TheDarkFrame.Margin = new Thickness(10, 50, 10, 0);
+            //    TheGrid.RowDefinitions.Remove(TheGrid.RowDefinitions.LastOrDefault());
+            //    TheGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(84, GridUnitType.Absolute) });
+            //}
+            //else
+            //{
+            //    LightFrame.Margin = new Thickness(20, 30, 20, 0);
+            //    TheDarkFrame.Margin = new Thickness(10, 30, 10, 0);
+            //}
             Debug.WriteLine(DeviceInfo.Model);
             Debug.WriteLine(DeviceDisplay.MainDisplayInfo.Height);
 
@@ -206,7 +224,7 @@ namespace GeohashCross.Views
 
             if (Device.RuntimePlatform == Device.iOS)
             {
-                var maps = await Shell.CurrentShell.DisplayActionSheet("Open in maps", "cancel", null, "Google Maps", "Apple Maps");//In current preview of Shell you must call actionsheets and alerts like this.
+                var maps = await Shell.Current.DisplayActionSheet("Open in maps", "cancel", null, "Google Maps", "Apple Maps");//In current preview of Shell you must call actionsheets and alerts like this.
                 if (maps == "Google Maps")
                 {
                     var uri = new Uri($"https://google.com/maps/place/{e.Pin.Position.Latitude},{e.Pin.Position.Longitude}");
@@ -268,6 +286,10 @@ namespace GeohashCross.Views
 
         void Handle_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
         {
+            if (!VM.DarkNavEnabled)
+                return;
+
+
             SKSurface surface = e.Surface;
             SKCanvas canvas = surface.Canvas;
             canvas.Clear(SKColors.Transparent);

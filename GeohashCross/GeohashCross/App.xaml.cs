@@ -27,7 +27,7 @@ namespace GeohashCross
             await DB.Initialize();
             if (!APIKeys.MapsKeyInitialized)
             {
-                await Shell.CurrentShell.DisplayAlert("Maps API Key", "Please add a google maps API Key to APIKeys.cs", "Okay");
+                await Shell.Current.DisplayAlert("Maps API Key", "Please add a google maps API Key to APIKeys.cs", "Okay");
             }
         }
 

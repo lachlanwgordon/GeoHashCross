@@ -20,6 +20,16 @@ namespace GeohashCross.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
+        public ICommand MyPosition
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                });
+            }
+        }
+
         public HomePageViewModel()
         {
             try
@@ -325,9 +335,11 @@ namespace GeohashCross.ViewModels
                 int failCount = 0;
                 while(loc == null)
                 {
+                    if (failCount > 0)
+                        await Task.Delay(1000);
                     failCount++;
-                    var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(failCount * 500));
-                    Debug.WriteLine($"try location for {failCount * 500}ms");
+                    var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(failCount * 1000));
+                    Debug.WriteLine($"try location for {failCount * 1000}ms");
                     loc = await Geolocation.GetLocationAsync(locationRequest);
 
                 }
@@ -367,8 +379,11 @@ namespace GeohashCross.ViewModels
 
             try
             {
+                if (Initialised)
+                    return;
                 Initialised = true;
-                Device.StartTimer(TimeSpan.FromSeconds(3), TimerInitiatedUpdateLocation);
+                Debug.WriteLine("!!!!!!!!!!!!!!!STARTING A TIMER");
+                Device.StartTimer(TimeSpan.FromSeconds(5), TimerInitiatedUpdateLocation);
             }
             catch (Exception ex)
             {

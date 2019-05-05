@@ -30,7 +30,7 @@ namespace GeohashCross.Services
             {
                 if (APIKeys.AnalyticsIOSKey == APIKeys.PlaceHolder)
                 {
-                    await Shell.CurrentShell.DisplayAlert("APIKey missing", "Please set analytics key in APIKeys.cs", "Okay");
+                    await Shell.Current.DisplayAlert("APIKey missing", "Please set analytics key in APIKeys.cs", "Okay");
                     return false;
                 }
                 IsInitialized = true;
