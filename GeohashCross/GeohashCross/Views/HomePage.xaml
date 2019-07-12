@@ -45,6 +45,8 @@
                     Width="58" />
                 <ColumnDefinition
                     Width="58" />
+                <ColumnDefinition
+                    Width="58" />
                 
             </Grid.ColumnDefinitions>
             <maps:Map
@@ -57,7 +59,7 @@
                     
             </maps:Map>
             <Frame
-                Grid.ColumnSpan="6"
+                Grid.ColumnSpan="7"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 x:Name="LightFrame">
                 <Grid
@@ -194,12 +196,13 @@
                 </Grid>
             </Frame>
             <Frame
-                Grid.ColumnSpan="6"
+                Grid.ColumnSpan="7"
                 Grid.RowSpan="5"
                 x:Name="TheDarkFrame"
                 IsVisible="{Binding DarkNavEnabled}"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid
+
                     RowSpacing="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -239,6 +242,7 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Distance}" />
+                    
                     <!--  This scroll view has usefull debug data, row definitions may need changing to make it visible -->
                     <!--  <ScrollView
                         Grid.Row="3"
@@ -291,25 +295,32 @@
                 Style="{StaticResource ButtonStyle}"
                 Text="{StaticResource globe}"
                 Clicked="GlobalClicked"
-                Grid.Column="5" />
+                Grid.Column="6" />
             <Button
                 Style="{StaticResource ButtonStyle}"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Text="{StaticResource night}"
-                Grid.Column="4"
+                Grid.Column="5"
                 Grid.Row="4"
                 Command="{Binding DarkNavCommand}" />
             <Button
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Grid.Column="3"
+                Grid.Column="4"
                 Grid.Row="4"
                 Text="{StaticResource layers}"
                 Clicked="SatteliteClicked"
                 Style="{StaticResource ButtonStyle}" />
             <Button
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="3"
+                Grid.Row="4"
+                Text="{StaticResource neighbours}"
+                Clicked="SatteliteClicked"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
                 Grid.Row="3"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Grid.Column="5"
+                Grid.Column="6"
                 Style="{StaticResource ButtonStyle}"
                 Command="{Binding ResetCommand}"
                 FontFamily="{StaticResource MaterialDesignIcons}"
@@ -317,7 +328,7 @@
              <Button
                 Grid.Row="4"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
-                Grid.Column="5"
+                Grid.Column="6"
                 Style="{StaticResource ButtonStyle}"
                 Command="{Binding MyPosition}"
                 Clicked="Handle_Clicked"

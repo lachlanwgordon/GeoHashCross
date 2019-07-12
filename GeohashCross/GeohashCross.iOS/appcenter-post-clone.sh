@@ -24,3 +24,15 @@ fi
     sed -i '' 's#MapsKey = "YOUR KEY HERE"#MapsKey = "'$MAPS_KEY'"#' ../GeohashCross/Resources/APIKeys.cs
     echo "File content:"
     cat ../GeohashCross/Resources/APIKeys.cs
+
+echo "$AnalyticsIOSKey"
+echo "$AnalyticsAndroidKey"
+
+if [ -n "$AnalyticsIOSKey" ]
+then
+    echo "Updating AnalyticsIOSKey to $AnalyticsIOSKey in APIKeys.cs"
+    sed -i '' 's#MapsKey = "YOUR KEY HERE"#MapsKey = "'$MAPS_KEY'"#' ../GeohashCross/Resources/APIKeys.cs
+
+
+    exit
+fi

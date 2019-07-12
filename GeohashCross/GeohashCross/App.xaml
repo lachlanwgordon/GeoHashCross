@@ -156,6 +156,7 @@
             <x:String x:Key="night">&#xf594;</x:String>
             <x:String x:Key="chevronRight">&#xf142;</x:String>
             <x:String x:Key="target">&#xf4fe;</x:String>
+            <x:String x:Key="neighbours">&#xfdb0;</x:String>
 
             <x:Double
                 x:Key="TabIconSize">25</x:Double>

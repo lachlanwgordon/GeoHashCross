@@ -332,7 +332,7 @@ namespace GeohashCross.Views
             //TrueNorth
             canvas.Save();
             canvas.RotateDegrees((int)VM.TrueNorthNeedleDirection);
-            canvas.DrawText("T", 0, -100, Paint.BlackPaint);
+            canvas.DrawText("T", 0, -100, BlackPaint);
             canvas.Restore();
         }
 
@@ -342,13 +342,15 @@ namespace GeohashCross.Views
             return true;
         }
 
+        public static SKPaint BlackPaint = new SKPaint
+        {
+            Style = SKPaintStyle.Fill,
+            Color = SKColors.Black
+        };
+
         public static class Paint
         {
-            public static SKPaint BlackPaint = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.Black
-            };
+            
 
             public static SKPaint RedPaint = new SKPaint
             {
