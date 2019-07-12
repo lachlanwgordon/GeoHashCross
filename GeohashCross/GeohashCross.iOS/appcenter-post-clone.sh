@@ -12,9 +12,13 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>> POST CLONE SCRIPT"
 
+echo "This maps key not in quotes"
+echo $MAPS_KEY
+echo "This maps key in quotes"
 echo "$MAPS_KEY"
 
-if [ ! -n "$MAPS_KEY" ]
+echo "About to check if there is a maps key"
+if [ ! -n $MAPS_KEY ]
 then
     echo "You need define the MAPS_KEY variable in App Center"
     exit
