@@ -25,7 +25,7 @@ namespace GeohashCross
             // Handle when your app starts
             await AnalyticsManager.Initialize();
             await DB.Initialize();
-            if (!APIKeys.MapsKeyInitialized)
+            if (String.IsNullOrWhiteSpace(APIKeys.MapsKey))
             {
                 await Shell.Current.DisplayAlert("Maps API Key", "Please add a google maps API Key to APIKeys.cs", "Okay");
             }

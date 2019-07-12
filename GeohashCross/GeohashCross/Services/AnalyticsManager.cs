@@ -28,7 +28,7 @@ namespace GeohashCross.Services
 
             if (allowAnalytics || allowCrashes)
             {
-                if (APIKeys.AnalyticsIOSKey == APIKeys.PlaceHolder)
+                if (String.IsNullOrEmpty(APIKeys.AnalyticsIOSKey))
                 {
                     await Shell.Current.DisplayAlert("APIKey missing", "Please set analytics key in APIKeys.cs", "Okay");
                     return false;

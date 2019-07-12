@@ -32,16 +32,15 @@ namespace GeohashCross.iOS
 
 
 
-            var mapsKey = APIKeys.MapsKey;
-            if(mapsKey != APIKeys.PlaceHolder)
+            if(!String.IsNullOrWhiteSpace(APIKeys.MapsKey))
             {
                 //Xamarin.FormsGoogleMaps.Init("AIzaSyB4t83nCYQnkjVUWpw83gabjKoPXG0QpAs"); //This key has been deactivated but not removed from source. Those who edit git history are doomed to repeat it. https://twitter.com/TheOnlyMego/status/918326739952160769
-                Xamarin.FormsGoogleMaps.Init(mapsKey); // initialize for Xamarin.Forms.GoogleMaps
-                APIKeys.MapsKeyInitialized = true;
+                Xamarin.FormsGoogleMaps.Init(APIKeys.MapsKey); // initialize for Xamarin.Forms.GoogleMaps
             }
             else
             {
                 Debug.WriteLine("Please register for a free google maps api key https://developers.google.com/maps/documentation/ios-sdk/get-api-key");
+                Xamarin.FormsGoogleMaps.Init("THIS IS AN INVALID KEY"); // initialize for Xamarin.Forms.GoogleMaps
             }
 
 

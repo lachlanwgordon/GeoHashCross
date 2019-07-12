@@ -22,14 +22,14 @@ echo "This maps key with dollar in quotes no underscore"
 echo "$MAPSKEY"
 
 echo "About to check if there is a maps key"
-if [ ! -n $MAPS_KEY ]
+if [ ! -n $MAPSKEY ]
 then
-    echo "You need define the MAPS_KEY variable in App Center"
+    echo "You need define the MAPSKEY variable in App Center"
     exit 1
 fi
 
-    echo "Updating Maps_Key to $MAPS_KEY in APIKeys.cs"
-    sed -i '' 's#MapsKey = "YOUR KEY HERE"#MapsKey = "'$MAPS_KEY'"#' ../GeohashCross/Resources/APIKeys.cs
+    echo "Updating MapsKey to $MAPSKEY in APIKeys.cs"
+    sed -i '' 's#MapsKey = ""#MapsKey = "'$MAPSKEY'"#' ../GeohashCross/Resources/APIKeys.cs
     echo "File content:"
     cat ../GeohashCross/Resources/APIKeys.cs
 
