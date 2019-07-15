@@ -27,12 +27,12 @@ namespace GeohashCross.Services
         /// </summary>
         /// <returns>The dow jones.</returns>
         /// <param name="date">Date.</param>
-        public static async Task<Response<string>> GetDjia(DateTime date)
+        public static async Task<Response<string>> GetDjia(DateTime date, bool allowCached = true, bool addToCache = true, bool checkConnectivity = true)
         {
             try
             {
 
-                if (Preferences.ContainsKey(date.ToString()))
+                if (allowCached && Preferences.ContainsKey(date.ToString()))
                 {
                     Debug.WriteLine($"Got DJIA from cache {Preferences.Get(date.ToString(), "")}");
 
@@ -44,7 +44,10 @@ namespace GeohashCross.Services
                 var url = $"{BaseUrl}{dateString}";
                 Debug.WriteLine($"About to get DJIA from {url}");
                 var response = await Client.GetStringAsync(url);
-                Preferences.Set(dateString.ToString(), response);
+                if(addToCache)
+                {
+                    Preferences.Set(dateString.ToString(), response);
+                }
                 Debug.WriteLine($"Got DJIA from web {response}");
 
                 return new Response<string>(response, true, "Loaded data from web");
@@ -53,7 +56,7 @@ namespace GeohashCross.Services
             {
                 Crashes.TrackError(ex);
                 Debug.WriteLine($"fail to get: \n{ex}\n{ex.StackTrace}");
-                if(Xamarin.Essentials.Connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
+                if(checkConnectivity && Connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
                 {
                     return new Response<string>(null, false, "No internet connection available. Please reconnect");
                 }

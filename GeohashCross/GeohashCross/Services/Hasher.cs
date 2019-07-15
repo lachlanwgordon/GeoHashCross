@@ -21,8 +21,15 @@ namespace GeohashCross.Services
                 RequestDate = date,
                 CurrentLocation = currentLocation
             };
-            hash.Date30W = DowJonesDates.Check30W(date, currentLocation);
-            var djDate = DowJonesDates.GetMostRecentDJDate(hash.Date30W);
+
+
+
+
+            hash.Date30W = DowJonesDates.Get30WCompliantDate(date, currentLocation);
+
+
+
+            var djDate = DowJonesDates.GetApplicableDJDate(hash.Date30W);
             if(!djDate.Success)
             {
                 hash.Message = djDate.Message;
@@ -40,8 +47,8 @@ namespace GeohashCross.Services
             }
             hash.DJIA = djia.Data;
             hash.Offset = CalculateOffset(date, djia.Data);
-            hash.NearestHashLocation = CalculateHashLocation(currentLocation, hash.Offset, date);
-            hash.GlobalHash = CalculateGlobalHash(hash.Offset);//This will only work in w30 regions. Will need to think about america etc. TODO
+            hash.NearestHashLocation = CalculateHashLocation(currentLocation, hash.Offset);
+            //hash.GlobalHash = CalculateGlobalHash(hash.Offset);//This will only work in w30 regions. Will need to think about america etc. TODO
 
             hash.Success = true;
             hash.Message = "Hashes calculated successfully";
@@ -60,20 +67,20 @@ namespace GeohashCross.Services
             return loc;
         }
 
-        public static Location CalculateHashLocation(Location currentLocation, Location offset, DateTime date)
+        //Get Offset needs current location to know whether to apply 30W rule
+        public static Location CalculateHashLocation(Location currentLocation, Location offset)
         {
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             var lat = currentLocation.Latitude > 0 ? Math.Floor(currentLocation.Latitude) + offset.Latitude : Math.Ceiling(currentLocation.Latitude) - offset.Latitude;
             var lon = currentLocation.Longitude > 0 ? Math.Floor(currentLocation.Longitude) + offset.Longitude : Math.Ceiling(currentLocation.Longitude) - offset.Longitude;
 
-            var loc = new Location(lat, lon, date);
+            var loc = new Location(lat, lon);
             return loc;
         }
 
 
-        //Get Offset needs current location to know whether to apply 30W rule
-        static Location CalculateOffset(DateTime date, string djia)
+        public static Location CalculateOffset(DateTime date, string djia)
         {
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 

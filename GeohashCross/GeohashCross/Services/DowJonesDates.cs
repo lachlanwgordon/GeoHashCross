@@ -8,16 +8,18 @@ using Xamarin.Essentials;
 
 namespace GeohashCross.Services
 {
-    class DowJonesDates
+    public class DowJonesDates
     {
         /// <summary>
         /// Checks if dow is open on given date.
         /// If open it returns the date that was input.
         /// If closed it finds most recent day that was open.
+        /// e.g. closed on weekends and public holidays so return friday
+        /// This Method is not 30w aware
         /// </summary>
         /// <param name="date"></param>
-        /// <returns>Most Recent Date that DJ was open</returns>
-        public static Response<DateTime> GetMostRecentDJDate(DateTime date)
+        /// <returns>Return the date that should be used for the most recent DJ opening for a given date </returns>
+        public static Response<DateTime> GetApplicableDJDate(DateTime date)
         {
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
@@ -27,7 +29,7 @@ namespace GeohashCross.Services
                 Debug.WriteLine($"{date} is a weekend");
 
                 //Check yesterday
-                return GetMostRecentDJDate(date.AddDays(-1));//WARNING RECURSION
+                return GetApplicableDJDate(date.AddDays(-1));//WARNING RECURSION
             }
 
             //Dow is closed on some public holidays
@@ -35,26 +37,26 @@ namespace GeohashCross.Services
             {
                 Debug.WriteLine($"{date} is a holiday");
 
-                return GetMostRecentDJDate(date.AddDays(-1));//WARNING RECURSION
+                return GetApplicableDJDate(date.AddDays(-1));//WARNING RECURSION
             }
             Debug.WriteLine($"Using {date}");
-
-            //Check if dow jones data exists, this needs to be updated to use 9:30am new york time
-            if(date > DateTime.Today)
-            {
-                return new Response<DateTime>(date, false, "Dow Jones hasn't openned yet, please check back later");
-            }
-
+                        
             return new Response<DateTime>(date, true, "Dow Jones Date is Valid");
         }
 
-        public static DateTime Check30W(DateTime date, Location currentLocation)
+        /// <summary>
+        /// If a location is east of 30w, returns previous date. Otherwise returns same date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public static DateTime Get30WCompliantDate(DateTime date, Location location)
         {
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
             //Check 30W rule
             var djDate = date;
-            if (currentLocation.Longitude >= 30)
+            if (location.Longitude >= -30)
             {
                 djDate = date.AddDays(-1);
                 Debug.WriteLine($"Using 30W rule. Selected date: {date} DJDate: {djDate}");
@@ -88,42 +90,49 @@ namespace GeohashCross.Services
             new DateTime(2018, 1, 15),
             new DateTime(2019, 1, 21),
             new DateTime(2020, 1, 20),
+            new DateTime(2021, 1, 18),
 
             //Washington's Birthday
             new DateTime(2018, 2, 19),
             new DateTime(2019, 2, 18),
             new DateTime(2020, 2, 20),
+            new DateTime(2021, 2, 15),
 
             //Good Friday
             new DateTime(2018, 3, 30),
             new DateTime(2019, 4, 19),
             new DateTime(2020, 4, 10),
+            new DateTime(2021, 4, 2),
 
             //Memorial Day
             new DateTime(2018, 5, 28),
             new DateTime(2019, 5, 27),
             new DateTime(2020, 5, 25),
+            new DateTime(2021, 5, 31),
 
             //Independance Day
             new DateTime(2018, 7, 4),
             new DateTime(2019, 7, 4),
             new DateTime(2020, 7, 4),
+            new DateTime(2021, 7, 5),
 
             //Labor Day
             new DateTime(2018, 9, 3),
             new DateTime(2019, 9, 2),
             new DateTime(2020, 9, 7),
+            new DateTime(2021, 9, 6),
 
             //Thanksgiving
             new DateTime(2018, 11, 22),
             new DateTime(2019, 11, 28),
             new DateTime(2020, 11, 26),
+            new DateTime(2021, 11, 25),
 
             //Christmas
             new DateTime(2018, 12, 25),
             new DateTime(2019, 12, 25),
             new DateTime(2020, 12, 25),
-            new DateTime(2021, 12, 25),
+            new DateTime(2021, 12, 24),
             new DateTime(2022, 12, 25),
             new DateTime(2023, 12, 25),
 
