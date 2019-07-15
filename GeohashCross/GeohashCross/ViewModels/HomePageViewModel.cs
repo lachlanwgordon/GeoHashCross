@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,8 +11,6 @@ using GeohashCross.Models;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
-using Plugin.Permissions;
-using TrueNorth.Geographic;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -20,15 +18,58 @@ namespace GeohashCross.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
-        public ICommand MyPosition
+        public ICommand ToggleNeighbours
         {
             get
             {
                 return new Command(() =>
                 {
+                    ShowNeighbours = !ShowNeighbours;
+                    UpdateShowNeighbours();
+
+                    
+
                 });
             }
         }
+
+        private void UpdateShowNeighbours()
+        {
+            if (ShowNeighbours)
+            {
+                var neighbours = new List<HashLocation>();
+                foreach (var hash in GeohashLocations)
+                {
+                    if (!hash.IsNeighbour)
+                    {
+                        neighbours.AddRange(hash.Neighbours);
+                    }
+                }
+                GeohashLocations.AddRange(neighbours);
+            }
+            else
+            {
+                var neighbours = GeohashLocations.Where(x => x.IsNeighbour).ToList();
+
+
+                //Do not convert to RemoveRange, there is a bug that means you end up with no pins displayed even if some are in collection
+                foreach (var loc in neighbours)
+                {
+                    GeohashLocations.Remove(loc);
+                }
+
+                Debug.WriteLine(GeohashLocations.Count);
+            }
+        }
+
+
+
+        public ObservableRangeCollection<HashLocation> GeohashLocations
+        {
+            get;
+            set;
+        } = new ObservableRangeCollection<HashLocation>();
+
 
         public HomePageViewModel()
         {
@@ -127,8 +168,7 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        public ObservableRangeCollection<Location> Locations = new ObservableRangeCollection<Location>();
-        public ObservableRangeCollection<Location> LocationsToDisplay = new ObservableRangeCollection<Location>();
+     
 
         Double? _Distance
         {
@@ -199,12 +239,6 @@ namespace GeohashCross.ViewModels
             {
                 if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
                     return 0;
-                var headingMag = HeadingMagneticNorth;
-                var headingTrue = HeadingTrueNorth;
-                //Bearing
-                var bearing = GetBearingRelativeToTrueNorth(_CurrentLocation, _HashData.NearestHashLocation);//Relative to true north ignoring heading
-
-
 
                 var displayBearing =  Bearing - HeadingTrueNorth;
 
@@ -309,8 +343,7 @@ namespace GeohashCross.ViewModels
         internal async Task Refresh()
         {
 
-            Locations.Clear();
-            LocationsToDisplay.Clear();
+            GeohashLocations.Clear();
             TappedLocation = null;
             _Date = DateTime.Today;
             OnPropertyChanged(nameof(Date));
@@ -397,20 +430,21 @@ namespace GeohashCross.ViewModels
         {
 
             var loc = TappedLocation ?? _CurrentLocation;
+            if(loc == null)
+            {
+                return new HashData { Success = false } ;
+            }
+
 
             var hashData = await Hasher.GetHashData(Date, loc);
 
             if (hashData.Success)
             {
-
-                var existingPins = Locations.Where(x => x.Latitude == hashData.NearestHashLocation.Latitude
-                                                                && x.Longitude == hashData.NearestHashLocation.Longitude).ToList();
-                Locations.RemoveRange(existingPins);
-                Locations.Add(hashData.NearestHashLocation);
-                LocationsToDisplay.Add(hashData.NearestHashLocation);
-                if (ShowNeighbours)
+                var location = new HashLocation(hashData);
+                GeohashLocations.Add(location);
+                if(ShowNeighbours)
                 {
-                    LocationsToDisplay.AddRange(hashData.NearestHashLocation.GetNeighbours());
+                    GeohashLocations.AddRange(location.Neighbours);
                 }
 
             }
@@ -420,20 +454,7 @@ namespace GeohashCross.ViewModels
             return hashData;
         }
 
-        bool _ShowNeighbours;
-        public bool ShowNeighbours
-        {
-            get
-            {
-                return _ShowNeighbours;
-            }
-            set
-            {
-                _ShowNeighbours = value;
-                UpdateNeighbouringPins();
-                OnPropertyChanged(nameof(ShowNeighbours));
-            }
-        }
+        public bool ShowNeighbours { get; set; }
 
         bool _DarkNavEnabled = false;
         public bool DarkNavEnabled
@@ -449,22 +470,6 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        private void UpdateNeighbouringPins()
-        {
-            if (ShowNeighbours)
-            {
-                foreach (var loc in Locations)
-                {
-                    LocationsToDisplay.AddRange(loc.GetNeighbours());
-                }
-            }
-            else
-            {
-                var removeMe = LocationsToDisplay.Where(x => Locations.Where(y => y.Latitude == x.Latitude && y.Longitude == x.Longitude).Count() == 0).ToList();
-                LocationsToDisplay.RemoveRange(removeMe, System.Collections.Specialized.NotifyCollectionChangedAction.Remove);
-            }
-
-        }
 
         public async Task ChangeDate()
         {
@@ -481,8 +486,7 @@ namespace GeohashCross.ViewModels
             {
                 Date = DateTime.Today;
                 ShowNeighbours = false;
-                LocationsToDisplay.Clear();
-                Locations.Clear();
+                GeohashLocations.Clear();
                 if(CurrentLocation == null)
                 {
                     await UpdateCurrentLocation();

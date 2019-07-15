@@ -7,6 +7,7 @@ namespace GeohashCross.Models
 {
     public static class LocationExtension
     {
+        [Obsolete("If using HashLocation please use Neighbours Property")]
         public static List<Location> GetNeighbours(this Location location)
         {
             var hashes = new List<Location>
