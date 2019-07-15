@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -30,7 +30,6 @@
                     Height="58" />
                 <RowDefinition
                     Height="2" />
-               
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
@@ -47,16 +46,27 @@
                     Width="58" />
                 <ColumnDefinition
                     Width="58" />
-                
             </Grid.ColumnDefinitions>
             <maps:Map
                 Margin="-8,-80,-80,-8"
                 x:Name="TheMap"
                 Grid.ColumnSpan="6"
+
                 MapClicked="MapClicked"
-                Grid.RowSpan="6" >
-              
-                    
+                MyLocationEnabled="false"
+                
+                ItemsSource="{Binding GeohashLocations}"
+                Grid.RowSpan="6">
+                <maps:Map.ItemTemplate>
+                    <DataTemplate>
+                        <maps:Pin
+                            Position="{Binding Position}"
+                            Label="{Binding Description}"
+                            
+                            
+                            />
+                    </DataTemplate>
+                </maps:Map.ItemTemplate>
             </maps:Map>
             <Frame
                 Grid.ColumnSpan="7"
@@ -87,7 +97,6 @@
                             Width="*" />
                         <ColumnDefinition
                             Width="*" />
-                       
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -117,14 +126,12 @@
                         TextColor="Transparent"
                         Unfocused="DateChanged"
                         Format="yyyy-MM-dd" />
-                    <Entry     
+                    <Entry
                         Placeholder="Date"
                         Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}', Mode=OneWay}"
                         Visual="Material"
                         Grid.ColumnSpan="11"
-                        InputTransparent="true"
-                        
-                    />
+                        InputTransparent="true" />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="1"
@@ -140,7 +147,7 @@
                         Grid.Row="1"
                         Grid.ColumnSpan="5"
                         Grid.Column="6"
-                        Text="Hasah" />
+                        Text="Hash" />
                     <Label
                         Style="{StaticResource SmallLabel}"
                         Grid.Row="2"
@@ -157,7 +164,8 @@
                         Grid.Row="4"
                         Grid.ColumnSpan="6"
                         Text="{Binding Distance}" />
-                    <Button Style="{StaticResource ExpandButtonStyle}"
+                    <Button
+                        Style="{StaticResource ExpandButtonStyle}"
                         Grid.Row="2"
                         Grid.RowSpan="3"
                         Text="{StaticResource chevronRight}"
@@ -172,17 +180,7 @@
                         Grid.ColumnSpan="11"
                         Margin="0,10,0,5"
                         HeightRequest="1" />
-                    <Label
-                        Grid.Row="7"
-                        Text="Neighbours"
-                        IsVisible="{Binding ShowAdvanced}"
-                        Grid.ColumnSpan="4"
-                        Style="{StaticResource MediumLabel}" />
-                    <Switch
-                        Grid.ColumnSpan="4"
-                        IsVisible="{Binding ShowAdvanced}"
-                        Grid.Row="8"
-                        IsToggled="{Binding ShowNeighbours}" />
+                   
                     <Button
                         Style="{StaticResource ExpandButtonStyle}"
                         Grid.Row="9"
@@ -190,9 +188,7 @@
                         Text="{StaticResource chevronRight}"
                         IsVisible="{Binding ShowAdvanced}"
                         Command="{Binding ShowMoreCommand}"
-                        Grid.Column="10" 
-                    />
-                    
+                        Grid.Column="10" />
                 </Grid>
             </Frame>
             <Frame
@@ -202,7 +198,6 @@
                 IsVisible="{Binding DarkNavEnabled}"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid
-
                     RowSpacing="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
@@ -242,7 +237,6 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Distance}" />
-                    
                     <!--  This scroll view has usefull debug data, row definitions may need changing to make it visible -->
                     <!--  <ScrollView
                         Grid.Row="3"
@@ -315,7 +309,7 @@
                 Grid.Column="3"
                 Grid.Row="4"
                 Text="{StaticResource neighbours}"
-                Clicked="SatteliteClicked"
+                Command="{Binding ToggleNeighbours}"
                 Style="{StaticResource ButtonStyle}" />
             <Button
                 Grid.Row="3"
@@ -325,31 +319,42 @@
                 Command="{Binding ResetCommand}"
                 FontFamily="{StaticResource MaterialDesignIcons}"
                 Text="{StaticResource refresh}" />
-             <Button
+            <Button
                 Grid.Row="4"
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Grid.Column="6"
                 Style="{StaticResource ButtonStyle}"
-                Command="{Binding MyPosition}"
-                Clicked="Handle_Clicked"
+                Clicked="MyPositionClicked"
                 FontFamily="{StaticResource MaterialDesignIcons}"
                 Text="{StaticResource target}" />
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
-          <Style x:Key="ExpandButtonStyle" TargetType="Button">
-            <Setter Property="TextColor" Value="{StaticResource Divider}"/>
-            <Setter Property="FontFamily" Value="{StaticResource MaterialDesignIcons}"/>
-            <Setter Property="FontSize" Value="Large"/>
-            <Setter Property="HorizontalOptions" Value="End"/>
-            <Setter Property="VerticalOptions" Value="End"/>
-            <Setter Property="Visual" Value="Default"/>
-          </Style>
-
+            <Style
+                x:Key="ExpandButtonStyle"
+                TargetType="Button">
+                <Setter
+                    Property="TextColor"
+                    Value="{StaticResource Divider}" />
+                <Setter
+                    Property="FontFamily"
+                    Value="{StaticResource MaterialDesignIcons}" />
+                <Setter
+                    Property="FontSize"
+                    Value="Large" />
+                <Setter
+                    Property="HorizontalOptions"
+                    Value="End" />
+                <Setter
+                    Property="VerticalOptions"
+                    Value="End" />
+                <Setter
+                    Property="Visual"
+                    Value="Default" />
+            </Style>
             <local:LocationSummary
                 x:Key="locationSummary" />
-            
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

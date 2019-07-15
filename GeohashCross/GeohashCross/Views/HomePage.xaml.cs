@@ -19,7 +19,7 @@ namespace GeohashCross.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
-        public async void Handle_Clicked(object sender, EventArgs e)
+        public async void MyPositionClicked(object sender, EventArgs e)
         {
             try
             {
@@ -58,6 +58,7 @@ namespace GeohashCross.Views
                 }
                 catch (Exception ex)
                 {
+                    Debug.WriteLine($"{ex}\n{ex.StackTrace}");
                     Crashes.TrackError(ex);
                     await Shell.Current.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
                 }
@@ -108,6 +109,7 @@ namespace GeohashCross.Views
 
             if (status == PermissionStatus.Granted)
             {
+                TheMap.MyLocationEnabled = true;
                 return true;
             }
 
@@ -120,29 +122,10 @@ namespace GeohashCross.Views
 
         private void SetupUI()
         {
-            TheMap.IsShowingUser = true;
-            //TheMap.UiSettings.
-            //TheMap.UiSettings.MyLocationButtonEnabled = true;
-            //TheMap.UiSettings.ZoomControlsEnabled = true;
-            VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
-            //TheMap.InfoWindowClicked += TheMap_InfoWindowClicked;
+            //VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
+            TheMap.UiSettings.MyLocationButtonEnabled = false;
 
-            //TheMap.UiSettings.CompassEnabled = true;
-            //TheMap.UiSettings.MapToolbarEnabled = true;
-            //TheMap.UiSettings.IndoorLevelPickerEnabled = true;
-            //TheMap.MapType = MapType.Satellite;
-            //if (DeviceDisplay.MainDisplayInfo.Height == 1792 || DeviceDisplay.MainDisplayInfo.Height == 2436 || DeviceDisplay.MainDisplayInfo.Height == 2688)//Notched phones
-            //{
-            //    LightFrame.Margin = new Thickness(20, 50, 20, 0);
-            //    TheDarkFrame.Margin = new Thickness(10, 50, 10, 0);
-            //    TheGrid.RowDefinitions.Remove(TheGrid.RowDefinitions.LastOrDefault());
-            //    TheGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(84, GridUnitType.Absolute) });
-            //}
-            //else
-            //{
-            //    LightFrame.Margin = new Thickness(20, 30, 20, 0);
-            //    TheDarkFrame.Margin = new Thickness(10, 30, 10, 0);
-            //}
+
             Debug.WriteLine(DeviceInfo.Model);
             Debug.WriteLine(DeviceDisplay.MainDisplayInfo.Height);
 
@@ -150,73 +133,7 @@ namespace GeohashCross.Views
 
         }
 
-        void PinLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Device.BeginInvokeOnMainThread(async() =>
-            {
 
-                try
-                {
-
-                    if (VM.LocationsToDisplay?.Count == 0)
-                    {
-                        TheMap.Pins.Clear();
-                        return;
-                    }
-                    Position? lastPos = null;
-                    if (e.OldItems != null)
-                    {
-
-                        foreach (var item in e.OldItems)
-                        {
-                            var loc = item as Location;
-                            var pin = TheMap.Pins.FirstOrDefault(x => x.Position.Latitude == loc.Latitude && x.Position.Longitude == loc.Longitude);
-                            if (pin != null)
-                            {
-                                TheMap.Pins.Remove(pin);
-                            }
-                        }
-                    }
-
-                    if (e.NewItems != null)
-                    {
-                        foreach (var item in e.NewItems)
-                        {
-                            var loc = item as Location;
-
-                            var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
-                            var pin = new Xamarin.Forms.GoogleMaps.Pin
-                            {
-                                Label = loc.Timestamp == DateTime.Today ? "Today's Hash" : loc.Timestamp.ToString("yyyy-MM-dd"),
-                                Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                                Icon = loc.Timestamp == DateTime.Today ? BitmapDescriptorFactory.DefaultMarker(Color.Red) : BitmapDescriptorFactory.DefaultMarker(Color.Yellow),
-                                Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
-                                //Address = $"{loc.Latitude},{loc.Longitude}"
-                            };
-                            TheMap.Pins.Add(pin);
-
-                            if (VM.Locations.Any(x => x.Latitude == loc.Latitude && x.Longitude == loc.Longitude))
-                            {
-                                lastPos = new Position(loc.Latitude, loc.Longitude);
-                            }
-                        }
-                    }
-
-
-                    if (lastPos.HasValue)
-                    {
-                        await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos.Value), TimeSpan.FromSeconds(1));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error in Pin Collection changed \n{ex}\n{ex.StackTrace}");
-                    Crashes.TrackError(ex);
-                }
-            });
-
-
-        }
 
         async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
         {
@@ -255,7 +172,7 @@ namespace GeohashCross.Views
 
 
 
-        bool SatteliteView = false;
+        bool SatteliteView;
         void SatteliteClicked(object sender, System.EventArgs e)
         {
             try
