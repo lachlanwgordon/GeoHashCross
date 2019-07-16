@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using GeohashCross.Services;
 using NUnit.Framework;
 
-namespace Tests
+namespace GeohashCross.UnitTests
 {
     public class WebTests
     {
