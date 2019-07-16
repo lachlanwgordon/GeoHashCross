@@ -51,18 +51,25 @@ namespace GeohashCross.Models
         {
             get
             {
-                var hashes = new List<HashLocation>
-                {
-                    new HashLocation{Latitude = Latitude -1, Longitude = Longitude -1, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude -1, Longitude = Longitude, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude -1, Longitude = Longitude + 1, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude, Longitude = Longitude - 1, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude, Longitude = Longitude + 1, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude + 1, Longitude = Longitude - 1, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude + 1, Longitude = Longitude, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude + 1, Longitude = Longitude + 1, Date = Date, Description = Description, IsNeighbour = true },
 
-                };
+
+                List<HashLocation> hashes = new List<HashLocation>
+                    {
+                    new HashLocation{Latitude = Latitude.IncrementLatitude(), Longitude = Longitude.DecrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude.IncrementLatitude(), Longitude = Longitude, Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude.IncrementLatitude(), Longitude = Longitude.IncrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude, Longitude = Longitude.DecrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude, Longitude = Longitude.IncrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude.DecrementLatitude(), Longitude = Longitude.DecrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude.DecrementLatitude(), Longitude = Longitude, Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation{Latitude = Latitude.DecrementLatitude(), Longitude = Longitude.IncrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    };
+
+                if (Math.Abs(Latitude) >= 89)
+                {
+                    hashes = hashes.GetRange(3, 5);
+                }
+
                 return hashes;
             }
         }

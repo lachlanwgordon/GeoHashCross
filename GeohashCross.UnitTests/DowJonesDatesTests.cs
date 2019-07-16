@@ -3,7 +3,7 @@ using GeohashCross.Services;
 using NUnit.Framework;
 using Xamarin.Essentials;
 
-namespace Tests
+namespace GeohashCross.UnitTests
 {
     public class DowJonesDatesTests
     {
