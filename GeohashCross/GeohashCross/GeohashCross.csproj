@@ -18,6 +18,7 @@
     <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
     <PackageReference Include="sqlite-net-pcl" Version="1.5.231" />
     <PackageReference Include="LiveXAML" Version="2.1.72" />
+    <PackageReference Include="Xamarin.Forms.DebugRainbows" Version="1.0.7" />
   </ItemGroup>
 
   <ItemGroup>

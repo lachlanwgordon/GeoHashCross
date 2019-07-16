@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Application
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -15,15 +15,19 @@
             <Color
                 x:Key="Accent">#536DFE</Color>
             <Color
-                x:Key="PrimaryText">#212121</Color>
+                x:Key="PrimaryText">#313131</Color>
             <Color
-                x:Key="SecondaryText">#757575</Color>
+                x:Key="SecondaryText">#444444</Color>
             <Color
                 x:Key="Icons">#FFFFFF</Color>
             <Color
                 x:Key="Divider">#BDBDBD</Color>
             <Color
                 x:Key="DarkBackground">#282828</Color>
+             <x:Double
+                x:Key="ButtonSize">62</x:Double>
+             <x:Int16
+                x:Key="ButtonRadius">29</x:Int16>
             <OnPlatform
                 x:TypeArguments="x:String"
                 x:Key="MaterialDesignIcons">
@@ -110,9 +114,9 @@
                 TargetType="Button">
                 <Setter
                     Property="CornerRadius"
-                    Value="29" />
-                <Setter Property="HeightRequest" Value="58"/>
-                <Setter Property="WidthRequest" Value="58"/>
+                    Value="{StaticResource ButtonRadius}" />
+                <Setter Property="HeightRequest" Value="{StaticResource ButtonSize}"/>
+                <Setter Property="WidthRequest" Value="{StaticResource ButtonSize}"/>
                 <Setter Property="HorizontalOptions" Value="Center"/>
                 <Setter
                     Property="TextColor"
@@ -126,6 +130,9 @@
                 <Setter
                     Property="BackgroundColor"
                     Value="{StaticResource Accent}" />
+                 <Setter
+                    Property="Margin"
+                    Value="4" />
             </Style>
             
             <Style
