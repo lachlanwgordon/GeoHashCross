@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Shell
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:local="clr-namespace:GeohashCross"
@@ -25,7 +25,8 @@
                     Size="{StaticResource TabIconSize}" />
             </Tab.Icon>
         </Tab>
-        <Tab
+<!--Disabled until geohash wiki goes https        -->
+       <!-- <Tab
             Title="Wiki"
             >
             <ShellContent>
@@ -37,7 +38,7 @@
                     FontFamily="{StaticResource MaterialDesignIcons}"
                     Size="{StaticResource TabIconSize}" />
             </Tab.Icon>
-        </Tab>
+        </Tab>-->
         <Tab
             Title="Notifications">
             <ShellContent >

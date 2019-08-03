@@ -307,9 +307,14 @@ namespace GeohashCross.Views
             };
         }
 
+        int appearingCount;
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
+
+            Debug.WriteLine($"On appearing {appearingCount}");
+
             Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
             {
                 {"Page", GetType().Name}
@@ -353,6 +358,7 @@ namespace GeohashCross.Views
             }
 
         }
+
 
     }
 }
