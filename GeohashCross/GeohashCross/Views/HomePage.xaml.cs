@@ -30,7 +30,7 @@ namespace GeohashCross.Views
 
                 await TheMap.AnimateCamera(update, TimeSpan.FromMilliseconds(200));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Crashes.TrackError(ex);
             }
@@ -39,33 +39,27 @@ namespace GeohashCross.Views
         public HomePage()
         {
             InitializeComponent();
-            Init();
-            UpdateCanvas();
         }
 
-        public void Init()
+        public async Task Init()
         {
-            Device.BeginInvokeOnMainThread(async () =>
+
+            try
             {
-                try
-                {
-                    SetupUI();
+                TheMap.UiSettings.MyLocationButtonEnabled = false;//Don't show the my location button because I've implemented my own
 
-                    var granted = await GetPermissions();
-                    if (!granted)
-                        return;
-                    await SetupLocations();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"{ex}\n{ex.StackTrace}");
-                    Crashes.TrackError(ex);
-                    await Shell.Current.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
-                }
-            });
-
-
-
+                var granted = await GetPermissions();
+                if (!granted)
+                    return;
+                await SetupLocations();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex}\n{ex.StackTrace}");
+                Crashes.TrackError(ex);
+                await Shell.Current.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
+            }
+            Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
         }
 
         private async Task SetupLocations()
@@ -109,7 +103,7 @@ namespace GeohashCross.Views
 
             if (status == PermissionStatus.Granted)
             {
-                TheMap.MyLocationEnabled = true;
+                VM.LocationPermissionGranted = true;
                 return true;
             }
 
@@ -118,19 +112,6 @@ namespace GeohashCross.Views
                 await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
             }
             return false;
-        }
-
-        private void SetupUI()
-        {
-            //VM.LocationsToDisplay.CollectionChanged += PinLocations_CollectionChanged;
-            TheMap.UiSettings.MyLocationButtonEnabled = false;
-
-
-            Debug.WriteLine(DeviceInfo.Model);
-            Debug.WriteLine(DeviceDisplay.MainDisplayInfo.Height);
-
-            Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
-
         }
 
 
@@ -172,21 +153,7 @@ namespace GeohashCross.Views
 
 
 
-        bool SatteliteView;
-        void SatteliteClicked(object sender, System.EventArgs e)
-        {
-            try
-            {
-                SatteliteView = !SatteliteView;
-                TheMap.MapType = SatteliteView ? MapType.Satellite : MapType.Street;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in satelite changed \n{ex}\n{ex.StackTrace}");
-                Crashes.TrackError(ex);
 
-            }
-        }
 
         private async void YouMadeItClicked(object sender, EventArgs e)
         {
@@ -265,61 +232,35 @@ namespace GeohashCross.Views
             Color = SKColors.Black
         };
 
-        public static class Paint
+        bool initialised;
+        bool FirstUse
         {
-            
-
-            public static SKPaint RedPaint = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.Red
-            };
-
-
-            public static SKPaint BluePaint = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.Blue
-            };
-
-
-            public static SKPath NeedlyPath = SKPath.ParseSvgPathData("M 0 -80 C 0 -30 20 -30 5 -20 L 10 10 C 5 7.5 -5 7.5 -10 10 L -5 -20 C -20 -30 0 -30 0 -80");
-
-            public static SKPaint WhiteFill = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.White,
-            };
-
-            public static SKPaint GreyFill = new SKPaint
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColors.DimGray,
-            };
-
-            public static SKPaint WhiteStrokePaint = new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                Color = SKColors.White,
-                StrokeWidth = 2,
-                StrokeCap = SKStrokeCap.Round,
-                IsAntialias = true
-            };
+            get => Xamarin.Essentials.Preferences.Get(Keys.FirstUse, false);
+            set => Xamarin.Essentials.Preferences.Set(Keys.FirstUse, value);
         }
 
-        int appearingCount;
-
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            Debug.WriteLine($"On appearing {appearingCount}");
 
             Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
             {
                 {"Page", GetType().Name}
             });
-            Debug.WriteLine($"Notifications appearing {DateTime.Now}");
+
+            if (FirstUse)
+            {
+                await Shell.Current.DisplayAlert("Onboarding Time", "how to", "Okay");
+                FirstUse = false;
+            }
+
+            if (!initialised)
+            {
+                await Init();
+                initialised = true;
+
+            }
 
         }
 

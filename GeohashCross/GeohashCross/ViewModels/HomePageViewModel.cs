@@ -13,11 +13,51 @@ using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Xamarin.Forms.GoogleMaps;
 
 namespace GeohashCross.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
+        bool locationPermissionGranted;
+        public bool LocationPermissionGranted
+        { 
+            get
+            {
+                return locationPermissionGranted;
+            }
+            set
+            {
+                locationPermissionGranted = value;
+                OnPropertyChanged(nameof(LocationPermissionGranted));
+            }
+        }
+
+        public ICommand SatteliteClicked
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    IsSatteliteView = !IsSatteliteView;
+                });
+            }
+        }
+
+        bool isSatteliteView;
+        public bool IsSatteliteView
+        {
+            get
+            {
+                return isSatteliteView;
+            }
+            set
+            {
+                isSatteliteView = value;
+                OnPropertyChanged(nameof(IsSatteliteView));
+            }
+        }
+
         public ICommand ToggleNeighbours
         {
             get
@@ -58,7 +98,6 @@ namespace GeohashCross.ViewModels
                     GeohashLocations.Remove(loc);
                 }
 
-                Debug.WriteLine(GeohashLocations.Count);
             }
         }
 
@@ -121,7 +160,7 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        bool _ShowAdvanced = false;
+        bool _ShowAdvanced;
         public bool ShowAdvanced
         {
             get
@@ -140,13 +179,10 @@ namespace GeohashCross.ViewModels
         {
             get
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
                 return _TappedLocation;
             }
             set
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
                 _TappedLocation = value;
                 Task.Run(LoadHashLocation);
@@ -329,7 +365,6 @@ namespace GeohashCross.ViewModels
             {
                 if (value != _Date)
                 {
-                    Debug.WriteLine("Date changed");
                     _Date = value;
                 }
                 else
@@ -363,7 +398,6 @@ namespace GeohashCross.ViewModels
 
             try
             {
-                Debug.WriteLine("About to get Location");
                 Location loc = null;
                 int failCount = 0;
                 while(loc == null)
@@ -372,14 +406,12 @@ namespace GeohashCross.ViewModels
                         await Task.Delay(1000);
                     failCount++;
                     var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(failCount * 1000));
-                    Debug.WriteLine($"try location for {failCount * 1000}ms");
                     loc = await Geolocation.GetLocationAsync(locationRequest);
 
                 }
 
 
 
-                Debug.WriteLine("Got Location");
                 CurrentLocation = loc;
 
                 if (!Initialised)
@@ -415,7 +447,6 @@ namespace GeohashCross.ViewModels
                 if (Initialised)
                     return;
                 Initialised = true;
-                Debug.WriteLine("!!!!!!!!!!!!!!!STARTING A TIMER");
                 Device.StartTimer(TimeSpan.FromSeconds(5), TimerInitiatedUpdateLocation);
             }
             catch (Exception ex)

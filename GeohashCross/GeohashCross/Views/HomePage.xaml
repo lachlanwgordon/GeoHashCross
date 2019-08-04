@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
-    Shell.NavBarIsVisible="false">
+    Shell.NavBarIsVisible="false" xmlns:converters="clr-namespace:GeohashCross.Converters">
     <ContentPage.BindingContext>
         <vm:HomePageViewModel
             x:Name="VM" />
@@ -55,7 +55,8 @@
                 x:Name="TheMap"
                 Grid.ColumnSpan="6"
                 MapClicked="MapClicked"
-                MyLocationEnabled="false"
+                MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
+                MyLocationEnabled="{Binding LocationPermissionGranted}"
                 ItemsSource="{Binding GeohashLocations}"
                 Grid.RowSpan="6">
                 <maps:Map.ItemTemplate>
@@ -173,8 +174,6 @@
                         Grid.ColumnSpan="6"
                         d:Text="1km"
                         Text="{Binding Distance}" />
-                   
-                             
                 </Grid>
             </Frame>
             <Frame
@@ -289,7 +288,7 @@
                 Grid.Column="4"
                 Grid.Row="4"
                 Text="{StaticResource layers}"
-                Clicked="SatteliteClicked"
+                Command="{Binding SatteliteClicked}"
                 Style="{StaticResource ButtonStyle}" />
             <Button
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
@@ -318,6 +317,7 @@
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
+          <converters:BoolToMapTypeConverter x:Key="boolToMapTypeConverter"/>
             <Style
                 x:Key="ExpandButtonStyle"
                 TargetType="Button">

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\" />
+    <Folder Include="Converters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ViewModels\AutoLinkedViewModel.cs" />
