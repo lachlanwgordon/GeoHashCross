@@ -20,7 +20,7 @@ namespace GeohashCross.Converters
 
             // TODO: Put your value conversion logic here.
 
-            return input ? MapType.Satellite : MapType.None;
+            return input ? MapType.Satellite : MapType.Street;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
