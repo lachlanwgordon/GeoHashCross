@@ -269,7 +269,7 @@ namespace GeohashCross.ViewModels
 
 
         //This is the direction to the hash that the needle should show. It updates as the device is rotated and accounts for magnetic declination
-        public double TargetNeedleDirection
+        public float TargetNeedleDirection
         {
             get
             {
@@ -278,7 +278,7 @@ namespace GeohashCross.ViewModels
 
                 var displayBearing =  Bearing - HeadingTrueNorth;
 
-                return displayBearing;
+                return (float)displayBearing;
             }
         }
 

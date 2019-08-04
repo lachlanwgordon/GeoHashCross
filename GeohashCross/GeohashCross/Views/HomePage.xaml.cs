@@ -9,7 +9,6 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
-using SkiaSharp;
 using Microsoft.AppCenter.Analytics;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
@@ -59,7 +58,6 @@ namespace GeohashCross.Views
                 Crashes.TrackError(ex);
                 await Shell.Current.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
             }
-            Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
         }
 
         private async Task SetupLocations()
@@ -168,69 +166,8 @@ namespace GeohashCross.Views
             }
         }
 
-        void Handle_PaintSurface(object sender, SkiaSharp.Views.Forms.SKPaintSurfaceEventArgs e)
-        {
-            if (!VM.DarkNavEnabled)
-                return;
+        
 
-
-            SKSurface surface = e.Surface;
-            SKCanvas canvas = surface.Canvas;
-            canvas.Clear(SKColors.Transparent);
-
-            var height = e.Info.Height;
-            var width = e.Info.Width;
-
-            //Setup canvas with transforms based at the center
-            canvas.Translate(width / 2, height / 2);
-            canvas.Scale(width / 220);
-
-            canvas.Save();
-
-            //Markers around circle
-            for (int angle = 0; angle < 360; angle += 15)
-            {
-                canvas.DrawCircle(0, -90, angle % 90 == 0 ? 5 : 2, Paint.WhiteFill);
-                canvas.RotateDegrees(15);
-            }
-
-            canvas.Restore();
-
-
-            //Target Needle
-            canvas.Save();
-            canvas.RotateDegrees((int)VM.TargetNeedleDirection);
-            canvas.DrawPath(Paint.NeedlyPath, Paint.BluePaint);
-            canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
-            canvas.Restore();
-
-
-
-            //MagneticNorth
-            canvas.Save();
-            canvas.RotateDegrees((int)VM.MagneticNorthNeedleDirection);
-            canvas.DrawText("M", 0, -100, Paint.RedPaint);
-            canvas.Restore();
-
-
-            //TrueNorth
-            canvas.Save();
-            canvas.RotateDegrees((int)VM.TrueNorthNeedleDirection);
-            canvas.DrawText("T", 0, -100, BlackPaint);
-            canvas.Restore();
-        }
-
-        bool UpdateCanvas()
-        {
-            skiaView.InvalidateSurface();
-            return true;
-        }
-
-        public static SKPaint BlackPaint = new SKPaint
-        {
-            Style = SKPaintStyle.Fill,
-            Color = SKColors.Black
-        };
 
         bool initialised;
         bool FirstUse

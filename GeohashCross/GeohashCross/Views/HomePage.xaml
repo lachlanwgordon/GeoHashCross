@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
-    Shell.NavBarIsVisible="false" xmlns:converters="clr-namespace:GeohashCross.Converters">
+    Shell.NavBarIsVisible="false" xmlns:converters="clr-namespace:GeohashCross.Converters" xmlns:views="clr-namespace:GeohashCross.Views">
     <ContentPage.BindingContext>
         <vm:HomePageViewModel
             x:Name="VM" />
@@ -211,11 +211,13 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="Hash Direction" />
-                    <skia:SKCanvasView
-                        x:Name="skiaView"
+                    <views:Compass
+                        NeedleDirection="{Binding TargetNeedleDirection}"
+                        Grid.Row="1" 
                         Grid.Column="1"
-                        PaintSurface="Handle_PaintSurface"
-                        Grid.Row="1" />
+                        IsVisible="{Binding DarkNavEnabled}"
+                    />
+                   
                     <Label
                         Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
@@ -223,39 +225,6 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Distance}" />
-                    <!--  This scroll view has usefull debug data, row definitions may need changing to make it visible -->
-                    <!--  <ScrollView
-                        Grid.Row="3"
-                        Grid.ColumnSpan="3">
-                        <StackLayout>
-                            <Label
-                                Text="{Binding HeadingMagneticNorth, StringFormat='HeadMagnNor: {0}'}" />
-                            <Label
-                                Text="{Binding HeadingTrueNorth, StringFormat='HeadTrueNor: {0}'}"
-                                Grid.Row="5"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding Declination, StringFormat='Declination: {0}'}"
-                                Grid.Row="6"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding TrueNorthNeedleDirection, StringFormat='TrueNorthNeedleDirection: {0}'}"
-                                Grid.Row="7"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding MagneticNorthNeedleDirection, StringFormat='MagNorNeedDir: {0}'}"
-                                Grid.ColumnSpan="3"
-                                Grid.Row="8" />
-                            <Label
-                                Text="{Binding Bearing, StringFormat='Bearing: {0}'}"
-                                Grid.Row="9"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding TargetNeedleDirection, StringFormat='TargNeedDir: {0}'}"
-                                Grid.Row="9"
-                                Grid.ColumnSpan="3" />
-                        </StackLayout>
-                    </ScrollView>-->
                     <Button
                         Text="{StaticResource night}"
                         Style="{StaticResource ButtonStyle}"
@@ -318,28 +287,6 @@
     <ContentPage.Resources>
         <ResourceDictionary>
           <converters:BoolToMapTypeConverter x:Key="boolToMapTypeConverter"/>
-            <Style
-                x:Key="ExpandButtonStyle"
-                TargetType="Button">
-                <Setter
-                    Property="TextColor"
-                    Value="{StaticResource Divider}" />
-                <Setter
-                    Property="FontFamily"
-                    Value="{StaticResource MaterialDesignIcons}" />
-                <Setter
-                    Property="FontSize"
-                    Value="Large" />
-                <Setter
-                    Property="HorizontalOptions"
-                    Value="End" />
-                <Setter
-                    Property="VerticalOptions"
-                    Value="End" />
-                <Setter
-                    Property="Visual"
-                    Value="Default" />
-            </Style>
             <local:LocationSummary
                 x:Key="locationSummary" />
         </ResourceDictionary>
