@@ -471,8 +471,6 @@ namespace GeohashCross.ViewModels
 
         public async Task<HashLocation> LoadHashLocation()
         {
-            Debug.WriteLine("LoadHashLocation");
-
             var loc = TappedLocation ?? _CurrentLocation;
             if (loc == null)
             {
@@ -527,7 +525,6 @@ namespace GeohashCross.ViewModels
 
         private async void MapTapped(object obj)
         {
-            Debug.WriteLine("Map tapped");
             var loc = obj as Location;
             TappedLocation = loc;
             await LoadHashLocation();

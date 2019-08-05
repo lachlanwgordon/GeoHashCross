@@ -11,7 +11,9 @@
     xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
     mc:Ignorable="d"
     xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
-    Shell.NavBarIsVisible="false" xmlns:converters="clr-namespace:GeohashCross.Converters" xmlns:views="clr-namespace:GeohashCross.Views">
+    Shell.NavBarIsVisible="false"
+    xmlns:converters="clr-namespace:GeohashCross.Converters"
+    xmlns:views="clr-namespace:GeohashCross.Views">
     <ContentPage.BindingContext>
         <vm:HomePageViewModel
             x:Name="VM" />
@@ -61,14 +63,15 @@
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
                         <maps:Pin
-                            
                             Position="{Binding ., Converter={StaticResource hashLocationToPositionConverter}}"
                             Label="{Binding Description}" />
                     </DataTemplate>
                 </maps:Map.ItemTemplate>
                 <maps:Map.Behaviors>
-                    <behaviors:EventToCommandBehavior EventName="MapClicked" Command="{Binding MapTappedCommand}" Converter="{StaticResource mapTappedEventArgsToLocationConverter}" />
-            
+                    <behaviors:EventToCommandBehavior
+                        EventName="MapClicked"
+                        Command="{Binding MapTappedCommand}"
+                        Converter="{StaticResource mapTappedEventArgsToLocationConverter}" />
                 </maps:Map.Behaviors>
             </maps:Map>
             <Frame
@@ -118,13 +121,13 @@
                             Height="Auto" />
                         <RowDefinition
                             Height="Auto" />
-                       
                     </Grid.RowDefinitions>
-                     <!-- Without this box view my layout goes crazy -->
-                    <BoxView HeightRequest="1" Grid.Row="4"
-                             VerticalOptions="Center"
-                             BackgroundColor="Transparent"
-                             />
+                    <!-- Without this box view my layout goes crazy -->
+                    <BoxView
+                        HeightRequest="1"
+                        Grid.Row="4"
+                        VerticalOptions="Center"
+                        BackgroundColor="Transparent" />
                     <DatePicker
                         x:Name="HiddenDatePicker"
                         BackgroundColor="Transparent"
@@ -142,8 +145,7 @@
                         Visual="Material"
                         BackgroundColor="#DDEEEEEE"
                         Grid.ColumnSpan="11"
-                        InputTransparent="true"
-                        />
+                        InputTransparent="true" />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="1"
@@ -166,7 +168,7 @@
                         Grid.ColumnSpan="5"
                         Grid.Column="6"
                         d:Text="-37,145"
-                        Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" />
+                        Text="{Binding HashLocation, Converter={StaticResource locationSummary}}" />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="3"
@@ -217,11 +219,9 @@
                         Text="Hash Direction" />
                     <views:Compass
                         NeedleDirection="{Binding TargetNeedleDirection}"
-                        Grid.Row="1" 
+                        Grid.Row="1"
                         Grid.Column="1"
-                        IsVisible="{Binding DarkNavEnabled}"
-                    />
-                   
+                        IsVisible="{Binding DarkNavEnabled}" />
                     <Label
                         Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
@@ -290,11 +290,14 @@
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
-          <converters:HashLocationToPositionConverter x:Key="hashLocationToPositionConverter"/>
-          <converters:BoolToMapTypeConverter x:Key="boolToMapTypeConverter"/>
-            <local:LocationSummary
+            <converters:HashLocationToPositionConverter
+                x:Key="hashLocationToPositionConverter" />
+            <converters:BoolToMapTypeConverter
+                x:Key="boolToMapTypeConverter" />
+            <converters:LocationSummary
                 x:Key="locationSummary" />
-            <converters:MapTappedEventArgsToLocationConverter x:Key="mapTappedEventArgsToLocationConverter"/>
+            <converters:MapTappedEventArgsToLocationConverter
+                x:Key="mapTappedEventArgsToLocationConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

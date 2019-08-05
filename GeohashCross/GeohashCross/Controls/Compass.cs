@@ -30,7 +30,6 @@ namespace GeohashCross.Views
         {
             if (!IsVisible)
                 return;
-            Debug.WriteLine("Painting");
 
             SKSurface surface = e.Surface;
             SKCanvas canvas = surface.Canvas;

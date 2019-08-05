@@ -21,7 +21,6 @@ namespace GeohashCross.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            Debug.WriteLine($"Notifications appearing {DateTime.Now}");
         }
     }
 }

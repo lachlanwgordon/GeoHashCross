@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Xamarin.Essentials;
+using GeohashCross.Models;
 using Xamarin.Forms;
 
-namespace GeohashCross.Models
+namespace GeohashCross.Converters
 {
     public class LocationSummary : IValueConverter
     {

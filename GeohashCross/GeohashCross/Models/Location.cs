@@ -16,7 +16,5 @@ namespace GeohashCross.Models
         public Location()
         {
         }
-
-        public string Summary { get => $"{Latitude}, {Longitude}"; }
     }
 }

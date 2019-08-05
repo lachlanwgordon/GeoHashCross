@@ -116,7 +116,6 @@ namespace GeohashCross.Views
 
         async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
         {
-            Debug.WriteLine($"When am I clicked? {e.Pin.Position.Latitude},{e.Pin.Position.Longitude}");
 
             if (Device.RuntimePlatform == Device.iOS)
             {
