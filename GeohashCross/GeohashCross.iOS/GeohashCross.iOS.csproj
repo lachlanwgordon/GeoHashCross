@@ -96,6 +96,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="appcenter-post-clone.sh" />
     <None Include="appcenter-pre-build.sh" />
+    <Compile Include="Services\NotificationPermission.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\fa-solid-900.ttf" />

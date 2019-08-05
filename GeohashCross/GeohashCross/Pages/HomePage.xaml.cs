@@ -159,7 +159,7 @@ namespace GeohashCross.Views
         bool initialised;
         bool FirstUse
         {
-            get => Xamarin.Essentials.Preferences.Get(Keys.FirstUse, false);
+            get => Xamarin.Essentials.Preferences.Get(Keys.FirstUse, true);
             set => Xamarin.Essentials.Preferences.Set(Keys.FirstUse, value);
         }
 
