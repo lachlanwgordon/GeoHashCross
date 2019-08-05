@@ -1,79 +1,64 @@
 using System;
 using System.Collections.Generic;
-using Xamarin.Essentials;
-using Xamarin.Forms;
-using Xamarin.Forms.GoogleMaps;
+using GeohashCross.Services;
 
 namespace GeohashCross.Models
 {
     public class HashLocation : Location
     {
+        public bool IsNeighbour { get; set; }
+        public bool IsGlobal { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime DJDate { get; set; }
+        public bool Is30WRuleApplied { get; set; }
+
+        public HashLocation(double latitude, double longitude, DateTime date, bool isNeighbour, bool isGlobal) : base(latitude, longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+            Date = date;
+            IsGlobal = isGlobal;
+            IsNeighbour = isNeighbour;
+        }
+
         public string Description
         {
-            get;
-            set;
-        }
-
-        public bool IsNeighbour { get; set; }
-
-        public HashLocation()
-        {
-
-        }
-
-        public HashLocation(HashData hashData)
-        {
-            Latitude = hashData.NearestHashLocation.Latitude;
-            Longitude = hashData.NearestHashLocation.Longitude;
-            Date = hashData.RequestDate;
-            Description = hashData.RequestDate == DateTime.Today ? "Today's Hash" : hashData.RequestDate.ToString("yyyy-MM-dd");
-        }
-
-        public DateTime Date { get; set; }
-        public Position Position
-        {
             get
             {
-                return new Position(Latitude, Longitude);
+                if (IsGlobal)
+                {
+                    return $"Global Hash for {Date.ToString(Keys.DateFormat)}";
+                }
+                else
+                {
+                    return Date == DateTime.Today ? "Today's Hash" : Date.ToString("yyyy-MM-dd");
+                }
             }
-        }
-
-        public Color Color
-        {
-            get
-            {
-                return DateTime.Today == Date ? Color.Red : Color.Yellow;
-            }
-
         }
 
         public List<HashLocation> Neighbours
         {
             get
             {
-
-
                 List<HashLocation> hashes = new List<HashLocation>
                     {
-                    new HashLocation{Latitude = Latitude.IncrementLatitude(), Longitude = Longitude.DecrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude.IncrementLatitude(), Longitude = Longitude, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude.IncrementLatitude(), Longitude = Longitude.IncrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude, Longitude = Longitude.DecrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude, Longitude = Longitude.IncrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude.DecrementLatitude(), Longitude = Longitude.DecrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude.DecrementLatitude(), Longitude = Longitude, Date = Date, Description = Description, IsNeighbour = true },
-                    new HashLocation{Latitude = Latitude.DecrementLatitude(), Longitude = Longitude.IncrementLongitude(), Date = Date, Description = Description, IsNeighbour = true },
+                    new HashLocation(Latitude.IncrementLatitude(), Longitude.DecrementLongitude(), Date,true, false ),
+                    new HashLocation(Latitude.IncrementLatitude(), Longitude, Date, true, false ),
+                    new HashLocation(Latitude.IncrementLatitude(), Longitude.IncrementLongitude(), Date, true, false ),
+                    new HashLocation(Latitude, Longitude.DecrementLongitude(), Date, true, false),
+                    new HashLocation(Latitude, Longitude.IncrementLongitude(), Date, true, false ),
+                    new HashLocation(Latitude.DecrementLatitude(), Longitude.DecrementLongitude(), Date, true, false ),
+                    new HashLocation(Latitude.DecrementLatitude(), Longitude, Date, true, false),
+                    new HashLocation(Latitude.DecrementLatitude(), Longitude.IncrementLongitude(), Date, true, false),
                     };
 
                 if (Math.Abs(Latitude) >= 89)
                 {
-                    hashes = hashes.GetRange(3, 5);
+                    hashes = hashes.GetRange(3, 5);//Double allocate?
                 }
 
                 return hashes;
             }
         }
-
-
     }
 }

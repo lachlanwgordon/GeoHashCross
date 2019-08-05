@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 using Xamarin.Essentials;
+using Location = GeohashCross.Models.Location;
 
 namespace GeohashCross.Services
 {
@@ -15,19 +16,15 @@ namespace GeohashCross.Services
         /// If open it returns the date that was input.
         /// If closed it finds most recent day that was open.
         /// e.g. closed on weekends and public holidays so return friday
-        /// This Method is not 30w aware
+        /// This Method is not 30w aware and doesn't need to be
         /// </summary>
         /// <param name="date"></param>
         /// <returns>Return the date that should be used for the most recent DJ opening for a given date </returns>
-        public static Response<DateTime> GetApplicableDJDate(DateTime date)
+        public static DateTime GetApplicableDJDate(DateTime date)
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
             //Dow is closed on weekend
             if(date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
-                Debug.WriteLine($"{date} is a weekend");
-
                 //Check yesterday
                 return GetApplicableDJDate(date.AddDays(-1));//WARNING RECURSION
             }
@@ -35,13 +32,10 @@ namespace GeohashCross.Services
             //Dow is closed on some public holidays
             if(Holidays.Contains(date))
             {
-                Debug.WriteLine($"{date} is a holiday");
-
                 return GetApplicableDJDate(date.AddDays(-1));//WARNING RECURSION
             }
-            Debug.WriteLine($"Using {date}");
-                        
-            return new Response<DateTime>(date, true, "Dow Jones Date is Valid");
+
+            return date;
         }
 
         /// <summary>
@@ -52,8 +46,6 @@ namespace GeohashCross.Services
         /// <returns></returns>
         public static DateTime Get30WCompliantDate(DateTime date, Location location)
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
             //Check 30W rule
             var djDate = date;
             if (location.Longitude >= -30)

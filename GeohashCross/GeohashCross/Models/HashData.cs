@@ -5,6 +5,7 @@ using Xamarin.Essentials;
 
 namespace GeohashCross.Models
 {
+    [Obsolete("Use HashLocation", false)]
     public class HashData
     {
         public bool Success { get; set; }

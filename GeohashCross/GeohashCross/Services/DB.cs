@@ -54,7 +54,6 @@ namespace GeohashCross.Services
             };
             await CrossJobs.Current.Schedule(job);
             var subs = await Connection.Table<NotificationSubscription>().ToListAsync();
-            Debug.WriteLine($"Subscribed to Distance Notifications {subs.Count}");
         }
     }
 }

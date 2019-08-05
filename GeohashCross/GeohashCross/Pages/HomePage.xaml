@@ -5,13 +5,15 @@
     xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
     xmlns:local="clr-namespace:GeohashCross.Models"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
-    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     x:Class="GeohashCross.Views.HomePage"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
     mc:Ignorable="d"
     xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
-    Shell.NavBarIsVisible="false">
+    Shell.NavBarIsVisible="false"
+    xmlns:converters="clr-namespace:GeohashCross.Converters"
+    xmlns:views="clr-namespace:GeohashCross.Views">
     <ContentPage.BindingContext>
         <vm:HomePageViewModel
             x:Name="VM" />
@@ -54,17 +56,23 @@
                 Margin="-8,-80,-80,-8"
                 x:Name="TheMap"
                 Grid.ColumnSpan="6"
-                MapClicked="MapClicked"
-                MyLocationEnabled="false"
+                MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
+                MyLocationEnabled="{Binding LocationPermissionGranted}"
                 ItemsSource="{Binding GeohashLocations}"
                 Grid.RowSpan="6">
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
                         <maps:Pin
-                            Position="{Binding Position}"
+                            Position="{Binding ., Converter={StaticResource hashLocationToPositionConverter}}"
                             Label="{Binding Description}" />
                     </DataTemplate>
                 </maps:Map.ItemTemplate>
+                <maps:Map.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="MapClicked"
+                        Command="{Binding MapTappedCommand}"
+                        Converter="{StaticResource mapTappedEventArgsToLocationConverter}" />
+                </maps:Map.Behaviors>
             </maps:Map>
             <Frame
                 Visual="Material"
@@ -113,13 +121,13 @@
                             Height="Auto" />
                         <RowDefinition
                             Height="Auto" />
-                       
                     </Grid.RowDefinitions>
-                     <!-- Without this box view my layout goes crazy -->
-                    <BoxView HeightRequest="1" Grid.Row="4"
-                             VerticalOptions="Center"
-                             BackgroundColor="Transparent"
-                             />
+                    <!-- Without this box view my layout goes crazy -->
+                    <BoxView
+                        HeightRequest="1"
+                        Grid.Row="4"
+                        VerticalOptions="Center"
+                        BackgroundColor="Transparent" />
                     <DatePicker
                         x:Name="HiddenDatePicker"
                         BackgroundColor="Transparent"
@@ -137,8 +145,7 @@
                         Visual="Material"
                         BackgroundColor="#DDEEEEEE"
                         Grid.ColumnSpan="11"
-                        InputTransparent="true"
-                        />
+                        InputTransparent="true" />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="1"
@@ -161,7 +168,7 @@
                         Grid.ColumnSpan="5"
                         Grid.Column="6"
                         d:Text="-37,145"
-                        Text="{Binding Path=HashData.NearestHashLocation, Converter={StaticResource locationSummary}}" />
+                        Text="{Binding HashLocation, Converter={StaticResource locationSummary}}" />
                     <Label
                         Style="{StaticResource MediumLabel}"
                         Grid.Row="3"
@@ -173,8 +180,6 @@
                         Grid.ColumnSpan="6"
                         d:Text="1km"
                         Text="{Binding Distance}" />
-                   
-                             
                 </Grid>
             </Frame>
             <Frame
@@ -212,11 +217,11 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="Hash Direction" />
-                    <skia:SKCanvasView
-                        x:Name="skiaView"
+                    <views:Compass
+                        NeedleDirection="{Binding TargetNeedleDirection}"
+                        Grid.Row="1"
                         Grid.Column="1"
-                        PaintSurface="Handle_PaintSurface"
-                        Grid.Row="1" />
+                        IsVisible="{Binding DarkNavEnabled}" />
                     <Label
                         Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
@@ -224,39 +229,6 @@
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
                         Text="{Binding Distance}" />
-                    <!--  This scroll view has usefull debug data, row definitions may need changing to make it visible -->
-                    <!--  <ScrollView
-                        Grid.Row="3"
-                        Grid.ColumnSpan="3">
-                        <StackLayout>
-                            <Label
-                                Text="{Binding HeadingMagneticNorth, StringFormat='HeadMagnNor: {0}'}" />
-                            <Label
-                                Text="{Binding HeadingTrueNorth, StringFormat='HeadTrueNor: {0}'}"
-                                Grid.Row="5"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding Declination, StringFormat='Declination: {0}'}"
-                                Grid.Row="6"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding TrueNorthNeedleDirection, StringFormat='TrueNorthNeedleDirection: {0}'}"
-                                Grid.Row="7"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding MagneticNorthNeedleDirection, StringFormat='MagNorNeedDir: {0}'}"
-                                Grid.ColumnSpan="3"
-                                Grid.Row="8" />
-                            <Label
-                                Text="{Binding Bearing, StringFormat='Bearing: {0}'}"
-                                Grid.Row="9"
-                                Grid.ColumnSpan="3" />
-                            <Label
-                                Text="{Binding TargetNeedleDirection, StringFormat='TargNeedDir: {0}'}"
-                                Grid.Row="9"
-                                Grid.ColumnSpan="3" />
-                        </StackLayout>
-                    </ScrollView>-->
                     <Button
                         Text="{StaticResource night}"
                         Style="{StaticResource ButtonStyle}"
@@ -275,7 +247,7 @@
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Style="{StaticResource ButtonStyle}"
                 Text="{StaticResource globe}"
-                Clicked="GlobalClicked"
+                Command="{Binding GlobalClicked}"
                 Grid.Column="6" />
             <Button
                 Style="{StaticResource ButtonStyle}"
@@ -289,7 +261,7 @@
                 Grid.Column="4"
                 Grid.Row="4"
                 Text="{StaticResource layers}"
-                Clicked="SatteliteClicked"
+                Command="{Binding SatteliteClicked}"
                 Style="{StaticResource ButtonStyle}" />
             <Button
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
@@ -318,30 +290,14 @@
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style
-                x:Key="ExpandButtonStyle"
-                TargetType="Button">
-                <Setter
-                    Property="TextColor"
-                    Value="{StaticResource Divider}" />
-                <Setter
-                    Property="FontFamily"
-                    Value="{StaticResource MaterialDesignIcons}" />
-                <Setter
-                    Property="FontSize"
-                    Value="Large" />
-                <Setter
-                    Property="HorizontalOptions"
-                    Value="End" />
-                <Setter
-                    Property="VerticalOptions"
-                    Value="End" />
-                <Setter
-                    Property="Visual"
-                    Value="Default" />
-            </Style>
-            <local:LocationSummary
+            <converters:HashLocationToPositionConverter
+                x:Key="hashLocationToPositionConverter" />
+            <converters:BoolToMapTypeConverter
+                x:Key="boolToMapTypeConverter" />
+            <converters:LocationSummary
                 x:Key="locationSummary" />
+            <converters:MapTappedEventArgsToLocationConverter
+                x:Key="mapTappedEventArgsToLocationConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

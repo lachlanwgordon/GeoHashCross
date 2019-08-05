@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -21,30 +21,13 @@
     <PackageReference Include="Xamarin.Forms.DebugRainbows" Version="1.0.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="Pages\AutoLinkedPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Views\HomePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\TabPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Wiki.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Views\LogPage.cs" />
-    <Compile Remove="ViewModels\AutoLinkedViewModel.cs" />
-    <Compile Remove="Pages\AutoLinkedPage.xaml.cs" />
-    <Compile Remove="Views\PreviewTest.xaml.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="ViewModels\" />
+    <Folder Include="Converters\" />
+    <Folder Include="Controls\" />
+    <Folder Include="Behaviors\" />
+    <Folder Include="Views\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ViewModels\AutoLinkedViewModel.cs" />
-  </ItemGroup>
+
 </Project>

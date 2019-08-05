@@ -6,9 +6,9 @@ using Xamarin.Forms;
 
 namespace GeohashCross.Views
 {
-    public partial class Notifications : ContentPage
+    public partial class NotificationsPage : ContentPage
     {
-        public Notifications()
+        public NotificationsPage()
         {
             InitializeComponent();
         }
@@ -21,7 +21,6 @@ namespace GeohashCross.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            Debug.WriteLine($"Notifications appearing {DateTime.Now}");
         }
     }
 }

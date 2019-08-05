@@ -7,7 +7,7 @@
     Visual="Material"
     BackgroundColor="#3F51B5"
     FlyoutBackgroundColor="Red"
-    x:Class="GeohashCross.Views.AppShell">
+    x:Class="GeohashCross.AppShell">
     <TabBar
         Shell.TitleColor="White"
         Shell.TabBarBackgroundColor="White"
@@ -42,7 +42,7 @@
         <Tab
             Title="Notifications">
             <ShellContent >
-                <views:Notifications Title="Notifications" />
+                <views:NotificationsPage Title="Notifications" />
             </ShellContent>
              <Tab.Icon>
                 <FontImageSource

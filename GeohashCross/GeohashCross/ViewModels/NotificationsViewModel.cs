@@ -50,7 +50,7 @@ namespace GeohashCross.ViewModels
         } = new ObservableRangeCollection<NotificationSubscription>();
 
   
-
+        public INotificationPermission NotificationPermission => DependencyService.Get<INotificationPermission>();
 
         public ICommand AddSubscriptionCommand => new Command(AddSubscription);
 
@@ -94,8 +94,8 @@ namespace GeohashCross.ViewModels
 
         private async Task<bool> GetNotificationsPermissions()
         {
-            //var permission = Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.noti)
-            return true;
+            var allowed = await NotificationPermission.GetPermission();
+            return allowed;
         }
 
         public async Task Delete(NotificationSubscription sub)

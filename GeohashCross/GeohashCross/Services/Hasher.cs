@@ -7,52 +7,28 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Location = GeohashCross.Models.Location;
 
 namespace GeohashCross.Services
 {
     public class Hasher
     {
-        public static async Task<HashData> GetHashData(DateTime date, Location currentLocation)
+        public static async Task<Response<HashLocation>> GetHashData(DateTime date, Location currentLocation)
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            var date30W = DowJonesDates.Get30WCompliantDate(date, currentLocation);
+            var djDate = DowJonesDates.GetApplicableDJDate(date30W);
+            var djia = await Webclient.GetDjia(djDate);
 
-            var hash = new HashData
+            if (!djia.Success)
             {
-                RequestDate = date,
-                CurrentLocation = currentLocation
-            };
-
-
-
-
-            hash.Date30W = DowJonesDates.Get30WCompliantDate(date, currentLocation);
-
-
-
-            var djDate = DowJonesDates.GetApplicableDJDate(hash.Date30W);
-            if(!djDate.Success)
-            {
-                hash.Message = djDate.Message;
-                hash.Success = false;
-                return hash;
+                return new Response<HashLocation>(null, false, djia.Message);
             }
-            hash.DJDate = djDate.Data;
+            var offset = CalculateOffset(date, djia.Data);
+            var loc = CalculateHashLocation(currentLocation, offset);
 
-            var djia = await Webclient.GetDjia(djDate.Data);
-            if(!djia.Success)
-            {
-                hash.Message = djia.Message;
-                hash.Success = false;
-                return hash;
-            }
-            hash.DJIA = djia.Data;
-            hash.Offset = CalculateOffset(date, djia.Data);
-            hash.NearestHashLocation = CalculateHashLocation(currentLocation, hash.Offset);
-            //hash.GlobalHash = CalculateGlobalHash(hash.Offset);//This will only work in w30 regions. Will need to think about america etc. TODO
+            var hash = new HashLocation(loc.Latitude, loc.Longitude, date, false, false);
 
-            hash.Success = true;
-            hash.Message = "Hashes calculated successfully";
-            return hash;
+            return new Response<HashLocation>(hash, true, "Hashes calculated successfully");
         }
 
         private static Location CalculateGlobalHash(Location offset)
@@ -70,8 +46,6 @@ namespace GeohashCross.Services
         //Get Offset needs current location to know whether to apply 30W rule
         public static Location CalculateHashLocation(Location currentLocation, Location offset)
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
             var lat = currentLocation.Latitude > 0 ? Math.Floor(currentLocation.Latitude) + offset.Latitude : Math.Ceiling(currentLocation.Latitude) - offset.Latitude;
             var lon = currentLocation.Longitude > 0 ? Math.Floor(currentLocation.Longitude) + offset.Longitude : Math.Ceiling(currentLocation.Longitude) - offset.Longitude;
 
@@ -82,10 +56,7 @@ namespace GeohashCross.Services
 
         public static Location CalculateOffset(DateTime date, string djia)
         {
-            Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
             var prehashString = $"{date.ToString("yyyy-MM-dd")}-{djia}";
-            Debug.WriteLine($"Prehash string: {prehashString}");
             var md5 = MD5.Create();
             byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(prehashString);
             byte[] result = md5.ComputeHash(inputBytes);
@@ -108,7 +79,6 @@ namespace GeohashCross.Services
                 + ((ulong)result[0xF] << 0x00);
             string latStr = ((part1 / 2.0) / (long.MaxValue + (ulong)1)).ToString(CultureInfo.InvariantCulture); // Some tricks are required to divide by ulong.MaxValue + 1
             string lonStr = ((part2 / 2.0) / (long.MaxValue + (ulong)1)).ToString(CultureInfo.InvariantCulture);
-            Debug.WriteLine($"Offset Lat: {latStr}, Lon: {lonStr}");
             double lat, lon;
             double.TryParse(latStr, out lat);
             double.TryParse(lonStr, out lon);

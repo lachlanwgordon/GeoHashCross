@@ -7,17 +7,90 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Geo;
 using Geo.Geomagnetism;
+using GeohashCross.Converters;
 using GeohashCross.Models;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using Location = GeohashCross.Models.Location;
 
 namespace GeohashCross.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
+        public ICommand GlobalClicked
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    try
+                    {
+                        //var loc = HashData.GlobalHash;
+                        //var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
+                        //var pin = new Xamarin.Forms.GoogleMaps.Pin
+                        //{
+                        //    Label = loc.Timestamp == DateTime.Today ? "Today's Global Hash" : "Global Hash for " + loc.Timestamp.ToString("yyyy-MM-dd"),
+                        //    Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
+                        //    Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green),
+                        //    Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
+                        //};
+
+                        //var globalHashLoc = new HashLocation(loc.Latitude, loc.Longitude, Date, false, true);
+
+                        //GeohashLocations.Add(globalHashLoc);
+                        //var lastPos = new Position(loc.Latitude, loc.Longitude);
+                        //await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos), TimeSpan.FromSeconds(1));
+                    }
+                    catch (Exception ex)
+                    {
+                        Crashes.TrackError(ex);
+                    }
+                });
+            }
+        }
+
+        bool locationPermissionGranted;
+        public bool LocationPermissionGranted
+        {
+            get
+            {
+                return locationPermissionGranted;
+            }
+            set
+            {
+                locationPermissionGranted = value;
+                OnPropertyChanged(nameof(LocationPermissionGranted));
+            }
+        }
+
+        public ICommand SatteliteClicked
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    IsSatteliteView = !IsSatteliteView;
+                });
+            }
+        }
+
+        bool isSatteliteView;
+        public bool IsSatteliteView
+        {
+            get
+            {
+                return isSatteliteView;
+            }
+            set
+            {
+                isSatteliteView = value;
+                OnPropertyChanged(nameof(IsSatteliteView));
+            }
+        }
+
         public ICommand ToggleNeighbours
         {
             get
@@ -27,7 +100,7 @@ namespace GeohashCross.ViewModels
                     ShowNeighbours = !ShowNeighbours;
                     UpdateShowNeighbours();
 
-                    
+
 
                 });
             }
@@ -58,7 +131,6 @@ namespace GeohashCross.ViewModels
                     GeohashLocations.Remove(loc);
                 }
 
-                Debug.WriteLine(GeohashLocations.Count);
             }
         }
 
@@ -82,7 +154,7 @@ namespace GeohashCross.ViewModels
             {
                 HeadingMagneticNorth = 30;
                 Crashes.TrackError(ex);
-            }       
+            }
         }
 
         //Direction the devic is facing relative to magnetic north
@@ -115,13 +187,12 @@ namespace GeohashCross.ViewModels
             {
                 _CurrentLocation = value;
                 OnPropertyChanged(nameof(CurrentLocation));
-                OnPropertyChanged(nameof(Declination));
                 OnPropertyChanged(nameof(Distance));
                 OnPropertyChanged(nameof(ImHere));
             }
         }
 
-        bool _ShowAdvanced = false;
+        bool _ShowAdvanced;
         public bool ShowAdvanced
         {
             get
@@ -135,48 +206,35 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        Location _TappedLocation;
-        public Location TappedLocation
+
+
+        public Location TappedLocation { get; set; }
+
+
+        HashLocation hashLocation;
+        public HashLocation HashLocation
         {
             get
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
-                return _TappedLocation;
+                return hashLocation;
             }
             set
             {
-                Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-
-                _TappedLocation = value;
-                Task.Run(LoadHashLocation);
-            }
-        }
-
-        HashData _HashData;
-        public HashData HashData
-        {
-            get
-            {
-                return _HashData;
-            }
-            set
-            {
-                _HashData = value;
-                OnPropertyChanged(nameof(HashData));
+                hashLocation = value;
+                OnPropertyChanged(nameof(HashLocation));
                 OnPropertyChanged(nameof(Distance));
             }
         }
 
-     
 
+        IDistanceCalculator DistanceCalculator = new DistanceCalculator();
         Double? _Distance
         {
             get
             {
-                if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
+                if (_CurrentLocation == null || HashLocation == null)
                     return null;
-                var distance = Xamarin.Essentials.Location.CalculateDistance(_CurrentLocation, _HashData.NearestHashLocation, DistanceUnits.Kilometers);
+                var distance = DistanceCalculator.CalculateDistance(_CurrentLocation, HashLocation);
                 return distance;
             }
         }
@@ -233,16 +291,16 @@ namespace GeohashCross.ViewModels
 
 
         //This is the direction to the hash that the needle should show. It updates as the device is rotated and accounts for magnetic declination
-        public double TargetNeedleDirection
+        public float TargetNeedleDirection
         {
             get
             {
-                if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
+                if (_CurrentLocation == null || HashLocation == null)
                     return 0;
 
-                var displayBearing =  Bearing - HeadingTrueNorth;
+                var displayBearing = Bearing - HeadingTrueNorth;
 
-                return displayBearing;
+                return (float)displayBearing;
             }
         }
 
@@ -250,9 +308,9 @@ namespace GeohashCross.ViewModels
         {
             get
             {
-                if (_CurrentLocation == null || _HashData == null || _HashData.NearestHashLocation == null)
+                if (_CurrentLocation == null || HashLocation == null)
                     return 0;
-                var bearing = GetBearingRelativeToTrueNorth(_CurrentLocation, _HashData.NearestHashLocation);//Relative to true north ignoring heading
+                var bearing = GetBearingRelativeToTrueNorth(_CurrentLocation, HashLocation);//Relative to true north ignoring heading
                 return bearing;
             }
         }
@@ -329,7 +387,6 @@ namespace GeohashCross.ViewModels
             {
                 if (value != _Date)
                 {
-                    Debug.WriteLine("Date changed");
                     _Date = value;
                 }
                 else
@@ -363,44 +420,31 @@ namespace GeohashCross.ViewModels
 
             try
             {
-                Debug.WriteLine("About to get Location");
                 Location loc = null;
                 int failCount = 0;
-                while(loc == null)
+                while (loc == null)
                 {
                     if (failCount > 0)
                         await Task.Delay(1000);
                     failCount++;
                     var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(failCount * 1000));
-                    Debug.WriteLine($"try location for {failCount * 1000}ms");
-                    loc = await Geolocation.GetLocationAsync(locationRequest);
+                    loc = (await Geolocation.GetLocationAsync(locationRequest)).ToGCLocation();
 
                 }
 
 
-
-                Debug.WriteLine("Got Location");
                 CurrentLocation = loc;
 
                 if (!Initialised)
                 {
                     SetUpTimer();
                 }
-                OnPropertyChanged(nameof(HeadingMagneticNorth));
-                OnPropertyChanged(nameof(HeadingTrueNorth));
-                OnPropertyChanged(nameof(Declination));
-                OnPropertyChanged(nameof(TargetNeedleDirection));
-                OnPropertyChanged(nameof(TrueNorthNeedleDirection));
-                OnPropertyChanged(nameof(MagneticNorthNeedleDirection));
-
-
-                OnPropertyChanged(nameof(TrueNorth));
                 return new Response<Location>(loc, true, "Location Loaded successfully");
             }
             catch (Exception ex)
             {
                 Crashes.TrackError(ex);
-                return new Response<Location>(new Location(), false, "Location Loaded successfully");
+                return new Response<Location>(new Location(), false, "Location not Loaded successfully");
 
             }
         }
@@ -415,7 +459,6 @@ namespace GeohashCross.ViewModels
                 if (Initialised)
                     return;
                 Initialised = true;
-                Debug.WriteLine("!!!!!!!!!!!!!!!STARTING A TIMER");
                 Device.StartTimer(TimeSpan.FromSeconds(5), TimerInitiatedUpdateLocation);
             }
             catch (Exception ex)
@@ -426,13 +469,12 @@ namespace GeohashCross.ViewModels
         }
 
 
-        public async Task<HashData> LoadHashLocation()
+        public async Task<HashLocation> LoadHashLocation()
         {
-
             var loc = TappedLocation ?? _CurrentLocation;
-            if(loc == null)
+            if (loc == null)
             {
-                return new HashData { Success = false } ;
+                return null;
             }
 
 
@@ -440,18 +482,18 @@ namespace GeohashCross.ViewModels
 
             if (hashData.Success)
             {
-                var location = new HashLocation(hashData);
+                var location = hashData.Data;
                 GeohashLocations.Add(location);
-                if(ShowNeighbours)
+                if (ShowNeighbours)
                 {
                     GeohashLocations.AddRange(location.Neighbours);
                 }
 
             }
 
-            HashData = hashData;
+            HashLocation = hashData.Data;
 
-            return hashData;
+            return hashData.Data;
         }
 
         public bool ShowNeighbours { get; set; }
@@ -479,15 +521,24 @@ namespace GeohashCross.ViewModels
         public ICommand ShowMoreCommand => new Command(ToggleShowMore);
         public ICommand ResetCommand => new Command(Reset);
         public ICommand DarkNavCommand => new Command(ToggleDarkNav);
+        public ICommand MapTappedCommand => new Command(MapTapped);
+
+        private async void MapTapped(object obj)
+        {
+            var loc = obj as Location;
+            TappedLocation = loc;
+            await LoadHashLocation();
+        }
 
         public async void Reset()
         {
             try
             {
                 Date = DateTime.Today;
+                TappedLocation = null;
                 ShowNeighbours = false;
                 GeohashLocations.Clear();
-                if(CurrentLocation == null)
+                if (CurrentLocation == null)
                 {
                     await UpdateCurrentLocation();
                 }

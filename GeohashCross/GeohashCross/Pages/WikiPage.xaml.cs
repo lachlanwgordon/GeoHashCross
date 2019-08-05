@@ -12,9 +12,9 @@ using Xamarin.Forms.Xaml;
 namespace GeohashCross.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class Wiki : ContentPage
+	public partial class WikiPage : ContentPage
 	{
-		public Wiki ()
+		public WikiPage ()
 		{
 			InitializeComponent ();
             Web.Navigating += Web_Navigating;

@@ -1,15 +1,12 @@
 using System;
 using MvvmHelpers;
-using Xamarin.Essentials;
 using System.Windows.Input;
 using SQLite;
 using Xamarin.Forms;
-using System.Diagnostics;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
 using GeohashCross.ViewModels;
 using System.Linq;
-using Xamarin.Forms.Internals;
 
 namespace GeohashCross.Models
 {
