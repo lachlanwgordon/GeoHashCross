@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 
-namespace GeohashCross.Pages
+namespace GeohashCross
 {
-    public partial class AltTestMyPage : ContentPage
+    public partial class AppShell : Shell
     {
-        public AltTestMyPage()
+        public AppShell()
         {
             InitializeComponent();
         }

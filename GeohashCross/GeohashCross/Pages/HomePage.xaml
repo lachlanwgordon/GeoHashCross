@@ -5,10 +5,10 @@
     xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
     xmlns:local="clr-namespace:GeohashCross.Models"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
-    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     x:Class="GeohashCross.Views.HomePage"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
     mc:Ignorable="d"
     xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
     Shell.NavBarIsVisible="false" xmlns:converters="clr-namespace:GeohashCross.Converters" xmlns:views="clr-namespace:GeohashCross.Views">
@@ -54,7 +54,6 @@
                 Margin="-8,-80,-80,-8"
                 x:Name="TheMap"
                 Grid.ColumnSpan="6"
-                MapClicked="MapClicked"
                 MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
                 MyLocationEnabled="{Binding LocationPermissionGranted}"
                 ItemsSource="{Binding GeohashLocations}"
@@ -62,10 +61,15 @@
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
                         <maps:Pin
-                            Position="{Binding Position}"
+                            
+                            Position="{Binding ., Converter={StaticResource hashLocationToPositionConverter}}"
                             Label="{Binding Description}" />
                     </DataTemplate>
                 </maps:Map.ItemTemplate>
+                <maps:Map.Behaviors>
+                    <behaviors:EventToCommandBehavior EventName="MapClicked" Command="{Binding MapTappedCommand}" Converter="{StaticResource mapTappedEventArgsToLocationConverter}" />
+            
+                </maps:Map.Behaviors>
             </maps:Map>
             <Frame
                 Visual="Material"
@@ -243,7 +247,7 @@
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Style="{StaticResource ButtonStyle}"
                 Text="{StaticResource globe}"
-                Clicked="GlobalClicked"
+                Command="{Binding GlobalClicked}"
                 Grid.Column="6" />
             <Button
                 Style="{StaticResource ButtonStyle}"
@@ -286,9 +290,11 @@
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
+          <converters:HashLocationToPositionConverter x:Key="hashLocationToPositionConverter"/>
           <converters:BoolToMapTypeConverter x:Key="boolToMapTypeConverter"/>
             <local:LocationSummary
                 x:Key="locationSummary" />
+            <converters:MapTappedEventArgsToLocationConverter x:Key="mapTappedEventArgsToLocationConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

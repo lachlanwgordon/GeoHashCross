@@ -6,9 +6,9 @@ using Xamarin.Forms;
 
 namespace GeohashCross.Views
 {
-    public partial class Notifications : ContentPage
+    public partial class NotificationsPage : ContentPage
     {
-        public Notifications()
+        public NotificationsPage()
         {
             InitializeComponent();
         }

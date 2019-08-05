@@ -17,10 +17,10 @@ namespace GeohashCross.Models
         public LocationNotificationJob()
         {
         }
-
+        IDistanceCalculator DistanceCalculator = new DistanceCalculator();
         public async Task Run(JobInfo jobInfo, CancellationToken cancelToken)
         {
-
+            
             CrossLocalNotifications.Current.Show("Hello", "Starting Job", 2);
             try
             {
@@ -35,10 +35,10 @@ namespace GeohashCross.Models
                     var subLocation = new Location(sub.Latitude, sub.Longitude);
                     var hash = await Hasher.GetHashData(DateTime.Today, subLocation);
 
-                    var nearBy = new List<Location>(hash.NearestHashLocation.GetNeighbours()) { hash.NearestHashLocation  };
-                    var closest = nearBy.OrderBy(x => x.CalculateDistance(subLocation, DistanceUnits.Kilometers)).FirstOrDefault();
+                    var nearBy = new List<Location>(hash.Data.Neighbours) { hash.Data  };
+                    var closest = nearBy.OrderBy(x => DistanceCalculator.CalculateDistance(subLocation, x)).FirstOrDefault();
 
-                    var distance = closest.CalculateDistance(subLocation, DistanceUnits.Kilometers);
+                    var distance = DistanceCalculator.CalculateDistance(subLocation, closest);
 
                     var message = $"Today's hash is {distance}km from {sub.Name} at ({sub.Latitude.ToString("0.###")},{sub.Longitude.ToString("0.###")})";
                     if (distance < sub.Radius)

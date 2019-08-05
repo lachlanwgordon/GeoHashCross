@@ -1,30 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Essentials;
 
 namespace GeohashCross.Models
 {
-    public static class LocationExtension
+    public static class LocationExtensions
     {
-        [Obsolete("If using HashLocation please use Neighbours Property")]
-        public static List<Location> GetNeighbours(this Location location)
-        {
-            var hashes = new List<Location>
-                {
-                    new Location(location.Latitude -1, location.Longitude -1, location.Timestamp),
-                    new Location(location.Latitude -1, location.Longitude, location.Timestamp),
-                    new Location(location.Latitude -1, location.Longitude + 1, location.Timestamp),
-
-                    new Location(location.Latitude, location.Longitude -1, location.Timestamp),
-                    new Location(location.Latitude, location.Longitude +1, location.Timestamp),
-
-                    new Location(location.Latitude +1, location.Longitude -1, location.Timestamp),
-                    new Location(location.Latitude +1, location.Longitude, location.Timestamp),
-                    new Location(location.Latitude +1, location.Longitude +1, location.Timestamp),
-                };
-            return hashes;
-        }
 
         public static double FixDegreesRange(this double degrees)
         {

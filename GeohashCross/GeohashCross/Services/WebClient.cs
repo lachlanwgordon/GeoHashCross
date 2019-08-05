@@ -32,21 +32,21 @@ namespace GeohashCross.Services
             try
             {
 
-                if (allowCached && Preferences.ContainsKey(date.ToString()))
+                var dateString = date.ToString("yyyy/MM/dd");
+                if (allowCached && Preferences.ContainsKey(dateString))
                 {
-                    Debug.WriteLine($"Got DJIA from cache {Preferences.Get(date.ToString(), "")}");
+                    Debug.WriteLine($"Got DJIA from cache {Preferences.Get(dateString, "")}");
 
-                    return new Response<string>(Preferences.Get(date.ToString(), ""), true, "Loaded DJIA from cache.");
+                    return new Response<string>(Preferences.Get(dateString, ""), true, "Loaded DJIA from cache.");
                 }
 
-                var dateString = date.ToString("yyyy/MM/dd");
 
                 var url = $"{BaseUrl}{dateString}";
                 Debug.WriteLine($"About to get DJIA from {url}");
                 var response = await Client.GetStringAsync(url);
                 if(addToCache)
                 {
-                    Preferences.Set(dateString.ToString(), response);
+                    Preferences.Set(dateString, response);
                 }
                 Debug.WriteLine($"Got DJIA from web {response}");
 

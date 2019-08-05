@@ -7,52 +7,45 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Location = GeohashCross.Models.Location;
 
 namespace GeohashCross.Services
 {
     public class Hasher
     {
-        public static async Task<HashData> GetHashData(DateTime date, Location currentLocation)
+        public static async Task<Response<HashLocation>> GetHashData(DateTime date, Location currentLocation)
         {
             Debug.WriteLine($"{MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
 
-            var hash = new HashData
-            {
-                RequestDate = date,
-                CurrentLocation = currentLocation
-            };
+            //var hash = new HashData
+            //{
+            //    RequestDate = date,
+            //    CurrentLocation = currentLocation
+            //};
 
 
 
 
-            hash.Date30W = DowJonesDates.Get30WCompliantDate(date, currentLocation);
+            var date30W = DowJonesDates.Get30WCompliantDate(date, currentLocation);
 
 
 
-            var djDate = DowJonesDates.GetApplicableDJDate(hash.Date30W);
-            if(!djDate.Success)
-            {
-                hash.Message = djDate.Message;
-                hash.Success = false;
-                return hash;
-            }
-            hash.DJDate = djDate.Data;
+            var djDate = DowJonesDates.GetApplicableDJDate(date30W);
+            
 
-            var djia = await Webclient.GetDjia(djDate.Data);
+            var djia = await Webclient.GetDjia(djDate);
             if(!djia.Success)
             {
-                hash.Message = djia.Message;
-                hash.Success = false;
-                return hash;
+                return new Response<HashLocation>(null, false, djia.Message);
             }
-            hash.DJIA = djia.Data;
-            hash.Offset = CalculateOffset(date, djia.Data);
-            hash.NearestHashLocation = CalculateHashLocation(currentLocation, hash.Offset);
+            var offset = CalculateOffset(date, djia.Data);
+            var loc = CalculateHashLocation(currentLocation, offset);
             //hash.GlobalHash = CalculateGlobalHash(hash.Offset);//This will only work in w30 regions. Will need to think about america etc. TODO
 
-            hash.Success = true;
-            hash.Message = "Hashes calculated successfully";
-            return hash;
+
+            var hash = new HashLocation(loc.Latitude, loc.Longitude, date, false, false);
+
+            return new Response<HashLocation>(hash, true, "Hashes calculated successfully");
         }
 
         private static Location CalculateGlobalHash(Location offset)

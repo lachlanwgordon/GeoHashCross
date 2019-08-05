@@ -76,7 +76,7 @@ namespace GeohashCross.Views
                 await DisplayAlert("Error", "Could not load DJIA for today, please check internet connection", "Okay");
                 return;
             }
-            var hashPos = new Position(hashLoc.NearestHashLocation.Latitude, hashLoc.NearestHashLocation.Longitude);
+            var hashPos = new Position(hashLoc.Latitude, hashLoc.Longitude);
             var myPos = new Position(currentLoc.Data.Latitude, currentLoc.Data.Longitude);
             var bounds = new Bounds(myPos, hashPos);
             var update = CameraUpdateFactory.NewBounds(bounds, 50);
@@ -138,19 +138,7 @@ namespace GeohashCross.Views
                 await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
             }
 
-
-
-
         }
-
-        private void MapClicked(object sender, MapClickedEventArgs e)
-        {
-            Debug.WriteLine("map clicked");
-            VM.TappedLocation = new Location(e.Point.Latitude, e.Point.Longitude);
-        }
-
-
-
 
 
         private async void YouMadeItClicked(object sender, EventArgs e)
@@ -213,29 +201,6 @@ namespace GeohashCross.Views
             }
         }
 
-        public async void GlobalClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                var loc = VM.HashData.GlobalHash;
-                var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
-                var pin = new Xamarin.Forms.GoogleMaps.Pin
-                {
-                    Label = loc.Timestamp == DateTime.Today ? "Today's Global Hash" : "Global Hash for " + loc.Timestamp.ToString("yyyy-MM-dd"),
-                    Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                    Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green),
-                    Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
-                };
-                TheMap.Pins.Add(pin);
-                var lastPos = new Position(loc.Latitude, loc.Longitude);
-                await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos), TimeSpan.FromSeconds(1));
-            }
-            catch (Exception ex)
-            {
-                Crashes.TrackError(ex);
-            }
-
-        }
 
 
     }
