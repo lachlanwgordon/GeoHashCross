@@ -43,36 +43,49 @@ namespace GeohashCross.Views
         {
             InitializeComponent();
             TheMap.UiSettings.MyLocationButtonEnabled = false;//Don't show the my location button because I've implemented my own
+            TheMap.UiSettings.ZoomControlsEnabled = false;
         }
 
 
 
         private async Task<bool> GetPermissions()
         {
-            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-
-            if (status != PermissionStatus.Granted)
+            Debug.WriteLine("Gettings permission 1");
+            var success = await Device.InvokeOnMainThreadAsync(async () =>
             {
-                if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                Debug.WriteLine("Gettings permission 2");
+
+                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+
+                if (status != PermissionStatus.Granted)
                 {
-                    //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                    {
+                        //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
+                    }
+
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                    if (results.ContainsKey(Permission.Location))
+                        status = results[Permission.Location];
                 }
 
-                var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                if (results.ContainsKey(Permission.Location))
-                    status = results[Permission.Location];
-            }
+                if (status == PermissionStatus.Granted)
+                {
+                    Debug.WriteLine("Gettings permission 3");
+                    return true;
+                }
 
-            if (status == PermissionStatus.Granted)
-            {
-                return true;
-            }
+                else if (status != PermissionStatus.Unknown)
+                {
+                    await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
+                }
+                Debug.WriteLine("Gettings permission 3");
+                return false;
+            });
+            Debug.WriteLine("Gettings permission 4");
 
-            else if (status != PermissionStatus.Unknown)
-            {
-                await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
-            }
-            return false;
+            return success;
+
         }
 
 
@@ -115,8 +128,9 @@ namespace GeohashCross.Views
         {
             base.OnAppearing();
 
-
+            VM.GeohashLocations.CollectionChanged += GeohashLocations_CollectionChanged;
             VM.OnBoardingViewModel.PropertyChanged += OnBoardingViewModel_PropertyChanged;
+
             if (FirstUse)
             {
                 FirstUse = false;
@@ -132,8 +146,6 @@ namespace GeohashCross.Views
 
 
 
-
-            VM.GeohashLocations.CollectionChanged += GeohashLocations_CollectionChanged;
 
 
         }
@@ -183,15 +195,15 @@ namespace GeohashCross.Views
             Debug.WriteLine("PropertyChanged" + e.PropertyName);
             if (e.PropertyName == "IsVisible" && VM.OnBoardingViewModel.IsVisible == false)
             {
-                VM.OnBoardingViewModel.PropertyChanged -= OnBoardingViewModel_PropertyChanged;
+                var granted = await GetPermissions();
+                if (granted)
+                {
+                    VM.LocationPermissionGranted = true;
+                    VM.StartLocationService();
+                }
             }
 
-            var granted = await GetPermissions();
-            if (granted)
-            {
-                VM.LocationPermissionGranted = true;
-                VM.StartLocationService();
-            }
+            
         }
 
 

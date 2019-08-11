@@ -253,7 +253,7 @@ namespace GeohashCross.ViewModels
         public void StartLocationService()
         {
             LocationServiceShouldContinue = true;
-            Device.StartTimer(TimeSpan.FromSeconds(2), TimerInitiatedUpdateLocation);
+            Device.StartTimer(TimeSpan.FromSeconds(4), TimerInitiatedUpdateLocation);
         }
 
         public void StopLocationService()
@@ -267,11 +267,14 @@ namespace GeohashCross.ViewModels
         {
             Task.Run(async () =>
             {
-                var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(1800));
+                var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(2500));
                 var loc = await Geolocation.GetLocationAsync(locationRequest);
                 if(loc != null)
                 {
-                    Device.BeginInvokeOnMainThread(() => CurrentLocation = loc.ToGCLocation());
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        CurrentLocation = loc.ToGCLocation();
+                    });
                 }
 
             });

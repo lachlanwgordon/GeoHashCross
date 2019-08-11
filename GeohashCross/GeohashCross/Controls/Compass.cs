@@ -11,7 +11,7 @@ namespace GeohashCross.Views
         public Compass()
         {
             PaintSurface += Handle_PaintSurface;
-            Device.StartTimer(TimeSpan.FromSeconds(1f / 5), UpdateCanvas);
+            Device.StartTimer(TimeSpan.FromSeconds(1f / 30), UpdateCanvas);
         }
 
         public static readonly BindableProperty NeedleDirectionProperty = BindableProperty.Create(
@@ -40,7 +40,9 @@ namespace GeohashCross.Views
 
             //Setup canvas with transforms based at the center
             canvas.Translate(width / 2, height / 2);
-            canvas.Scale(width / 220);
+
+            var smallerSide = Math.Min(height, width);
+            canvas.Scale(smallerSide / 220);//Using smaller side makes sure it's a circle that fits without cropping regardless of orientation. I don't remember what 220 means
 
             canvas.Save();
 

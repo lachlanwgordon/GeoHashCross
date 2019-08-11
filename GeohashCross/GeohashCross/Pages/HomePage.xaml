@@ -20,7 +20,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid
-            Margin="8"
+            Padding="8"
             ColumnSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -53,12 +53,10 @@
                     Width="{StaticResource ButtonSize}" />
             </Grid.ColumnDefinitions>
             <maps:Map
-                Margin="-8,-80,-80,-8"
+                d:BackgroundColor="Teal"
                 x:Name="TheMap"
-                Grid.ColumnSpan="6"
-                MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
-                MyLocationEnabled="{Binding LocationPermissionGranted}"
-                ItemsSource="{Binding GeohashLocations}"
+                Margin="-8"
+                Grid.ColumnSpan="7"
                 Grid.RowSpan="6">
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
@@ -75,6 +73,7 @@
                 </maps:Map.Behaviors>
             </maps:Map>
             <Frame
+                Margin="0,20,0,0"
                 Visual="Material"
                 HasShadow="true"
                 Grid.ColumnSpan="7"
@@ -190,17 +189,16 @@
                 Grid.RowSpan="5"
                 x:Name="TheDarkFrame"
                 IsVisible="{Binding DarkNavEnabled}"
-                d:IsVisible="false"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid
                     RowSpacing="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="10" />
+                            Width="{StaticResource ButtonSize}" />
                         <ColumnDefinition
                             Width="*" />
                         <ColumnDefinition
-                            Width="10" />
+                            Width="{StaticResource ButtonSize}" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -208,11 +206,7 @@
                         <RowDefinition
                             Height="*" />
                         <RowDefinition
-                            Height="30" />
-                        <RowDefinition
-                            Height="30" />
-                        <RowDefinition
-                            Height="60" />
+                            Height="{StaticResource ButtonSize}" />
                     </Grid.RowDefinitions>
                     <Label
                         Style="{StaticResource LargeLabel}"
@@ -228,6 +222,7 @@
                     <Label
                         Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
+                        d:Text="35km"
                         Grid.Row="2"
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
@@ -237,7 +232,7 @@
                         Style="{StaticResource ButtonStyle}"
                         Grid.Column="1"
                         Grid.ColumnSpan="2"
-                        Grid.Row="4"
+                        Grid.Row="2"
                         HeightRequest="{StaticResource ButtonSize}"
                         WidthRequest="{StaticResource ButtonSize}"
                         VerticalOptions="End"
@@ -291,6 +286,7 @@
                 Text="{StaticResource target}" />
             <views:OnBoardingView Grid.RowSpan="6" Grid.ColumnSpan="7" 
                 Margin="-8,-10,-8,-8"
+                                  d:IsVisible="false"
                                   BindingContext="{Binding OnBoardingViewModel}"
                                   
                                   />
