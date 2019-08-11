@@ -1,7 +1,7 @@
 ﻿using System;
+using GeohashCross.Models;
 using GeohashCross.Services;
 using NUnit.Framework;
-using Xamarin.Essentials;
 
 namespace GeohashCross.UnitTests
 {

@@ -20,39 +20,64 @@ namespace GeohashCross.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
-        public ICommand GlobalClicked
+
+        //TODO: Services in this section should be handled with IOC
+        IDistanceCalculator DistanceCalculator = new DistanceCalculator();
+
+        //TODO: Backing fields for observable properties, these can probably be eliminated with FODY
+        bool darkNavEnabled;
+        bool locationPermissionGranted;
+        bool isSatteliteView;
+        HashLocation hashLocation;
+        Location currentLocation;
+        DateTime date = DateTime.Today;
+
+        public OnBoardingViewModel OnBoardingViewModel { get; set; } = new OnBoardingViewModel();
+        public ObservableRangeCollection<HashLocation> GeohashLocations { get; set; } = new ObservableRangeCollection<HashLocation>();
+        public bool ShowNeighbours { get; set; }
+        public Location TappedLocation { get; set; }
+
+
+
+
+
+        public ICommand DarkNavCommand => new Command(ExecuteToggleDarkNavCommand);
+        public ICommand GlobalHashCommand => new Command(ExecuteGlobalHashCommand);
+        public ICommand SatteliteCommand => new Command(ExecuteSatteliteCommand);
+        public ICommand ToggleNeighboursCommand => new Command(ExecuteToggleNeighboursCommand);
+        public ICommand ResetCommand => new Command(async () => await ExecuteResetCommand());
+        public ICommand MapTappedCommand => new Command(async (obj) => await ExecuteMapTappedCommand(obj));
+        public ICommand DateChangedCommand => new Command(async () => await LoadHashLocation());
+        public ICommand LoadHashLocationCommand => new Command(async () => await LoadHashLocation());
+
+
+        public DateTime Date
         {
             get
             {
-                return new Command(async () =>
-                {
-                    try
-                    {
-                        //var loc = HashData.GlobalHash;
-                        //var address = await Xamarin.Essentials.Geocoding.GetPlacemarksAsync(loc);
-                        //var pin = new Xamarin.Forms.GoogleMaps.Pin
-                        //{
-                        //    Label = loc.Timestamp == DateTime.Today ? "Today's Global Hash" : "Global Hash for " + loc.Timestamp.ToString("yyyy-MM-dd"),
-                        //    Position = new Xamarin.Forms.GoogleMaps.Position(loc.Latitude, loc.Longitude),
-                        //    Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green),
-                        //    Address = $"{address.FirstOrDefault().Locality ?? address.FirstOrDefault().SubLocality }"
-                        //};
-
-                        //var globalHashLoc = new HashLocation(loc.Latitude, loc.Longitude, Date, false, true);
-
-                        //GeohashLocations.Add(globalHashLoc);
-                        //var lastPos = new Position(loc.Latitude, loc.Longitude);
-                        //await TheMap.AnimateCamera(CameraUpdateFactory.NewPosition(lastPos), TimeSpan.FromSeconds(1));
-                    }
-                    catch (Exception ex)
-                    {
-                        Crashes.TrackError(ex);
-                    }
-                });
+                return date;
+            }
+            set
+            {
+                date = value;
+                OnPropertyChanged(nameof(Date));
             }
         }
 
-        bool locationPermissionGranted;
+        //This is the direction to the hash that the needle should show. It updates as the device is rotated and accounts for magnetic declination
+        public float TargetNeedleDirection
+        {
+            get
+            {
+                if (currentLocation == null || HashLocation == null)
+                    return 0;
+
+                var displayBearing = Bearing - HeadingTrueNorth;
+
+                return (float)displayBearing;
+            }
+        }
+
         public bool LocationPermissionGranted
         {
             get
@@ -63,21 +88,13 @@ namespace GeohashCross.ViewModels
             {
                 locationPermissionGranted = value;
                 OnPropertyChanged(nameof(LocationPermissionGranted));
-            }
-        }
-
-        public ICommand SatteliteClicked
-        {
-            get
-            {
-                return new Command(() =>
+                if (value == true)
                 {
-                    IsSatteliteView = !IsSatteliteView;
-                });
+                    StartLocationService();
+                }
             }
         }
 
-        bool isSatteliteView;
         public bool IsSatteliteView
         {
             get
@@ -91,23 +108,72 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        public ICommand ToggleNeighbours
+        public Location CurrentLocation
         {
             get
             {
-                return new Command(() =>
+                return currentLocation;
+            }
+            set
+            {
+                var oldValue = currentLocation;
+                currentLocation = value;
+                if(oldValue == null)
                 {
-                    ShowNeighbours = !ShowNeighbours;
-                    UpdateShowNeighbours();
-
-
-
-                });
+                    Debug.WriteLine("Am I main thread?");
+                    LoadHashLocationCommand.Execute(null);
+                }
+                OnPropertyChanged(nameof(CurrentLocation));
+                OnPropertyChanged(nameof(Distance));
+                
             }
         }
 
-        private void UpdateShowNeighbours()
+        public HashLocation HashLocation
         {
+            get
+            {
+                return hashLocation;
+            }
+            set
+            {
+                hashLocation = value;
+                OnPropertyChanged(nameof(HashLocation));
+                OnPropertyChanged(nameof(Distance));
+            }
+        }
+
+
+        public Double? Distance
+        {
+            get
+            {
+                if (CurrentLocation == null || HashLocation == null)
+                    return null;
+                var distance = DistanceCalculator.CalculateDistance(CurrentLocation, HashLocation);
+                return distance;
+            }
+        }
+
+        public bool DarkNavEnabled
+        {
+            get
+            {
+                return darkNavEnabled;
+            }
+            set
+            {
+                darkNavEnabled = value;
+                OnPropertyChanged(nameof(DarkNavEnabled));
+            }
+        }
+
+
+
+
+        private void ExecuteToggleNeighboursCommand(object obj)
+        {
+            ShowNeighbours = !ShowNeighbours;
             if (ShowNeighbours)
             {
                 var neighbours = new List<HashLocation>();
@@ -124,8 +190,6 @@ namespace GeohashCross.ViewModels
             {
                 var neighbours = GeohashLocations.Where(x => x.IsNeighbour).ToList();
 
-
-                //Do not convert to RemoveRange, there is a bug that means you end up with no pins displayed even if some are in collection
                 foreach (var loc in neighbours)
                 {
                     GeohashLocations.Remove(loc);
@@ -134,21 +198,168 @@ namespace GeohashCross.ViewModels
             }
         }
 
-
-
-        public ObservableRangeCollection<HashLocation> GeohashLocations
+        private void ExecuteSatteliteCommand()
         {
-            get;
-            set;
-        } = new ObservableRangeCollection<HashLocation>();
+            IsSatteliteView = !IsSatteliteView;
+        }
+
+        private void ExecuteGlobalHashCommand()
+        {
+            throw new NotImplementedException();
+        }
 
 
-        public HomePageViewModel()
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //This bearing is relative to true north and doesn't use declination
+        //Thanks to http://www.movable-type.co.uk/scripts/latlong.html
+        public double GetBearingRelativeToTrueNorth(Location currentLocation, Location destination)
+        {
+            var lat1 = currentLocation.Latitude.ToRadians();
+            var lon1 = currentLocation.Longitude.ToRadians();
+            var lat2 = destination.Latitude.ToRadians();
+            var lon2 = destination.Longitude.ToRadians();
+
+            var dlon = lon2 - lon1;
+
+            var y = Math.Sin(dlon) * Math.Cos(lat2);
+            var x = (Math.Cos(lat1) * Math.Sin(lat2)) - (Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dlon));
+
+            var bearing = Math.Atan2(y, x);
+            var bearingInDegrees = bearing.ToDegrees();
+
+            var normalisedBearing = (bearingInDegrees + 360) % 360;
+
+            return normalisedBearing;
+        }
+
+        void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
+        {
+            HeadingMagneticNorth = e.Reading.HeadingMagneticNorth;
+        }
+
+        bool LocationServiceShouldContinue;
+        public void StartLocationService()
+        {
+            LocationServiceShouldContinue = true;
+            Device.StartTimer(TimeSpan.FromSeconds(4), TimerInitiatedUpdateLocation);
+        }
+
+        public void StopLocationService()
+        {
+            LocationServiceShouldContinue = false;
+        }
+
+
+
+        bool TimerInitiatedUpdateLocation()
+        {
+            Task.Run(async () =>
+            {
+                var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(2500));
+                var loc = await Geolocation.GetLocationAsync(locationRequest);
+                if(loc != null)
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        CurrentLocation = loc.ToGCLocation();
+                    });
+                }
+
+            });
+
+
+            return LocationServiceShouldContinue;
+        }
+
+
+        public async Task<HashLocation> LoadHashLocation()
+        {
+            var loc = TappedLocation ?? CurrentLocation;
+            if (loc == null)
+            {
+                return null;
+            }
+
+
+            var hashData = await Hasher.GetHashData(Date, loc);
+
+            if (hashData.Success)
+            {
+                var location = hashData.Data;
+
+                GeohashLocations.Add(location);
+                if (ShowNeighbours)
+                {
+                    GeohashLocations.AddRange(location.Neighbours);
+                }
+
+            }
+
+            HashLocation = hashData.Data;
+
+            return hashData.Data;
+        }
+
+
+
+
+
+
+        private async Task ExecuteMapTappedCommand(object obj)
+        {
+            var loc = obj as Location;
+            TappedLocation = loc;
+            await LoadHashLocation();
+        }
+
+        public async Task ExecuteResetCommand()
         {
             try
             {
-                Compass.ReadingChanged += Compass_ReadingChanged;
-                Compass.Start(SensorSpeed.Fastest);
+                Date = DateTime.Today;
+                TappedLocation = null;
+                ShowNeighbours = false;
+                GeohashLocations.Clear();
+
+                await LoadHashLocation();
+            }
+            catch (Exception ex)
+            {
+                Crashes.TrackError(ex);
+            }
+        }
+
+
+        public void ExecuteToggleDarkNavCommand()
+        {
+            //Make Dark nav visible/invible
+            DarkNavEnabled = !DarkNavEnabled;
+
+            //Start compass, because compass is only visible in DarkMode
+            try
+            {
+                if (DarkNavEnabled)
+                {
+                    Compass.ReadingChanged += Compass_ReadingChanged;
+                    Compass.Start(SensorSpeed.Fastest);
+                }
+                else
+                {
+                    Compass.ReadingChanged -= Compass_ReadingChanged;
+                    Compass.Stop();
+                }
             }
             catch (Exception ex)
             {
@@ -157,111 +368,36 @@ namespace GeohashCross.ViewModels
             }
         }
 
-        //Direction the devic is facing relative to magnetic north
-        public double HeadingMagneticNorth
-        {
-            get;
-            set;
-        }
-
-        public double HeadingTrueNorth
-        {
-            get
-            {
-                var headingTrueNorth = HeadingMagneticNorth + Declination;
-
-                if (headingTrueNorth > 360)
-                    headingTrueNorth -= 360;
-                return headingTrueNorth;
-            }
-        }
-
-        Location _CurrentLocation;
-        public Location CurrentLocation
-        {
-            get
-            {
-                return _CurrentLocation;
-            }
-            set
-            {
-                _CurrentLocation = value;
-                OnPropertyChanged(nameof(CurrentLocation));
-                OnPropertyChanged(nameof(Distance));
-                OnPropertyChanged(nameof(ImHere));
-            }
-        }
-
-        bool _ShowAdvanced;
-        public bool ShowAdvanced
-        {
-            get
-            {
-                return _ShowAdvanced;
-            }
-            set
-            {
-                _ShowAdvanced = value;
-                OnPropertyChanged(nameof(ShowAdvanced));
-            }
-        }
 
 
 
-        public Location TappedLocation { get; set; }
 
 
-        HashLocation hashLocation;
-        public HashLocation HashLocation
-        {
-            get
-            {
-                return hashLocation;
-            }
-            set
-            {
-                hashLocation = value;
-                OnPropertyChanged(nameof(HashLocation));
-                OnPropertyChanged(nameof(Distance));
-            }
-        }
 
 
-        IDistanceCalculator DistanceCalculator = new DistanceCalculator();
-        Double? _Distance
-        {
-            get
-            {
-                if (_CurrentLocation == null || HashLocation == null)
-                    return null;
-                var distance = DistanceCalculator.CalculateDistance(_CurrentLocation, HashLocation);
-                return distance;
-            }
-        }
 
-        public string Distance
-        {
-            get
-            {
-                var distance = _Distance;
-                if (!distance.HasValue)
-                    return "Calculating...";
-                if (distance < 1)
-                    return (distance.Value * 1000).ToString("N2") + "m";
-                else
-                    return _Distance.Value.ToString("N2") + "Km";
-            }
-        }
+
+
+
+
+
+
+
+
+        //Everything below here needs to be refactored into a direction calculating class
+
+
+
 
         //This is the difference between True north and magnetic north in degress
         public double Declination
         {
             get
             {
-                if (_CurrentLocation == null)
+                if (CurrentLocation == null)
                     return 0;
                 var calc = new WmmGeomagnetismCalculator();
-                var declination = calc.TryCalculate(new Coordinate(_CurrentLocation.Latitude, _CurrentLocation.Longitude), DateTime.Now);
+                var declination = calc.TryCalculate(new Coordinate(CurrentLocation.Latitude, CurrentLocation.Longitude), DateTime.Now);
                 return declination.Declination;
             }
         }
@@ -290,275 +426,37 @@ namespace GeohashCross.ViewModels
         }
 
 
-        //This is the direction to the hash that the needle should show. It updates as the device is rotated and accounts for magnetic declination
-        public float TargetNeedleDirection
-        {
-            get
-            {
-                if (_CurrentLocation == null || HashLocation == null)
-                    return 0;
 
-                var displayBearing = Bearing - HeadingTrueNorth;
-
-                return (float)displayBearing;
-            }
-        }
 
         public double Bearing
         {
             get
             {
-                if (_CurrentLocation == null || HashLocation == null)
+                if (CurrentLocation == null || HashLocation == null)
                     return 0;
-                var bearing = GetBearingRelativeToTrueNorth(_CurrentLocation, HashLocation);//Relative to true north ignoring heading
+                var bearing = GetBearingRelativeToTrueNorth(CurrentLocation, HashLocation);//Relative to true north ignoring heading
                 return bearing;
             }
         }
 
-
-        //This bearing is relative to true north and doesn't use declination
-        //Thanks to http://www.movable-type.co.uk/scripts/latlong.html
-        public double GetBearingRelativeToTrueNorth(Location currentLocation, Location destination)
+        //Direction the devic is facing relative to magnetic north
+        public double HeadingMagneticNorth
         {
-            var lat1 = currentLocation.Latitude.ToRadians();
-            var lon1 = currentLocation.Longitude.ToRadians();
-            var lat2 = destination.Latitude.ToRadians();
-            var lon2 = destination.Longitude.ToRadians();
-
-            var dlon = lon2 - lon1;
-
-            var y = Math.Sin(dlon) * Math.Cos(lat2);
-            var x = (Math.Cos(lat1) * Math.Sin(lat2)) - (Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dlon));
-
-            var bearing = Math.Atan2(y, x);
-            var bearingInDegrees = bearing.ToDegrees();
-
-            var normalisedBearing = (bearingInDegrees + 360) % 360;
-
-            return normalisedBearing;
+            get;
+            set;
         }
 
-        void Compass_ReadingChanged(object sender, CompassChangedEventArgs e)
-        {
-            HeadingMagneticNorth = e.Reading.HeadingMagneticNorth;
-            OnPropertyChanged(nameof(HeadingMagneticNorth));
-            OnPropertyChanged(nameof(HeadingTrueNorth));
-            OnPropertyChanged(nameof(Declination));
-            OnPropertyChanged(nameof(TrueNorthNeedleDirection));
-            OnPropertyChanged(nameof(MagneticNorthNeedleDirection));
-            OnPropertyChanged(nameof(TargetNeedleDirection));
-            OnPropertyChanged(nameof(Bearing));
-        }
-
-        public bool ImHere
+        public double HeadingTrueNorth
         {
             get
             {
-                var distance = _Distance;
+                var headingTrueNorth = HeadingMagneticNorth + Declination;
 
-                if (!distance.HasValue)
-                {
-                    return false;
-                }
-
-                if (distance.Value < 0.005)//5 metres
-                {
-                    return true;
-                }
-                if (_CurrentLocation.Accuracy.HasValue && _CurrentLocation.Accuracy.Value <= 50)//Accuracy greater than 10 metres
-                {
-                    if (distance * 1000 < _CurrentLocation.Accuracy.Value)
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                if (headingTrueNorth > 360)
+                    headingTrueNorth -= 360;
+                return headingTrueNorth;
             }
         }
 
-        DateTime _Date = DateTime.Today;
-        public DateTime Date
-        {
-            get
-            {
-                return _Date;
-            }
-            set
-            {
-                if (value != _Date)
-                {
-                    _Date = value;
-                }
-                else
-                {
-                    _Date = value;
-                }
-                OnPropertyChanged(nameof(Date));
-            }
-        }
-
-        internal async Task Refresh()
-        {
-
-            GeohashLocations.Clear();
-            TappedLocation = null;
-            _Date = DateTime.Today;
-            OnPropertyChanged(nameof(Date));
-            await LoadHashLocation();
-        }
-
-        bool TimerInitiatedUpdateLocation()
-        {
-
-            Task.Run(UpdateCurrentLocation);
-            return true;
-        }
-
-
-        public async Task<Response<Location>> UpdateCurrentLocation()
-        {
-
-            try
-            {
-                Location loc = null;
-                int failCount = 0;
-                while (loc == null)
-                {
-                    if (failCount > 0)
-                        await Task.Delay(1000);
-                    failCount++;
-                    var locationRequest = new GeolocationRequest(GeolocationAccuracy.High, TimeSpan.FromMilliseconds(failCount * 1000));
-                    loc = (await Geolocation.GetLocationAsync(locationRequest)).ToGCLocation();
-
-                }
-
-
-                CurrentLocation = loc;
-
-                if (!Initialised)
-                {
-                    SetUpTimer();
-                }
-                return new Response<Location>(loc, true, "Location Loaded successfully");
-            }
-            catch (Exception ex)
-            {
-                Crashes.TrackError(ex);
-                return new Response<Location>(new Location(), false, "Location not Loaded successfully");
-
-            }
-        }
-
-
-        private bool Initialised = false;
-        private void SetUpTimer()
-        {
-
-            try
-            {
-                if (Initialised)
-                    return;
-                Initialised = true;
-                Device.StartTimer(TimeSpan.FromSeconds(5), TimerInitiatedUpdateLocation);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in {this.GetType().Name} \n {ex}\n{ex.StackTrace}");
-                Crashes.TrackError(ex);
-            }
-        }
-
-
-        public async Task<HashLocation> LoadHashLocation()
-        {
-            var loc = TappedLocation ?? _CurrentLocation;
-            if (loc == null)
-            {
-                return null;
-            }
-
-
-            var hashData = await Hasher.GetHashData(Date, loc);
-
-            if (hashData.Success)
-            {
-                var location = hashData.Data;
-                GeohashLocations.Add(location);
-                if (ShowNeighbours)
-                {
-                    GeohashLocations.AddRange(location.Neighbours);
-                }
-
-            }
-
-            HashLocation = hashData.Data;
-
-            return hashData.Data;
-        }
-
-        public bool ShowNeighbours { get; set; }
-
-        bool _DarkNavEnabled = false;
-        public bool DarkNavEnabled
-        {
-            get
-            {
-                return _DarkNavEnabled;
-            }
-            set
-            {
-                _DarkNavEnabled = value;
-                OnPropertyChanged(nameof(DarkNavEnabled));
-            }
-        }
-
-
-        public async Task ChangeDate()
-        {
-            await LoadHashLocation();
-        }
-
-        public ICommand ShowMoreCommand => new Command(ToggleShowMore);
-        public ICommand ResetCommand => new Command(Reset);
-        public ICommand DarkNavCommand => new Command(ToggleDarkNav);
-        public ICommand MapTappedCommand => new Command(MapTapped);
-
-        private async void MapTapped(object obj)
-        {
-            var loc = obj as Location;
-            TappedLocation = loc;
-            await LoadHashLocation();
-        }
-
-        public async void Reset()
-        {
-            try
-            {
-                Date = DateTime.Today;
-                TappedLocation = null;
-                ShowNeighbours = false;
-                GeohashLocations.Clear();
-                if (CurrentLocation == null)
-                {
-                    await UpdateCurrentLocation();
-                }
-
-                await LoadHashLocation();
-            }
-            catch (Exception ex)
-            {
-                Crashes.TrackError(ex);
-            }
-        }
-
-        public void ToggleShowMore()
-        {
-            ShowAdvanced = !ShowAdvanced;
-        }
-
-        public void ToggleDarkNav()
-        {
-            DarkNavEnabled = !DarkNavEnabled;
-        }
     }
 }

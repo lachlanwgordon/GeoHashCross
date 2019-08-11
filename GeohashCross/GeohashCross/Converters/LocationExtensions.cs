@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GeohashCross.Models
 {
@@ -126,5 +128,45 @@ namespace GeohashCross.Models
 
             return newLon;
         }
+
+
+
+        public static (Location SouthWest, Location NorthEast) GetBounds(List<Location> locations)
+        {
+            var north = locations.Max(x => x.Latitude);
+            var maxLon = locations.Max(x => x.Longitude);
+            var south = locations.Min(x => x.Latitude);
+            var minLon = locations.Min(x => x.Longitude);
+            var eastAndWest = OrderEastAndWest(minLon, maxLon);
+
+            var southWest = new Location(south, eastAndWest.west);
+            var northEast = new Location(north, eastAndWest.east);
+
+
+
+
+            return (southWest, northEast);
+        }
+
+        public static (double east, double west) OrderEastAndWest(double point1, double point2)
+        {
+            double east;
+            double west;
+
+            if(Math.Abs(point1 - point2) > 180)
+            {
+                east = Math.Min(point1, point2);
+                west = Math.Max(point1, point2);
+            }
+            else
+            {
+                east = Math.Max(point1, point2);
+                west = Math.Min(point1, point2);
+            }
+
+            return (east, west);
+        }
     }
+
+
 }

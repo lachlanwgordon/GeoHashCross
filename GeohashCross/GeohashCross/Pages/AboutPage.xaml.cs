@@ -8,6 +8,12 @@ namespace GeohashCross.Views
 {
     public partial class AboutPage : ContentPage
     {
+        public void ShowOnboarding(object sender, EventArgs e)
+        {
+            
+        }
+
+
         public AboutPage()
         {
             InitializeComponent();
@@ -20,6 +26,7 @@ namespace GeohashCross.Views
             {
                 {"Page", GetType().Name}
             });
+            VM.OnBoardingViewModel.IsVisible = false;
         }
     }
 }

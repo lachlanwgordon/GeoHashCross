@@ -12,6 +12,16 @@ namespace GeohashCross.ViewModels
 {
     public class AboutViewModel : BaseViewModel
     {
+
+        public ICommand ShowOnboardingCommand => new Command(ShowOnboarding);
+
+        private void ShowOnboarding(object obj)
+        {
+            OnBoardingViewModel.IsVisible = true;
+        }
+
+        public OnBoardingViewModel OnBoardingViewModel { get; set; } = new OnBoardingViewModel();
+
         public ICommand WebsiteCommand => new Command<string>(OpenMyWebsite);
 
         public ICommand LogCommand => new Command(OpenLog);
@@ -22,7 +32,7 @@ namespace GeohashCross.ViewModels
             {
                 var defaultLog = $"New log in About page {DateTime.Now}\n";
                 var log = Preferences.Get(Keys.log, "");
-                if(string.IsNullOrEmpty(log))
+                if (string.IsNullOrEmpty(log))
                 {
                     log = defaultLog;
                     Xamarin.Essentials.Preferences.Set(Keys.log, log);

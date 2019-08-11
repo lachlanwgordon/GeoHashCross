@@ -8,8 +8,8 @@
     x:Class="GeohashCross.Views.HomePage"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
     mc:Ignorable="d"
+    xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
     xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
     Shell.NavBarIsVisible="false"
     xmlns:converters="clr-namespace:GeohashCross.Converters"
@@ -20,7 +20,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid
-            Margin="8"
+            Padding="0"
             ColumnSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -53,9 +53,9 @@
                     Width="{StaticResource ButtonSize}" />
             </Grid.ColumnDefinitions>
             <maps:Map
-                Margin="-8,-80,-80,-8"
                 x:Name="TheMap"
-                Grid.ColumnSpan="6"
+                Margin="-8,-80,-8,-8"
+                Grid.ColumnSpan="7"
                 MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
                 MyLocationEnabled="{Binding LocationPermissionGranted}"
                 ItemsSource="{Binding GeohashLocations}"
@@ -75,6 +75,7 @@
                 </maps:Map.Behaviors>
             </maps:Map>
             <Frame
+                Margin="8"
                 Visual="Material"
                 HasShadow="true"
                 Grid.ColumnSpan="7"
@@ -137,8 +138,12 @@
                         VerticalOptions="CenterAndExpand"
                         Margin="0"
                         TranslationX="00"
-                        Unfocused="DateChanged"
-                        Format="yyyy-MM-dd" />
+                        Format="yyyy-MM-dd">
+                        <DatePicker.Behaviors>
+                            <behaviors:EventToCommandBehavior EventName="Unfocused"
+                                                              Command="{Binding DateChangedCommand}" />
+                        </DatePicker.Behaviors>
+                    </DatePicker>
                     <Entry
                         Placeholder="Date"
                         Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}', Mode=OneWay}"
@@ -179,25 +184,25 @@
                         Grid.Row="4"
                         Grid.ColumnSpan="6"
                         d:Text="1km"
-                        Text="{Binding Distance}" />
+                        Text="{Binding Distance, Converter={StaticResource nullableDoubleToDistanceStringConverter}}" />
                 </Grid>
             </Frame>
             <Frame
                 Grid.ColumnSpan="7"
                 Grid.RowSpan="5"
                 x:Name="TheDarkFrame"
+                Margin="8"
                 IsVisible="{Binding DarkNavEnabled}"
-                d:IsVisible="false"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid
                     RowSpacing="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="10" />
+                            Width="{StaticResource ButtonSize}" />
                         <ColumnDefinition
                             Width="*" />
                         <ColumnDefinition
-                            Width="10" />
+                            Width="{StaticResource ButtonSize}" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition
@@ -205,11 +210,7 @@
                         <RowDefinition
                             Height="*" />
                         <RowDefinition
-                            Height="30" />
-                        <RowDefinition
-                            Height="30" />
-                        <RowDefinition
-                            Height="60" />
+                            Height="{StaticResource ButtonSize}" />
                     </Grid.RowDefinitions>
                     <Label
                         Style="{StaticResource LargeLabel}"
@@ -220,25 +221,23 @@
                     <views:Compass
                         NeedleDirection="{Binding TargetNeedleDirection}"
                         Grid.Row="1"
-                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         IsVisible="{Binding DarkNavEnabled}" />
                     <Label
                         Style="{StaticResource LargeLabel}"
                         TextColor="{StaticResource Divider}"
+                        d:Text="35km"
                         Grid.Row="2"
                         Grid.ColumnSpan="3"
                         HorizontalTextAlignment="Center"
-                        Text="{Binding Distance}" />
+                        Text="{Binding Distance, Converter={StaticResource nullableDoubleToDistanceStringConverter}}" />
                     <Button
                         Text="{StaticResource night}"
                         Style="{StaticResource ButtonStyle}"
-                        Grid.Column="1"
-                        Grid.ColumnSpan="2"
-                        Grid.Row="4"
+                        Grid.Column="2"
+                        Grid.Row="2"
                         HeightRequest="{StaticResource ButtonSize}"
                         WidthRequest="{StaticResource ButtonSize}"
-                        VerticalOptions="End"
-                        HorizontalOptions="End"
                         Command="{Binding DarkNavCommand}" />
                 </Grid>
             </Frame>
@@ -261,14 +260,14 @@
                 Grid.Column="4"
                 Grid.Row="4"
                 Text="{StaticResource layers}"
-                Command="{Binding SatteliteClicked}"
+                Command="{Binding SatteliteCommand}"
                 Style="{StaticResource ButtonStyle}" />
             <Button
                 IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
                 Grid.Column="3"
                 Grid.Row="4"
                 Text="{StaticResource neighbours}"
-                Command="{Binding ToggleNeighbours}"
+                Command="{Binding ToggleNeighboursCommand}"
                 Style="{StaticResource ButtonStyle}" />
             <Button
                 Grid.Row="3"
@@ -286,10 +285,17 @@
                 Clicked="MyPositionClicked"
                 FontFamily="{StaticResource MaterialDesignIcons}"
                 Text="{StaticResource target}" />
+            <views:OnBoardingView Grid.RowSpan="6"
+                                  Grid.ColumnSpan="7"
+                                  Margin="-8,-53,-8,-8"
+                                  VerticalOptions="Center"
+                                  d:IsVisible="false"
+                                  BindingContext="{Binding OnBoardingViewModel}" />
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
+            <converters:NullableDoubleToDistanceStringConverter x:Key="nullableDoubleToDistanceStringConverter" />
             <converters:HashLocationToPositionConverter
                 x:Key="hashLocationToPositionConverter" />
             <converters:BoolToMapTypeConverter
