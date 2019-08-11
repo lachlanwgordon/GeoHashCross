@@ -12,6 +12,12 @@ namespace GeohashCross.Models
         public DateTime DJDate { get; set; }
         public bool Is30WRuleApplied { get; set; }
 
+
+        public HashLocation ()
+        {
+
+        }
+
         public HashLocation(double latitude, double longitude, DateTime date, bool isNeighbour, bool isGlobal) : base(latitude, longitude)
         {
             Latitude = latitude;

@@ -12,6 +12,10 @@ using Xamarin.Forms.Xaml;
 using Microsoft.AppCenter.Analytics;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
+using GeohashCross.Models;
+using Location = GeohashCross.Models.Location;
+using LocationExtensions = GeohashCross.Models.LocationExtensions;
+using GeohashCross.Converters;
 
 namespace GeohashCross.Views
 {
@@ -38,50 +42,10 @@ namespace GeohashCross.Views
         public HomePage()
         {
             InitializeComponent();
+            TheMap.UiSettings.MyLocationButtonEnabled = false;//Don't show the my location button because I've implemented my own
         }
 
-        public async Task Init()
-        {
 
-            try
-            {
-                TheMap.UiSettings.MyLocationButtonEnabled = false;//Don't show the my location button because I've implemented my own
-
-                var granted = await GetPermissions();
-                if (!granted)
-                    return;
-                await SetupLocations();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"{ex}\n{ex.StackTrace}");
-                Crashes.TrackError(ex);
-                await Shell.Current.DisplayAlert("Error", "An error has occured, probably because the hash isn't available yet.", "Okay");
-            }
-        }
-
-        private async Task SetupLocations()
-        {
-            var currentLoc = await VM.UpdateCurrentLocation();
-            if (currentLoc == null)
-            {
-                await DisplayAlert("Error", "Could not get current location. Please tap a location on the map", "Okay");
-                return;
-            }
-            TheMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(currentLoc.Data.Latitude, currentLoc.Data.Longitude), new Distance(50)));
-
-            var hashLoc = await VM.LoadHashLocation();
-            if (hashLoc == null)
-            {
-                await DisplayAlert("Error", "Could not load DJIA for today, please check internet connection", "Okay");
-                return;
-            }
-            var hashPos = new Position(hashLoc.Latitude, hashLoc.Longitude);
-            var myPos = new Position(currentLoc.Data.Latitude, currentLoc.Data.Longitude);
-            var bounds = new Bounds(myPos, hashPos);
-            var update = CameraUpdateFactory.NewBounds(bounds, 50);
-            await TheMap.AnimateCamera(update);
-        }
 
         private async Task<bool> GetPermissions()
         {
@@ -101,7 +65,6 @@ namespace GeohashCross.Views
 
             if (status == PermissionStatus.Granted)
             {
-                VM.LocationPermissionGranted = true;
                 return true;
             }
 
@@ -140,21 +103,6 @@ namespace GeohashCross.Views
         }
 
 
-        private async void YouMadeItClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                var result = await DisplayActionSheet("Congratulations\nWould you like to take a photo?", "Cancel", null, "Screen shot", "Photo", "Both");
-            }
-            catch (Exception ex)
-            {
-
-                Crashes.TrackError(ex);
-            }
-        }
-
-        
-
 
         bool initialised;
         bool FirstUse
@@ -168,38 +116,83 @@ namespace GeohashCross.Views
             base.OnAppearing();
 
 
-            Analytics.TrackEvent(AnalyticsManager.PageOpened, new Dictionary<string, string>
-            {
-                {"Page", GetType().Name}
-            });
-
+            VM.OnBoardingViewModel.PropertyChanged += OnBoardingViewModel_PropertyChanged;
             if (FirstUse)
             {
-                await Shell.Current.DisplayAlert("Onboarding Time", "how to", "Okay");
                 FirstUse = false;
-            }
+                VM.OnBoardingViewModel.IsVisible = true;
 
-            if (!initialised)
+                return;
+            }
+            else
             {
-                await Init();
-                initialised = true;
-
+                VM.OnBoardingViewModel.IsVisible = false;
             }
+
+
+
+
+
+            VM.GeohashLocations.CollectionChanged += GeohashLocations_CollectionChanged;
+
 
         }
 
-        async void DateChanged(object sender, Xamarin.Forms.FocusEventArgs e)
+        private async void GeohashLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            try
+            if (e.NewItems == null || e.NewItems.Count == 0)
             {
-                await VM.ChangeDate();
+                return;
             }
-            catch (Exception ex)
+
+
+            CameraUpdate update;
+            if (e.NewItems?.Count == 1)
             {
-                Crashes.TrackError(ex);
+                var loc = e.NewItems[0] as Location;
+
+
+                update = CameraUpdateFactory.NewPosition(new Position(loc.Latitude, loc.Longitude));
             }
+            else
+            {
+                var newLocs = new List<Location>();
+                foreach (var item in e.NewItems)
+                {
+                    newLocs.Add(item as Location);
+                }
+                var locationBounds = LocationExtensions.GetBounds(newLocs);
+                var bounds = new Bounds(locationBounds.SouthWest.ToPosition(), locationBounds.NorthEast.ToPosition());
+
+                update = CameraUpdateFactory.NewBounds(bounds, 100);
+            }
+
+            await TheMap.AnimateCamera(update);
         }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            VM.OnBoardingViewModel.PropertyChanged -= OnBoardingViewModel_PropertyChanged;
+            VM.GeohashLocations.CollectionChanged -= GeohashLocations_CollectionChanged;
+            VM.StopLocationService();
+        }
+
+        private async void OnBoardingViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Debug.WriteLine("PropertyChanged" + e.PropertyName);
+            if (e.PropertyName == "IsVisible" && VM.OnBoardingViewModel.IsVisible == false)
+            {
+                VM.OnBoardingViewModel.PropertyChanged -= OnBoardingViewModel_PropertyChanged;
+            }
+
+            var granted = await GetPermissions();
+            if (granted)
+            {
+                VM.LocationPermissionGranted = true;
+                VM.StartLocationService();
+            }
+        }
 
 
     }

@@ -1,104 +1,125 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:vms="clr-namespace:GeohashCross.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Padding="{OnPlatform iOS=0,83, Android=0}"
-    x:Class="GeohashCross.Views.AboutPage">
+    x:Class="GeohashCross.Views.AboutPage" xmlns:views="clr-namespace:GeohashCross.Views">
     <ContentPage.BindingContext>
         <vms:AboutViewModel
             x:Name="VM" />
     </ContentPage.BindingContext>
-    <ContentPage.Content>   
-        <ScrollView>
-        <TableView
-            Intent="Settings">
-            <TableRoot>
-                <TableSection
-                    Title="About Geohash Cross">
-                    <TextCell
-                        Text="Created By"
-                        Detail="Lachlan Gordon"
-                        CommandParameter="https://lachlanwgordon.com"
-                        Command="{Binding WebsiteCommand}" />
-                    <TextCell
-                        Text="Development Blog Post"
-                        Detail="https://lachlanwgordon.com"
-                        CommandParameter="https://lachlanwgordon.com/"
-                        Command="{Binding WebsiteCommand}" />
-                    <TextCell
-                        Text="Twitter"
-                        Detail="@lachlanwgordon"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://twitter.com/lachlanwgordon" />
-                    <TextCell
-                        Text="Source Code"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://github.com/lachlanwgordon/GeoHashCross/"
-                        Detail="https://github.com/lachlanwgordon/GeoHashCross/" />
-                    <TextCell
-                        Text="Rate and Review" />
-                    <TextCell
-                        Text="Inspired By"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://xkcd.com/426/"
-                        Detail="https://xkcd.com/426/" />
-                </TableSection>
-                <TableSection
-                    Title="Libraries">
-                    <TextCell
-                        Text="Xamarin Forms"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://docs.microsoft.com/en-us/xamarin/xamarin-forms/"
-                        Detail="Xamarin" />
-                    <TextCell
-                        Text="Xamarin Essentials"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://docs.microsoft.com/en-us/xamarin/essentials/"
-                        Detail="Xamarin" />
-                    <TextCell
-                        Text="Mvvm Helpers"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://github.com/jamesmontemagno/mvvm-helpers"
-                        Detail="James Montemagno" />
-                    <TextCell
-                        Text="Skia Sharp"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://github.com/mono/SkiaSharp"
-                        Detail="Mono" />
-                     <TextCell
-                        Text="Geo"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://github.com/sibartlett/Geo"
-                        Detail="Simon Bartlett" />
-                    <TextCell
-                        Text="Jobs Plugin"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://github.com/aritchie/jobs"
-                        Detail="Allan Ritchie" />
-                    <TextCell
-                        Text="SQLite-net"
-                        Command="{Binding WebsiteCommand}"
-                        CommandParameter="https://github.com/praeclarum/sqlite-net"
-                        Detail="Frank Krueger" />
-                    
-                   
-                </TableSection>
-                <TableSection
-                    Title="Crash Reports and Analytics">
-                    <SwitchCell
-                        Text="Enable crashes and error reports"
-                        On="{Binding CrashesEnabled}" />
-                    <SwitchCell
-                        Text="Enable analytics reports"
-                        On="{Binding AnalyticsEnabled}" />
-                    <TextCell 
-                        Text="Job Log"
-                         Command="{Binding LogCommand}"
-                    />
-                </TableSection>
-            </TableRoot>
-        </TableView>
+    <ContentPage.Content>
+        <Grid>
+            <ScrollView>
+                <TableView
+                    Intent="Settings">
+                    <TableRoot>
+                        <TableSection
+                            Title="About Geohash Cross">
+                            <TextCell
+                                Text="Created By"
+                                Detail="Lachlan Gordon"
+                                CommandParameter="https://lachlanwgordon.com"
+                                Command="{Binding WebsiteCommand}" />
+                            <TextCell
+                                Text="Development Blog Post"
+                                Detail="https://lachlanwgordon.com"
+                                CommandParameter="https://lachlanwgordon.com/"
+                                Command="{Binding WebsiteCommand}" />
+                            <TextCell
+                                Text="Twitter"
+                                Detail="@lachlanwgordon"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://twitter.com/lachlanwgordon" />
+                            <TextCell
+                                Text="Source Code"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://github.com/lachlanwgordon/GeoHashCross/"
+                                Detail="https://github.com/lachlanwgordon/GeoHashCross/" />
+                            <TextCell
+                                Text="Rate and Review" />
+                            <TextCell
+                                Text="Inspired By"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://xkcd.com/426/"
+                                Detail="https://xkcd.com/426/" />
+                            <TextCell
+                                Text="Help"
+                                Command="{Binding ShowOnboardingCommand}"
+                                Detail="Replay intro" />
+                        </TableSection>
+                        <TableSection
+                            Title="Libraries">
+                            <TextCell
+                                Text="Xamarin Forms"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://docs.microsoft.com/en-us/xamarin/xamarin-forms/"
+                                Detail="Xamarin" />
+                            <TextCell
+                                Text="Xamarin Essentials"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://docs.microsoft.com/en-us/xamarin/essentials/"
+                                Detail="Xamarin" />
+                            <TextCell
+                                Text="Mvvm Helpers"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://github.com/jamesmontemagno/mvvm-helpers"
+                                Detail="James Montemagno" />
+                            <TextCell
+                                Text="Skia Sharp"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://github.com/mono/SkiaSharp"
+                                Detail="Mono" />
+                            <TextCell
+                                Text="Geo"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://github.com/sibartlett/Geo"
+                                Detail="Simon Bartlett" />
+                            <TextCell
+                                Text="Jobs Plugin"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://github.com/aritchie/jobs"
+                                Detail="Allan Ritchie" />
+                            <TextCell
+                                Text="SQLite-net"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://github.com/praeclarum/sqlite-net"
+                                Detail="Frank Krueger" />
+                        </TableSection>
+                        <TableSection
+                            Title="Crash Reports and Analytics">
+                            <SwitchCell
+                                Text="Enable crashes and error reports"
+                                On="{Binding CrashesEnabled}" />
+                            <SwitchCell
+                                Text="Enable analytics reports"
+                                On="{Binding AnalyticsEnabled}" />
+                            <TextCell
+                                Text="Job Log"
+                                Command="{Binding LogCommand}" />
+                        </TableSection>
+                        <TableSection
+                            Title="Libraries">
+                            <TextCell
+                                Text="Xamarin Forms"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://docs.microsoft.com/en-us/xamarin/xamarin-forms/"
+                                Detail="Xamarin" />
+                            <TextCell
+                                Text="Xamarin Essentials"
+                                Command="{Binding WebsiteCommand}"
+                                CommandParameter="https://docs.microsoft.com/en-us/xamarin/essentials/"
+                                Detail="Xamarin" />
+                        </TableSection>
+                            
+                    </TableRoot>
+                </TableView>
             </ScrollView>
+             <views:OnBoardingView
+                BindingContext="{Binding OnBoardingViewModel}"
+                x:Name="Onboarding"
+                Margin="-8,-8,-8,-8"
+                                  />
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

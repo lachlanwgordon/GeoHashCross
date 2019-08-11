@@ -1,4 +1,6 @@
 ﻿using System;
+using Xamarin.Forms.GoogleMaps;
+
 namespace GeohashCross.Converters
 {
     public static class XFLocationGCLocationConverter
@@ -11,6 +13,11 @@ namespace GeohashCross.Converters
         public static GeohashCross.Models.Location ToGCLocation(this Xamarin.Essentials.Location location)
         {
             return new GeohashCross.Models.Location(location.Latitude, location.Longitude);
+        }
+
+        public static Position ToPosition(this GeohashCross.Models.Location location)
+        {
+            return new Position(location.Latitude, location.Longitude);
         }
 
     }

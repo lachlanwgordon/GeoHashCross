@@ -1,7 +1,7 @@
 ﻿using System;
+using GeohashCross.Models;
 using GeohashCross.Services;
 using NUnit.Framework;
-using Xamarin.Essentials;
 
 namespace GeohashCross.UnitTests
 {
@@ -102,7 +102,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace GeohashCross.UnitTests
 
             var djdate = DowJonesDates.GetApplicableDJDate(date);
 
-            Assert.AreEqual(djdate.Data, expectedDate);
+            Assert.AreEqual(djdate, expectedDate);
         }
     }
 }

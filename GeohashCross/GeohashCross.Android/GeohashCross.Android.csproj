@@ -112,6 +112,12 @@
     <AndroidResource Include="Resources\mipmap-xhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\geohashing.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\geohashing.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\geohashing.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\geohashing.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\geohashing.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\geohashing.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable-hdpi\" />
