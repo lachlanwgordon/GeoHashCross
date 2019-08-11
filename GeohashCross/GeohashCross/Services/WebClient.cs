@@ -1,9 +1,11 @@
 ﻿using GeohashCross.Models;
+using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace GeohashCross.Services
 {
@@ -19,40 +21,39 @@ namespace GeohashCross.Services
 
         const string BaseUrl = "http://geo.crox.net/djia/";
 
-        static Dictionary<DateTime, string> Cache = new Dictionary<DateTime, string>();
-
         /// <summary>
         /// Gets the dow jones opening price for a given date.
         /// If no date provided it will use UTC today.
         /// </summary>
         /// <returns>The dow jones.</returns>
         /// <param name="date">Date.</param>
-        public static async Task<Response<string>> GetDjia(DateTime date)
+        public static async Task<Response<string>> GetDjia(DateTime date, bool allowCached = true, bool addToCache = true, bool checkConnectivity = true)
         {
             try
             {
-                if (Cache.ContainsKey(date))
-                {
-                    Debug.WriteLine($"Got DJIA from cache {Cache[date]}");
-
-                    return new Response<string>(Cache[date], true, "Loaded DJIA from cache.");
-                }
 
                 var dateString = date.ToString("yyyy/MM/dd");
+                if (allowCached && Preferences.ContainsKey(dateString))
+                {
+                    return new Response<string>(Preferences.Get(dateString, ""), true, "Loaded DJIA from cache.");
+                }
+
 
                 var url = $"{BaseUrl}{dateString}";
-                Debug.WriteLine($"About to get DJIA from {url}");
                 var response = await Client.GetStringAsync(url);
-
-                Cache.Add(date, response);
+                if(addToCache)
+                {
+                    Preferences.Set(dateString, response);
+                }
                 Debug.WriteLine($"Got DJIA from web {response}");
 
                 return new Response<string>(response, true, "Loaded data from web");
             }
             catch (Exception ex)
             {
+                Crashes.TrackError(ex);
                 Debug.WriteLine($"fail to get: \n{ex}\n{ex.StackTrace}");
-                if(Xamarin.Essentials.Connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
+                if(checkConnectivity && Connectivity.NetworkAccess != Xamarin.Essentials.NetworkAccess.Internet)
                 {
                     return new Response<string>(null, false, "No internet connection available. Please reconnect");
                 }

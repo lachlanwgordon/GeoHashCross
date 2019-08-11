@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+    xmlns:local="clr-namespace:GeohashCross.Models"
+    xmlns:vm="clr-namespace:GeohashCross.ViewModels"
+    x:Class="GeohashCross.Views.HomePage"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
+    xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
+    Shell.NavBarIsVisible="false"
+    xmlns:converters="clr-namespace:GeohashCross.Converters"
+    xmlns:views="clr-namespace:GeohashCross.Views">
+    <ContentPage.BindingContext>
+        <vm:HomePageViewModel
+            x:Name="VM" />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid
+            Padding="0"
+            ColumnSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition
+                    Height="Auto" />
+                <RowDefinition
+                    Height="*" />
+                <RowDefinition
+                    Height="{StaticResource ButtonSize}" />
+                <RowDefinition
+                    Height="{StaticResource ButtonSize}" />
+                <RowDefinition
+                    Height="{StaticResource ButtonSize}" />
+                <RowDefinition
+                    Height="2" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="Auto" />
+                <ColumnDefinition
+                    Width="Auto" />
+                <ColumnDefinition
+                    Width="{StaticResource ButtonSize}" />
+                <ColumnDefinition
+                    Width="{StaticResource ButtonSize}" />
+                <ColumnDefinition
+                    Width="{StaticResource ButtonSize}" />
+                <ColumnDefinition
+                    Width="{StaticResource ButtonSize}" />
+            </Grid.ColumnDefinitions>
+            <maps:Map
+                x:Name="TheMap"
+                Margin="-8,-80,-8,-8"
+                Grid.ColumnSpan="7"
+                MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
+                MyLocationEnabled="{Binding LocationPermissionGranted}"
+                ItemsSource="{Binding GeohashLocations}"
+                Grid.RowSpan="6">
+                <maps:Map.ItemTemplate>
+                    <DataTemplate>
+                        <maps:Pin
+                            Position="{Binding ., Converter={StaticResource hashLocationToPositionConverter}}"
+                            Label="{Binding Description}" />
+                    </DataTemplate>
+                </maps:Map.ItemTemplate>
+                <maps:Map.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="MapClicked"
+                        Command="{Binding MapTappedCommand}"
+                        Converter="{StaticResource mapTappedEventArgsToLocationConverter}" />
+                </maps:Map.Behaviors>
+            </maps:Map>
+            <Frame
+                Margin="8"
+                Visual="Material"
+                HasShadow="true"
+                Grid.ColumnSpan="7"
+                Padding="4"
+                IsClippedToBounds="true"
+                VerticalOptions="Start"
+                BackgroundColor="#DDEEEEEE"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                x:Name="LightFrame">
+                <Grid
+                    RowSpacing="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!-- Without this box view my layout goes crazy -->
+                    <BoxView
+                        HeightRequest="1"
+                        Grid.Row="4"
+                        VerticalOptions="Center"
+                        BackgroundColor="Transparent" />
+                    <DatePicker
+                        x:Name="HiddenDatePicker"
+                        BackgroundColor="Transparent"
+                        Date="{Binding Date}"
+                        Grid.ColumnSpan="11"
+                        TextColor="Transparent"
+                        VerticalOptions="CenterAndExpand"
+                        Margin="0"
+                        TranslationX="00"
+                        Format="yyyy-MM-dd">
+                        <DatePicker.Behaviors>
+                            <behaviors:EventToCommandBehavior EventName="Unfocused"
+                                                              Command="{Binding DateChangedCommand}" />
+                        </DatePicker.Behaviors>
+                    </DatePicker>
+                    <Entry
+                        Placeholder="Date"
+                        Text="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}', Mode=OneWay}"
+                        Visual="Material"
+                        BackgroundColor="#DDEEEEEE"
+                        Grid.ColumnSpan="11"
+                        InputTransparent="true" />
+                    <Label
+                        Style="{StaticResource MediumLabel}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="6"
+                        Text="Location" />
+                    <Label
+                        Style="{StaticResource SmallLabel}"
+                        Text="{Binding Path=CurrentLocation, Converter={StaticResource locationSummary}}"
+                        Grid.ColumnSpan="6"
+                        Grid.Row="2" />
+                    <Label
+                        Style="{StaticResource MediumLabel}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="5"
+                        Grid.Column="6"
+                        Text="Hash" />
+                    <Label
+                        Style="{StaticResource SmallLabel}"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="5"
+                        Grid.Column="6"
+                        d:Text="-37,145"
+                        Text="{Binding HashLocation, Converter={StaticResource locationSummary}}" />
+                    <Label
+                        Style="{StaticResource MediumLabel}"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="6"
+                        Text="Distance" />
+                    <Label
+                        Style="{StaticResource SmallLabel}"
+                        Grid.Row="4"
+                        Grid.ColumnSpan="6"
+                        d:Text="1km"
+                        Text="{Binding Distance, Converter={StaticResource nullableDoubleToDistanceStringConverter}}" />
+                </Grid>
+            </Frame>
+            <Frame
+                Grid.ColumnSpan="7"
+                Grid.RowSpan="5"
+                x:Name="TheDarkFrame"
+                Margin="8"
+                IsVisible="{Binding DarkNavEnabled}"
+                BackgroundColor="{StaticResource DarkBackground}">
+                <Grid
+                    RowSpacing="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="{StaticResource ButtonSize}" />
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="{StaticResource ButtonSize}" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="30" />
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="{StaticResource ButtonSize}" />
+                    </Grid.RowDefinitions>
+                    <Label
+                        Style="{StaticResource LargeLabel}"
+                        TextColor="{StaticResource Divider}"
+                        Grid.ColumnSpan="3"
+                        HorizontalTextAlignment="Center"
+                        Text="Hash Direction" />
+                    <views:Compass
+                        NeedleDirection="{Binding TargetNeedleDirection}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        IsVisible="{Binding DarkNavEnabled}" />
+                    <Label
+                        Style="{StaticResource LargeLabel}"
+                        TextColor="{StaticResource Divider}"
+                        d:Text="35km"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Distance, Converter={StaticResource nullableDoubleToDistanceStringConverter}}" />
+                    <Button
+                        Text="{StaticResource night}"
+                        Style="{StaticResource ButtonStyle}"
+                        Grid.Column="2"
+                        Grid.Row="2"
+                        HeightRequest="{StaticResource ButtonSize}"
+                        WidthRequest="{StaticResource ButtonSize}"
+                        Command="{Binding DarkNavCommand}" />
+                </Grid>
+            </Frame>
+            <Button
+                Grid.Row="2"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Style="{StaticResource ButtonStyle}"
+                Text="{StaticResource globe}"
+                Command="{Binding GlobalClicked}"
+                Grid.Column="6" />
+            <Button
+                Style="{StaticResource ButtonStyle}"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Text="{StaticResource night}"
+                Grid.Column="5"
+                Grid.Row="4"
+                Command="{Binding DarkNavCommand}" />
+            <Button
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="4"
+                Grid.Row="4"
+                Text="{StaticResource layers}"
+                Command="{Binding SatteliteCommand}"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="3"
+                Grid.Row="4"
+                Text="{StaticResource neighbours}"
+                Command="{Binding ToggleNeighboursCommand}"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
+                Grid.Row="3"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="6"
+                Style="{StaticResource ButtonStyle}"
+                Command="{Binding ResetCommand}"
+                FontFamily="{StaticResource MaterialDesignIcons}"
+                Text="{StaticResource refresh}" />
+            <Button
+                Grid.Row="4"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="6"
+                Style="{StaticResource ButtonStyle}"
+                Clicked="MyPositionClicked"
+                FontFamily="{StaticResource MaterialDesignIcons}"
+                Text="{StaticResource target}" />
+            <views:OnBoardingView Grid.RowSpan="6"
+                                  Grid.ColumnSpan="7"
+                                  Margin="-8,-53,-8,-8"
+                                  VerticalOptions="Center"
+                                  d:IsVisible="false"
+                                  BindingContext="{Binding OnBoardingViewModel}" />
+        </Grid>
+    </ContentPage.Content>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullableDoubleToDistanceStringConverter x:Key="nullableDoubleToDistanceStringConverter" />
+            <converters:HashLocationToPositionConverter
+                x:Key="hashLocationToPositionConverter" />
+            <converters:BoolToMapTypeConverter
+                x:Key="boolToMapTypeConverter" />
+            <converters:LocationSummary
+                x:Key="locationSummary" />
+            <converters:MapTappedEventArgsToLocationConverter
+                x:Key="mapTappedEventArgsToLocationConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+</ContentPage>

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Shell
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:local="clr-namespace:GeohashCross"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:GeohashCross.Views"
+    Visual="Material"
+    BackgroundColor="#3F51B5"
+    FlyoutBackgroundColor="Red"
+    x:Class="GeohashCross.AppShell">
+    <TabBar
+        Shell.TitleColor="White"
+        Shell.TabBarBackgroundColor="White"
+        Shell.TabBarTitleColor="{StaticResource Primary}"
+        >
+        <Tab
+            Title="Home">
+            <ShellContent Shell.TitleColor="White">
+                <views:HomePage/>
+            </ShellContent>
+            <Tab.Icon>
+                <FontImageSource
+                    Glyph="{x:StaticResource home}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+        </Tab>
+<!--Disabled until geohash wiki goes https        -->
+       <!-- <Tab
+            Title="Wiki"
+            >
+            <ShellContent>
+                <views:Wiki />
+            </ShellContent>
+            <Tab.Icon>
+                <FontImageSource
+                    Glyph="{x:StaticResource wiki}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+        </Tab>-->
+        <Tab
+            Title="Notifications">
+            <ShellContent >
+                <views:NotificationsPage Title="Notifications" />
+            </ShellContent>
+             <Tab.Icon>
+                <FontImageSource
+                    Glyph="{x:StaticResource bell}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+        </Tab>
+        <Tab
+            Title="About">
+            <ShellContent >
+                <views:AboutPage Title="About" />
+            </ShellContent>
+             <Tab.Icon>
+                <FontImageSource
+                    Glyph="{x:StaticResource info}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+        </Tab>
+        
+
+    </TabBar>
+
+    <!--<TabBar>
+        <Tab
+            Title="Home">
+            <Tab.Icon>
+                <FontImageSource
+                    Glyph="{x:StaticResource home}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+            <ShellContent
+                Title="Home">
+
+                <views:HomePage
+                    Title="Home"
+                  />
+
+            </ShellContent>
+        </Tab>
+        <Tab
+            Title="Wiki">
+            <ShellContent>
+                <views:Wiki />
+
+            </ShellContent>
+            <Tab.Icon>
+                <FontImageSource
+                    Glyph="{StaticResource wiki}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+        </Tab>
+
+        <Tab
+            Title="Notifications">
+            <ShellContent>
+                <views:Notifications
+                    Title="Notification Subscriptions" />
+
+            </ShellContent>
+            <Tab.Icon>
+                <FontImageSource
+                    Glyph="{StaticResource bell}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource bell}" />
+            </Tab.Icon>
+        </Tab>
+        <Tab
+            Title="About">
+            <ShellContent>
+                <views:AboutPage />
+            </ShellContent>
+            <Tab.Icon>
+                <FontImageSource
+                    Glyph="{StaticResource info}"
+                    FontFamily="{StaticResource MaterialDesignIcons}"
+                    Size="{StaticResource TabIconSize}" />
+            </Tab.Icon>
+        </Tab>
+    </TabBar>-->
+</Shell>

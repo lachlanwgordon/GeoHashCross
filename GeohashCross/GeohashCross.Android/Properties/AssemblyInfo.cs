@@ -31,4 +31,12 @@ using Android.App;
 
 // Add some common permissions, these can be removed if not needed
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
+[assembly: UsesPermission(Android.Manifest.Permission.AccessFineLocation)]
+[assembly: UsesPermission(Android.Manifest.Permission.AccessCoarseLocation)]
+[assembly: UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
 [assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
+[assembly: UsesPermission(Android.Manifest.Permission.BatteryStats)]
+[assembly: UsesPermission(Android.Manifest.Permission.ReceiveBootCompleted)]
+
+
+[assembly: MetaDataAttribute("com.google.android.maps.v2.API_KEY", Value = GeohashCross.Resources.APIKeys.MapsKey)]

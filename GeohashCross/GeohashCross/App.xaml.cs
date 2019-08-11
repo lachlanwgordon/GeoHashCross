@@ -1,5 +1,11 @@
+using GeohashCross.Resources;
+using GeohashCross.Services;
 using GeohashCross.Views;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using System;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,14 +16,20 @@ namespace GeohashCross
 	{
 		public App ()
 		{
-			InitializeComponent();
+            InitializeComponent();
             MainPage = new AppShell();
 		}
 
-		protected override void OnStart ()
+		protected override async void OnStart ()
 		{
-			// Handle when your app starts
-		}
+            // Handle when your app starts
+            await AnalyticsManager.Initialize();
+            await DB.Initialize();
+            if (String.IsNullOrWhiteSpace(APIKeys.MapsKey))
+            {
+                await Shell.Current.DisplayAlert("Maps API Key", "Please add a google maps API Key to APIKeys.cs", "Okay");
+            }
+        }
 
 		protected override void OnSleep ()
 		{
