@@ -24,8 +24,9 @@
     <CarouselView.ItemTemplate>
         <DataTemplate>
             <Frame
+                Visual="Material"
                 WidthRequest="{Binding Source={x:Reference TheCarousel}, Path=Width}"
-                Padding="0"
+                Padding="0,25,0,0"
                 Margin="0"
                 BorderColor="Transparent"
                 BackgroundColor="Transparent"

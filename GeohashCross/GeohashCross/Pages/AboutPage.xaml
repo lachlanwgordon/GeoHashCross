@@ -118,7 +118,7 @@
              <views:OnBoardingView
                 BindingContext="{Binding OnBoardingViewModel}"
                 x:Name="Onboarding"
-                Margin="-8,-8,-8,-8"
+                Margin="-8,-32,-8,-8"
                                   />
         </Grid>
     </ContentPage.Content>

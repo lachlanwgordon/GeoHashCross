@@ -20,7 +20,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid
-            Padding="8"
+            Padding="0"
             ColumnSpacing="0">
             <Grid.RowDefinitions>
                 <RowDefinition
@@ -53,10 +53,12 @@
                     Width="{StaticResource ButtonSize}" />
             </Grid.ColumnDefinitions>
             <maps:Map
-                d:BackgroundColor="Teal"
                 x:Name="TheMap"
-                Margin="-8"
+                Margin="-8,-80,-8,-8"
                 Grid.ColumnSpan="7"
+                MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
+                MyLocationEnabled="{Binding LocationPermissionGranted}"
+                ItemsSource="{Binding GeohashLocations}"
                 Grid.RowSpan="6">
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
@@ -73,7 +75,7 @@
                 </maps:Map.Behaviors>
             </maps:Map>
             <Frame
-                Margin="0,20,0,0"
+                Margin="8"
                 Visual="Material"
                 HasShadow="true"
                 Grid.ColumnSpan="7"
@@ -136,9 +138,10 @@
                         VerticalOptions="CenterAndExpand"
                         Margin="0"
                         TranslationX="00"
-                        Format="yyyy-MM-dd" >
+                        Format="yyyy-MM-dd">
                         <DatePicker.Behaviors>
-                            <behaviors:EventToCommandBehavior EventName="Unfocused"  Command="{Binding DateChangedCommand}"/>
+                            <behaviors:EventToCommandBehavior EventName="Unfocused"
+                                                              Command="{Binding DateChangedCommand}" />
                         </DatePicker.Behaviors>
                     </DatePicker>
                     <Entry
@@ -188,6 +191,7 @@
                 Grid.ColumnSpan="7"
                 Grid.RowSpan="5"
                 x:Name="TheDarkFrame"
+                Margin="8"
                 IsVisible="{Binding DarkNavEnabled}"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid
@@ -217,7 +221,7 @@
                     <views:Compass
                         NeedleDirection="{Binding TargetNeedleDirection}"
                         Grid.Row="1"
-                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         IsVisible="{Binding DarkNavEnabled}" />
                     <Label
                         Style="{StaticResource LargeLabel}"
@@ -230,13 +234,10 @@
                     <Button
                         Text="{StaticResource night}"
                         Style="{StaticResource ButtonStyle}"
-                        Grid.Column="1"
-                        Grid.ColumnSpan="2"
+                        Grid.Column="2"
                         Grid.Row="2"
                         HeightRequest="{StaticResource ButtonSize}"
                         WidthRequest="{StaticResource ButtonSize}"
-                        VerticalOptions="End"
-                        HorizontalOptions="End"
                         Command="{Binding DarkNavCommand}" />
                 </Grid>
             </Frame>
@@ -284,17 +285,17 @@
                 Clicked="MyPositionClicked"
                 FontFamily="{StaticResource MaterialDesignIcons}"
                 Text="{StaticResource target}" />
-            <views:OnBoardingView Grid.RowSpan="6" Grid.ColumnSpan="7" 
-                Margin="-8,-10,-8,-8"
+            <views:OnBoardingView Grid.RowSpan="6"
+                                  Grid.ColumnSpan="7"
+                                  Margin="-8,-53,-8,-8"
+                                  VerticalOptions="Center"
                                   d:IsVisible="false"
-                                  BindingContext="{Binding OnBoardingViewModel}"
-                                  
-                                  />
+                                  BindingContext="{Binding OnBoardingViewModel}" />
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>
         <ResourceDictionary>
-          <converters:NullableDoubleToDistanceStringConverter x:Key="nullableDoubleToDistanceStringConverter"/>
+            <converters:NullableDoubleToDistanceStringConverter x:Key="nullableDoubleToDistanceStringConverter" />
             <converters:HashLocationToPositionConverter
                 x:Key="hashLocationToPositionConverter" />
             <converters:BoolToMapTypeConverter
