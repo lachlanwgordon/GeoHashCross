@@ -21,6 +21,7 @@ namespace GeohashCross.ViewModels
     public class HomePageViewModel : BaseViewModel
     {
 
+        public static HomePageViewModel Instance {get;set;}
         //TODO: Services in this section should be handled with IOC
         IDistanceCalculator DistanceCalculator = new DistanceCalculator();
 
@@ -77,6 +78,8 @@ namespace GeohashCross.ViewModels
                 return (float)displayBearing;
             }
         }
+
+        public static float StaticNeedleDirection => Instance.TargetNeedleDirection;
 
         public bool LocationPermissionGranted
         {
@@ -205,7 +208,6 @@ namespace GeohashCross.ViewModels
 
         private void ExecuteGlobalHashCommand()
         {
-            throw new NotImplementedException();
         }
 
 
@@ -286,6 +288,11 @@ namespace GeohashCross.ViewModels
 
         public async Task<HashLocation> LoadHashLocation()
         {
+            if(HomePageViewModel.Instance == null)
+            {
+                HomePageViewModel.Instance = this;
+            }
+
             var loc = TappedLocation ?? CurrentLocation;
             if (loc == null)
             {

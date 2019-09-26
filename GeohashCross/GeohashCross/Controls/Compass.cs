@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using GeohashCross.ViewModels;
 using SkiaSharp;
 using Xamarin.Forms;
 using static GeohashCross.Views.HomePage;
@@ -58,7 +59,8 @@ namespace GeohashCross.Views
 
             //Target Needle
             canvas.Save();
-            canvas.RotateDegrees(NeedleDirection);
+            
+            canvas.RotateDegrees(HomePageViewModel.Instance.TargetNeedleDirection);
             canvas.DrawPath(Paint.NeedlyPath, Paint.BluePaint);
             canvas.DrawPath(Paint.NeedlyPath, Paint.WhiteStrokePaint);
             canvas.Restore();
