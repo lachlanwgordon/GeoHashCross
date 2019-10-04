@@ -31,7 +31,7 @@ namespace GeohashCross.iOS
     //Xamarin.Calabash.Start();
 #endif
 
-            Xamarin.Calabash.Start();
+            //Xamarin.Calabash.Start();
 
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();

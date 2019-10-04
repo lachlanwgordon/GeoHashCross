@@ -1,198 +1,162 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<CarouselView
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="GeohashCross.Views.OnBoardingView"
-    BackgroundColor="#55555555"
-    ItemsSource="{Binding Slides}"
-    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    IsVisible="{Binding IsVisible}"
-    d:IsVisible="True"
-    Visual="Material"
-    x:Name="TheCarousel"
-    xmlns:vm="clr-namespace:GeohashCross.ViewModels"
-    xmlns:converters="clr-namespace:GeohashCross.Converters">
-   
-    <CarouselView.ItemsLayout>
-        <GridItemsLayout
-            SnapPointsType="MandatorySingle"
-            SnapPointsAlignment="Center"
-            Orientation="Horizontal" />
-    </CarouselView.ItemsLayout>
-    <CarouselView.ItemTemplate>
-        <DataTemplate>
-            <Frame
-                Visual="Material"
-                WidthRequest="{Binding Source={x:Reference TheCarousel}, Path=Width}"
-                Padding="0,25,0,0"
-                Margin="0"
-                BorderColor="Transparent"
-                BackgroundColor="Transparent"
-                HasShadow="true">
-                <Grid
-                    Padding="10"
-                    Margin="20"
-                    RowSpacing="0"
-                    HorizontalOptions="FillAndExpand">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="Auto" />
-                        <ColumnDefinition
-                            Width="*" />
-                        <ColumnDefinition
-                            Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                        <RowDefinition
-                            Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <BoxView
-                        Grid.RowSpan="8"
-                        Grid.ColumnSpan="3"
-                        BackgroundColor="White"
-                        CornerRadius="10"
-                        Margin="-10">
-                    </BoxView>
-                    <Label
-                        Style="{StaticResource OnboardingLabel}"
-                        Text="{Binding Title}"
-                        FontSize="22" />
-                    <Label
-                        Style="{StaticResource OnboardingLabel}"
-                        Text="{Binding Paragraph1}"
-                        d:Text="This is paragraph one."
-                        Grid.Row="1" />
-                    <Label
-                        Style="{StaticResource OnboardingLabel}"
-                        Text="{Binding Paragraph2}"
-                        d:Text="This is paragraph two."
-                        Grid.Row="2" />
-                    <Image
-                        Source="{Binding ImageSource}"
-                        d:Source="geohashing.png"
-                        Aspect="AspectFit"
-                        VerticalOptions="Center"
-                        Grid.ColumnSpan="3"
-                        Grid.Row="3" />
-                    <Label
-                        Style="{StaticResource OnboardingLabel}"
-                        d:Text="This is paragraph three."
-                        Text="{Binding Paragraph3}"
-                        Grid.Row="4" />
-                    <Label
-                        Style="{StaticResource OnboardingLabel}"
-                        d:Text="This is paragraph four."
-                        Text="{Binding Paragraph4}"
-                        Grid.Row="5" />
-                    <StackLayout
-                        IsVisible="{Binding NavigationVisible}"
-                        Margin="8"
-                        Orientation="Horizontal"
-                        Grid.Row="6"
-                        Grid.ColumnSpan="3"
-                        HorizontalOptions="Center">
-                        <BoxView
-                            HeightRequest="6"
-                            WidthRequest="6"
-                            CornerRadius="3"
-                            BackgroundColor="Blue" />
-                        <BoxView
-                            HeightRequest="6"
-                            WidthRequest="6"
-                            CornerRadius="3"
-                            BackgroundColor="Gray" />
-                        <BoxView
-                            HeightRequest="6"
-                            WidthRequest="6"
-                            CornerRadius="3"
-                            BackgroundColor="Gray" />
-                        <BoxView
-                            HeightRequest="6"
-                            WidthRequest="6"
-                            CornerRadius="3"
-                            BackgroundColor="Gray" />
-                    </StackLayout>
-                    <Button
-                        Text="Back"
-                        Grid.Row="7"
-                        IsVisible="{Binding NavigationVisible}"
-                        Style="{StaticResource OnboardingButtons}"
-                        Clicked="BackClicked" />
-                    <Button
-                        IsVisible="{Binding NavigationVisible}"
-                        Text="Done"
-                        Grid.Row="7"
-                        Style="{StaticResource OnboardingButtons}"
-                        Clicked="DoneClicked"
-                        Grid.Column="1" />
-                    <Button
-                        IsVisible="{Binding NavigationVisible}"
-                        Text="Next"
-                        Grid.Row="7"
-                        Grid.Column="2"
-                        Style="{StaticResource OnboardingButtons}"
-                        Clicked="NextClicked" />
-                    <Button
-                        Text="Learn More..."
-                        IsVisible="{Binding NavigationVisible, Converter={StaticResource NotBool}}"
-                        Grid.Row="6"
-                        Clicked="NextClicked"
-                        Style="{StaticResource OnboardingButtons}"
-                        Grid.Column="1" />
-                    <Button
-                        Style="{StaticResource OnboardingButtons}"
-                        Text="Let me at it!"
-                        IsVisible="{Binding NavigationVisible, Converter={StaticResource NotBool}}"
-                        Grid.Row="7"
-                        Clicked="DoneClicked"
-                        Grid.Column="1" />
-                </Grid>
-            </Frame>
-        </DataTemplate>
-    </CarouselView.ItemTemplate>
-    <CarouselView.Resources>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GeohashCross.Views.OnBoardingView"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             BackgroundColor="#2a2a2a2a"
+             xmlns:vm="clr-namespace:GeohashCross.ViewModels"
+             xmlns:converters="clr-namespace:GeohashCross.Converters">
+    <ContentView.Content>
+        <CarouselView ItemsSource="{Binding Slides}"
+                      Visual="Material"
+                       ScrollToRequested="Handle_ScrollToRequested"
+                      Scrolled="Handle_Scrolled"
+                      x:Name="TheCarousel">
+            <CarouselView.ItemsLayout>
+                <LinearItemsLayout SnapPointsType="MandatorySingle"
+                                   SnapPointsAlignment="Center"
+                                   Orientation="Horizontal" />
+            </CarouselView.ItemsLayout>
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Visual="Material"
+                           Margin="0,-45,0,0"
+                           Padding="20"
+                           x:Name="TheFrame"
+                           WidthRequest="{Binding Source={x:Reference TheCarousel}, Path=Width}"
+                           BackgroundColor="Transparent"
+                           HasShadow="False">
+                        <Grid 
+                              RowSpacing="0"
+                              HorizontalOptions="FillAndExpand">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <BoxView Grid.RowSpan="8"
+                                     Grid.ColumnSpan="3"
+                                     BackgroundColor="White"
+                                     CornerRadius="10"
+                                     Margin="-10">
+                            </BoxView>
+                            <Label Style="{StaticResource OnboardingLabel}"
+                                   Text="{Binding Title}"
+                                   FontSize="22" />
+                            <Label Style="{StaticResource OnboardingLabel}"
+                                   Text="{Binding Paragraph1}"
+                                   d:Text="This is paragraph one."
+                                   Grid.Row="1" />
+                            <Label Style="{StaticResource OnboardingLabel}"
+                                   Text="{Binding Paragraph2}"
+                                   d:Text="This is paragraph two."
+                                   Grid.Row="2" />
+                            <Image Source="{Binding ImageSource}"
+                                   d:Source="geohashing.png"
+                                   Aspect="AspectFit"
+                                   VerticalOptions="Center"
+                                   Grid.ColumnSpan="3"
+                                   Grid.Row="3" />
+                            <Label Style="{StaticResource OnboardingLabel}"
+                                   d:Text="This is paragraph three."
+                                   Text="{Binding Paragraph3}"
+                                   Grid.Row="4" />
+                            <Label Style="{StaticResource OnboardingLabel}"
+                                   d:Text="This is paragraph four."
+                                   Text="{Binding Paragraph4}"
+                                   Grid.Row="5" />
+                            <StackLayout IsVisible="{Binding NavigationVisible}"
+                                         Margin="8"
+                                         Orientation="Horizontal"
+                                         Grid.Row="6"
+                                         Grid.ColumnSpan="3"
+                                         HorizontalOptions="Center">
+                                <BoxView HeightRequest="6"
+                                         WidthRequest="6"
+                                         CornerRadius="3"
+                                         BackgroundColor="Blue" />
+                                <BoxView HeightRequest="6"
+                                         WidthRequest="6"
+                                         CornerRadius="3"
+                                         BackgroundColor="Gray" />
+                                <BoxView HeightRequest="6"
+                                         WidthRequest="6"
+                                         CornerRadius="3"
+                                         BackgroundColor="Gray" />
+                                <BoxView HeightRequest="6"
+                                         WidthRequest="6"
+                                         CornerRadius="3"
+                                         BackgroundColor="Gray" />
+                            </StackLayout>
+                            <Button Text="Back"
+                                    Grid.Row="7"
+                                    IsVisible="{Binding NavigationVisible}"
+                                    Style="{StaticResource OnboardingButtons}"
+                                    Clicked="BackClicked" />
+                            <Button IsVisible="{Binding NavigationVisible}"
+                                    Text="Done"
+                                    Grid.Row="7"
+                                    Style="{StaticResource OnboardingButtons}"
+                                    Clicked="DoneClicked"
+                                    Grid.Column="1" />
+                            <Button IsVisible="{Binding NavigationVisible}"
+                                    Text="Next"
+                                    Grid.Row="7"
+                                    Grid.Column="2"
+                                    Style="{StaticResource OnboardingButtons}"
+                                    Clicked="NextClicked" />
+                            <Button Text="Learn More..."
+                                    IsVisible="{Binding NavigationVisible, Converter={StaticResource NotBool}}"
+                                    Grid.Row="6"
+                                    Clicked="NextClicked"
+                                    Style="{StaticResource OnboardingButtons}"
+                                    Grid.Column="1" />
+                            <Button Style="{StaticResource OnboardingButtons}"
+                                    Text="Let me at it!"
+                                    IsVisible="{Binding NavigationVisible, Converter={StaticResource NotBool}}"
+                                    Grid.Row="7"
+                                    Clicked="DoneClicked"
+                                    Grid.Column="1" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+
+
+        </CarouselView>
+    </ContentView.Content>
+
+    <ContentView.Resources>
         <ResourceDictionary>
-            <Style
-                x:Key="OnboardingButtons"
-                TargetType="Button">
-                <Setter
-                    Property="Margin"
-                    Value="8" />
-                <Setter
-                    Property="Visual"
-                    Value="Material" />
+            <Style x:Key="OnboardingButtons"
+                   TargetType="Button">
+                <Setter Property="Margin"
+                        Value="8" />
+                <Setter Property="Visual"
+                        Value="Material" />
             </Style>
-            <Style
-                x:Key="OnboardingLabel"
-                TargetType="Label">
-                <Setter
-                    Property="HorizontalTextAlignment"
-                    Value="Center" />
-                <Setter
-                    Property="Margin"
-                    Value="8" />
-                <Setter
-                    Property="Grid.ColumnSpan"
-                    Value="3" />
+            <Style x:Key="OnboardingLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalTextAlignment"
+                        Value="Center" />
+                <Setter Property="Margin"
+                        Value="8" />
+                <Setter Property="Grid.ColumnSpan"
+                        Value="3" />
             </Style>
-            <converters:ImageFileToImageSourceConverter
-                x:Key="imageFileToImageSourceConverter" />
+            <converters:ImageFileToImageSourceConverter x:Key="imageFileToImageSourceConverter" />
         </ResourceDictionary>
-    </CarouselView.Resources>
-</CarouselView>
+    </ContentView.Resources>
+</ContentView>

@@ -16,12 +16,15 @@ using GeohashCross.Models;
 using Location = GeohashCross.Models.Location;
 using LocationExtensions = GeohashCross.Models.LocationExtensions;
 using GeohashCross.Converters;
+using GeohashCross.ViewModels;
 
 namespace GeohashCross.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
+        
+
         public async void MyPositionClicked(object sender, EventArgs e)
         {
             try
@@ -88,6 +91,20 @@ namespace GeohashCross.Views
 
         }
 
+        void HelpClicked(object sender, EventArgs e)
+        {
+            onboarding = new OnBoardingView
+            {
+                BindingContext = new OnBoardingViewModel(),
+
+                //Make the semi transparent background extendbehind the notch but keep the real content below it.
+                Margin = new Thickness(0,-45,0,0),
+                Padding = new Thickness(0,38,0,0)
+            };
+            onboarding.OnDisappearing += Handle_OnBoardingDisappearing;
+            TheGrid.Children.Add(onboarding,0,7,0,6);
+        }
+
 
 
         async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
@@ -116,12 +133,10 @@ namespace GeohashCross.Views
         }
 
 
-
-        bool initialised;
         bool FirstUse
         {
-            get => Xamarin.Essentials.Preferences.Get(Keys.FirstUse, true);
-            set => Xamarin.Essentials.Preferences.Set(Keys.FirstUse, value);
+            get => Preferences.Get(Keys.FirstUse, true);
+            set => Preferences.Set(Keys.FirstUse, value);
         }
 
         protected override async void OnAppearing()
@@ -129,27 +144,24 @@ namespace GeohashCross.Views
             base.OnAppearing();
 
             VM.GeohashLocations.CollectionChanged += GeohashLocations_CollectionChanged;
-            VM.OnBoardingViewModel.PropertyChanged += OnBoardingViewModel_PropertyChanged;
 
             if (FirstUse)
             {
                 FirstUse = false;
-                VM.OnBoardingViewModel.IsVisible = true;
-
+                HelpClicked(this, new EventArgs());
                 return;
             }
             else
             {
-                VM.OnBoardingViewModel.IsVisible = false;
+                var granted = await GetPermissions();
+                if (granted)
+                {
+                    VM.LocationPermissionGranted = true;
+                    VM.StartLocationService();
+                }
             }
-
-
-
-
-
-
         }
-
+        OnBoardingView onboarding;
         private async void GeohashLocations_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems == null || e.NewItems.Count == 0)
@@ -185,26 +197,22 @@ namespace GeohashCross.Views
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            VM.OnBoardingViewModel.PropertyChanged -= OnBoardingViewModel_PropertyChanged;
             VM.GeohashLocations.CollectionChanged -= GeohashLocations_CollectionChanged;
             VM.StopLocationService();
         }
 
-        private async void OnBoardingViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public async void Handle_OnBoardingDisappearing(object sender, EventArgs e)
         {
-            Debug.WriteLine("PropertyChanged" + e.PropertyName);
-            if (e.PropertyName == "IsVisible" && VM.OnBoardingViewModel.IsVisible == false)
+            onboarding.OnDisappearing -= Handle_OnBoardingDisappearing;
+            TheGrid.Children.Remove(onboarding);
+            var granted = await GetPermissions();
+            if (granted)
             {
-                var granted = await GetPermissions();
-                if (granted)
-                {
-                    VM.LocationPermissionGranted = true;
-                    VM.StartLocationService();
-                }
+                VM.LocationPermissionGranted = true;
+                VM.StartLocationService();
             }
-
-            
         }
+
 
 
     }

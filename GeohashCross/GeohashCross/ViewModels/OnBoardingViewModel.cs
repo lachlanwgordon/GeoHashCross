@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using GeohashCross.Models;
 using MvvmHelpers;
@@ -9,31 +10,12 @@ namespace GeohashCross.ViewModels
 {
     public class OnBoardingViewModel : BaseViewModel
     {
-        private bool isVisible = true;
 
-        public bool IsVisible
-        {
-            get => isVisible;
-            set
-            {
-                isVisible = value;
-                OnPropertyChanged(nameof(IsVisible));
-                OnPropertyChanged(nameof(Slides));
-            }
-        } 
-
-        public ICommand DoneComman => new Command(Done);
-
-        private void Done(object obj)
-        {
-            IsVisible = false;
-        }
-
-        public IEnumerable<OnBoardingSlide> Slides
+        public ObservableCollection<OnBoardingSlide> Slides
         {
             get;
             set;
-        } = new List<OnBoardingSlide>
+        } = new ObservableCollection<OnBoardingSlide>
         {
             new OnBoardingSlide{Title = "Welcome to Geohash Cross",
                                 Paragraph1 = "Geohashing gives you a destination each day so you can go on an adventure.",

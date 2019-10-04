@@ -3,15 +3,15 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
-    xmlns:local="clr-namespace:GeohashCross.Models"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
     x:Class="GeohashCross.Views.HomePage"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="True"
+    Shell.NavBarIsVisible="False"
     xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
-    xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"
-    Shell.NavBarIsVisible="false"
     xmlns:converters="clr-namespace:GeohashCross.Converters"
     xmlns:views="clr-namespace:GeohashCross.Views">
     <ContentPage.BindingContext>
@@ -20,8 +20,8 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid
-            Padding="0"
-            ColumnSpacing="0">
+            x:Name="TheGrid"
+            >
             <Grid.RowDefinitions>
                 <RowDefinition
                     Height="Auto" />
@@ -54,7 +54,7 @@
             </Grid.ColumnDefinitions>
             <maps:Map
                 x:Name="TheMap"
-                Margin="-8,-80,-8,-8"
+                Margin="-45"
                 Grid.ColumnSpan="7"
                 MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
                 MyLocationEnabled="{Binding LocationPermissionGranted}"
@@ -75,7 +75,7 @@
                 </maps:Map.Behaviors>
             </maps:Map>
             <Frame
-                Margin="8"
+                Margin="12"
                 Visual="Material"
                 HasShadow="true"
                 Grid.ColumnSpan="7"
@@ -191,7 +191,7 @@
                 Grid.ColumnSpan="7"
                 Grid.RowSpan="5"
                 x:Name="TheDarkFrame"
-                Margin="8"
+                Margin="10,40,10,10"
                 IsVisible="{Binding DarkNavEnabled}"
                 BackgroundColor="{StaticResource DarkBackground}">
                 <Grid
@@ -285,12 +285,16 @@
                 Clicked="MyPositionClicked"
                 FontFamily="{StaticResource MaterialDesignIcons}"
                 Text="{StaticResource target}" />
-            <views:OnBoardingView Grid.RowSpan="6"
-                                  Grid.ColumnSpan="7"
-                                  Margin="-8,-53,-8,-8"
-                                  VerticalOptions="Center"
-                                  d:IsVisible="false"
-                                  BindingContext="{Binding OnBoardingViewModel}" />
+            <Button
+                Grid.Row="4"
+                IsVisible="{Binding DarkNavEnabled, Converter={StaticResource NotBool}}"
+                Grid.Column="2"
+                Style="{StaticResource ButtonStyle}"
+                Clicked="HelpClicked"
+                FontFamily="{StaticResource MaterialDesignIcons}"
+                Text="?" />
+
+           
         </Grid>
     </ContentPage.Content>
     <ContentPage.Resources>

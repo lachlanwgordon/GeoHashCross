@@ -13,12 +13,7 @@ namespace GeohashCross.ViewModels
     public class AboutViewModel : BaseViewModel
     {
 
-        public ICommand ShowOnboardingCommand => new Command(ShowOnboarding);
 
-        private void ShowOnboarding(object obj)
-        {
-            OnBoardingViewModel.IsVisible = true;
-        }
 
         public OnBoardingViewModel OnBoardingViewModel { get; set; } = new OnBoardingViewModel();
 
