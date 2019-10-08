@@ -26,7 +26,7 @@ namespace GeohashCross.Droid
             Plugin.Jobs.CrossJobs.Init(this, bundle); // activity
             global::Xamarin.Forms.Forms.Init(this, bundle);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
-            Xamarin.FormsGoogleMaps.Init(this, bundle); // initialize for Xamarin.Forms.GoogleMaps
+            //Xamarin.FormsGoogleMaps.Init(this, bundle); // initialize for Xamarin.Forms.GoogleMaps
             LoadApplication(new App());
         }
 

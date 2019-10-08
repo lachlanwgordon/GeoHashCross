@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.GoogleMaps;
+//using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 using Microsoft.AppCenter.Analytics;
 using GeohashCross.Services;
@@ -32,9 +32,9 @@ namespace GeohashCross.Views
 
                 var pos = VM.CurrentLocation;
 
-                var update = CameraUpdateFactory.NewPosition(new Position(pos.Latitude, pos.Longitude));
+                //var update = CameraUpdateFactory.NewPosition(new Position(pos.Latitude, pos.Longitude));
 
-                await TheMap.AnimateCamera(update, TimeSpan.FromMilliseconds(200));
+                //await TheMap.AnimateCamera(update, TimeSpan.FromMilliseconds(200));
             }
             catch (Exception ex)
             {
@@ -45,8 +45,8 @@ namespace GeohashCross.Views
         public HomePage()
         {
             InitializeComponent();
-            TheMap.UiSettings.MyLocationButtonEnabled = false;//Don't show the my location button because I've implemented my own
-            TheMap.UiSettings.ZoomControlsEnabled = false;
+            //TheMap.UiSettings.MyLocationButtonEnabled = false;//Don't show the my location button because I've implemented my own
+            //TheMap.UiSettings.ZoomControlsEnabled = false;
         }
 
 
@@ -107,30 +107,30 @@ namespace GeohashCross.Views
 
 
 
-        async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
-        {
+        //async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
+        //{
 
-            if (Device.RuntimePlatform == Device.iOS)
-            {
-                var maps = await Shell.Current.DisplayActionSheet("Open in maps", "cancel", null, "Google Maps", "Apple Maps");//In current preview of Shell you must call actionsheets and alerts like this.
-                if (maps == "Google Maps")
-                {
-                    var uri = new Uri($"https://google.com/maps/place/{e.Pin.Position.Latitude},{e.Pin.Position.Longitude}");
-                    Device.OpenUri(uri);
+        //    if (Device.RuntimePlatform == Device.iOS)
+        //    {
+        //        var maps = await Shell.Current.DisplayActionSheet("Open in maps", "cancel", null, "Google Maps", "Apple Maps");//In current preview of Shell you must call actionsheets and alerts like this.
+        //        if (maps == "Google Maps")
+        //        {
+        //            var uri = new Uri($"https://google.com/maps/place/{e.Pin.Position.Latitude},{e.Pin.Position.Longitude}");
+        //            Device.OpenUri(uri);
 
-                }
-                else if (maps == "Apple Maps")
-                {
-                    await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
-                }
-            }
+        //        }
+        //        else if (maps == "Apple Maps")
+        //        {
+        //            await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
+        //        }
+        //    }
 
-            else
-            {
-                await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
-            }
+        //    else
+        //    {
+        //        await Xamarin.Essentials.Map.OpenAsync(e.Pin.Position.Latitude, e.Pin.Position.Longitude);
+        //    }
 
-        }
+        //}
 
 
         bool FirstUse
@@ -170,28 +170,28 @@ namespace GeohashCross.Views
             }
 
 
-            CameraUpdate update;
-            if (e.NewItems?.Count == 1)
-            {
-                var loc = e.NewItems[0] as Location;
+            //CameraUpdate update;
+            //if (e.NewItems?.Count == 1)
+            //{
+            //    var loc = e.NewItems[0] as Location;
 
 
-                update = CameraUpdateFactory.NewPosition(new Position(loc.Latitude, loc.Longitude));
-            }
-            else
-            {
-                var newLocs = new List<Location>();
-                foreach (var item in e.NewItems)
-                {
-                    newLocs.Add(item as Location);
-                }
-                var locationBounds = LocationExtensions.GetBounds(newLocs);
-                var bounds = new Bounds(locationBounds.SouthWest.ToPosition(), locationBounds.NorthEast.ToPosition());
+            //    update = CameraUpdateFactory.NewPosition(new Position(loc.Latitude, loc.Longitude));
+            //}
+            //else
+            //{
+            //    var newLocs = new List<Location>();
+            //    foreach (var item in e.NewItems)
+            //    {
+            //        newLocs.Add(item as Location);
+            //    }
+            //    var locationBounds = LocationExtensions.GetBounds(newLocs);
+            //    var bounds = new Bounds(locationBounds.SouthWest.ToPosition(), locationBounds.NorthEast.ToPosition());
 
-                update = CameraUpdateFactory.NewBounds(bounds, 100);
-            }
+            //    update = CameraUpdateFactory.NewBounds(bounds, 100);
+            //}
 
-            await TheMap.AnimateCamera(update);
+            //await TheMap.AnimateCamera(update);
         }
 
         protected override void OnDisappearing()
@@ -210,6 +210,7 @@ namespace GeohashCross.Views
             {
                 VM.LocationPermissionGranted = true;
                 VM.StartLocationService();
+                
             }
         }
 

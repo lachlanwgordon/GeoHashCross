@@ -1,31 +1,31 @@
-using System;
-using System.Globalization;
-using GeohashCross.Converters;
-using Xamarin.Forms;
-using Xamarin.Forms.GoogleMaps;
+//using System;
+//using System.Globalization;
+//using GeohashCross.Converters;
+//using Xamarin.Forms;
+//using Xamarin.Forms.GoogleMaps;
 
-namespace GeohashCross.Converters
-{
-    [ValueConversion(typeof(bool), typeof(MapType))]
-    public class BoolToMapTypeConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool == false)
-            {
-                return default(MapType);
-            }
+//namespace GeohashCross.Converters
+//{
+//    [ValueConversion(typeof(bool), typeof(MapType))]
+//    public class BoolToMapTypeConverter : IValueConverter
+//    {
+//        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+//        {
+//            if (value is bool == false)
+//            {
+//                return default(MapType);
+//            }
 
-            var input = (bool)value;
+//            var input = (bool)value;
 
-            // TODO: Put your value conversion logic here.
+//            // TODO: Put your value conversion logic here.
 
-            return input ? MapType.Satellite : MapType.Street;
-        }
+//            return input ? MapType.Satellite : MapType.Street;
+//        }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-}
+//        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }
+//}

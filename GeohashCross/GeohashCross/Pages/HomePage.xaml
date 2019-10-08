@@ -2,18 +2,20 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
     xmlns:vm="clr-namespace:GeohashCross.ViewModels"
     x:Class="GeohashCross.Views.HomePage"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
              ios:Page.UseSafeArea="True"
     Shell.NavBarIsVisible="False"
     xmlns:behaviors="clr-namespace:GeohashCross.Behaviors"
     xmlns:converters="clr-namespace:GeohashCross.Converters"
     xmlns:views="clr-namespace:GeohashCross.Views">
+    <!--xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"-->
+
     <ContentPage.BindingContext>
         <vm:HomePageViewModel
             x:Name="VM" />
@@ -52,14 +54,15 @@
                 <ColumnDefinition
                     Width="{StaticResource ButtonSize}" />
             </Grid.ColumnDefinitions>
-            <maps:Map
+            <!--<maps:Map
                 x:Name="TheMap"
                 Margin="-45"
                 Grid.ColumnSpan="7"
+                Grid.RowSpan="6"
                 MapType="{Binding IsSatteliteView, Converter={StaticResource boolToMapTypeConverter}}"
                 MyLocationEnabled="{Binding LocationPermissionGranted}"
                 ItemsSource="{Binding GeohashLocations}"
-                Grid.RowSpan="6">
+            >
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
                         <maps:Pin
@@ -73,7 +76,14 @@
                         Command="{Binding MapTappedCommand}"
                         Converter="{StaticResource mapTappedEventArgsToLocationConverter}" />
                 </maps:Map.Behaviors>
-            </maps:Map>
+            </maps:Map>-->
+            <maps:Map x:Name="MyMap"
+
+                  Margin="-45"
+                Grid.ColumnSpan="7"
+                Grid.RowSpan="6"                
+                  IsShowingUser="{Binding LocationPermissionGranted}"
+                  MapType="Hybrid" />
             <Frame
                 Margin="12"
                 Visual="Material"
@@ -300,14 +310,14 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:NullableDoubleToDistanceStringConverter x:Key="nullableDoubleToDistanceStringConverter" />
-            <converters:HashLocationToPositionConverter
-                x:Key="hashLocationToPositionConverter" />
-            <converters:BoolToMapTypeConverter
-                x:Key="boolToMapTypeConverter" />
+            <!--<converters:HashLocationToPositionConverter
+                x:Key="hashLocationToPositionConverter" />-->
+            <!--<converters:BoolToMapTypeConverter
+                x:Key="boolToMapTypeConverter" />-->
             <converters:LocationSummary
                 x:Key="locationSummary" />
-            <converters:MapTappedEventArgsToLocationConverter
-                x:Key="mapTappedEventArgsToLocationConverter" />
+            <!--<converters:MapTappedEventArgsToLocationConverter
+                x:Key="mapTappedEventArgsToLocationConverter" />-->
         </ResourceDictionary>
     </ContentPage.Resources>
 </ContentPage>

@@ -23,7 +23,7 @@ namespace GeohashCross.ViewModels
 
         public static HomePageViewModel Instance {get;set;}
         //TODO: Services in this section should be handled with IOC
-        IDistanceCalculator DistanceCalculator = new DistanceCalculator();
+        //IDistanceCalculator DistanceCalculator = new DistanceCalculator();
 
         //TODO: Backing fields for observable properties, these can probably be eliminated with FODY
         bool darkNavEnabled;
@@ -153,8 +153,8 @@ namespace GeohashCross.ViewModels
             {
                 if (CurrentLocation == null || HashLocation == null)
                     return null;
-                var distance = DistanceCalculator.CalculateDistance(CurrentLocation, HashLocation);
-                return distance;
+                //var distance = DistanceCalculator.CalculateDistance(CurrentLocation, HashLocation);
+                return 0;// distance;
             }
         }
 
@@ -275,7 +275,7 @@ namespace GeohashCross.ViewModels
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
-                        CurrentLocation = loc.ToGCLocation();
+                        //CurrentLocation = loc.ToGCLocation();
                     });
                 }
 

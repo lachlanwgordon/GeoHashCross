@@ -1,35 +1,35 @@
-using System;
-using System.Globalization;
-using GeohashCross.Converters;
-using GeohashCross.Models;
-using Xamarin.Forms;
-using Xamarin.Forms.GoogleMaps;
+//using System;
+//using System.Globalization;
+//using GeohashCross.Converters;
+//using GeohashCross.Models;
+//using Xamarin.Forms;
+//using Xamarin.Forms.GoogleMaps;
 
-namespace GeohashCross.Converters
-{
-    [ValueConversion(typeof(HashLocation), typeof(Position))]
-    public class HashLocationToPositionConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is HashLocation == false)
-            {
-                return default(Position);
-            }
+//namespace GeohashCross.Converters
+//{
+//    [ValueConversion(typeof(HashLocation), typeof(Position))]
+//    public class HashLocationToPositionConverter : IValueConverter
+//    {
+//        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+//        {
+//            if (value is HashLocation == false)
+//            {
+//                return default(Position);
+//            }
 
-            var input = (HashLocation)value;
+//            var input = (HashLocation)value;
 
-            // TODO: Put your value conversion logic here.
+//            // TODO: Put your value conversion logic here.
 
 
-            var pos = new Position(input.Latitude, input.Longitude);
+//            var pos = new Position(input.Latitude, input.Longitude);
 
-            return pos;
-        }
+//            return pos;
+//        }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-}
+//        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }
+//}
