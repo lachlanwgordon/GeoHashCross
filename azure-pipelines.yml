@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'macos-latest'
+  vmImage: 'macOS 10.13'
 
 steps:
 # To manually select a Xamarin SDK version on the Microsoft-hosted macOS agent,
