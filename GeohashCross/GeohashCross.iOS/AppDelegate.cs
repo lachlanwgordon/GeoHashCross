@@ -45,8 +45,9 @@ namespace GeohashCross.iOS
             }
             else
             {
+                var key = Environment.GetEnvironmentVariable("MapsKey");
                 Debug.WriteLine("Please register for a free google maps api key https://developers.google.com/maps/documentation/ios-sdk/get-api-key");
-                Xamarin.FormsGoogleMaps.Init("THIS IS AN INVALID KEY"); // initialize for Xamarin.Forms.GoogleMaps
+                Xamarin.FormsGoogleMaps.Init(key); // initialize for Xamarin.Forms.GoogleMaps
             }
 
 

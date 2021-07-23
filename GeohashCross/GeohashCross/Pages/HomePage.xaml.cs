@@ -1,6 +1,4 @@
-﻿using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -57,19 +55,12 @@ namespace GeohashCross.Views
             var success = await Device.InvokeOnMainThreadAsync(async () =>
             {
                 Debug.WriteLine("Gettings permission 2");
-
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                
+                var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
                 if (status != PermissionStatus.Granted)
                 {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                    {
-                        //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
-                    }
-
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                    if (results.ContainsKey(Permission.Location))
-                        status = results[Permission.Location];
+                    status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
                 }
 
                 if (status == PermissionStatus.Granted)

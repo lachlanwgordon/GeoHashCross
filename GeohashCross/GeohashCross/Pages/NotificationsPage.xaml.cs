@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GeohashCross.Models;
+using GeohashCross.ViewModels;
 using Xamarin.Forms;
 
 namespace GeohashCross.Views
@@ -21,6 +22,18 @@ namespace GeohashCross.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
+        }
+
+        void Button_Clicked(System.Object sender, System.EventArgs e)
+        {
+            var context = BindingContext as NotificationsViewModel;
+            context.AddSubscriptionCommand.Execute(null);
+        }
+
+        void ToolbarItem_Clicked(System.Object sender, System.EventArgs e)
+        {
+            var context = BindingContext as NotificationsViewModel;
+            context.AddSubscriptionCommand.Execute(null);
         }
     }
 }

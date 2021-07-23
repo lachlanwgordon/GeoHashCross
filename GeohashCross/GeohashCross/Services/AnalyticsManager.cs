@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using GeohashCross.Resources;
 using GeohashCross.Views;
@@ -47,6 +48,20 @@ namespace GeohashCross.Services
             return true;
 
         }
+
+
+        //private static string GetKey()
+        //{
+        //    if (!String.IsNullOrWhiteSpace(APIKeys.AnalyticsIOSKey))
+        //    {
+        //        return APIKeys.AnalyticsIOSKey;
+        //    }
+        //    else
+        //    {
+        //        Debug.WriteLine("Please register for a free google maps api key https://developers.google.com/maps/documentation/ios-sdk/get-api-key");
+        //        //Xamarin.FormsGoogleMaps.Init("THIS IS AN INVALID KEY"); // initialize for Xamarin.Forms.GoogleMaps
+        //    }
+        //}
 
         public static async Task<bool> SetAnalyticsEnabled(bool allowAnalytics)
         {

@@ -62,6 +62,7 @@
                 Grid.RowSpan="6">
                 <maps:Map.ItemTemplate>
                     <DataTemplate>
+
                         <maps:Pin
                             Position="{Binding ., Converter={StaticResource hashLocationToPositionConverter}}"
                             Label="{Binding Description}" />

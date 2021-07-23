@@ -11,6 +11,9 @@
         <vm:NotificationsViewModel
             x:Name="VM" />
     </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding AddSubscriptionCommand}" Clicked="ToolbarItem_Clicked" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
             <ScrollView>
@@ -120,7 +123,7 @@
                                     Grid.Column="2"
                                     Grid.ColumnSpan="2"
                                     Grid.Row="1"
-                                    Text="{Binding AlarmTime, StringFormat='{}{0:hh\\:mm}'}}"
+                                    Text="{Binding AlarmTime, StringFormat='{}{0:hh\\:mm}'}"
                                     Placeholder="Alarm Time"
                                     IsVisible="{Binding IsEditing}"
                                     InputTransparent="true" />
@@ -219,6 +222,7 @@
                 Style="{StaticResource ButtonStyle}"
                 VerticalOptions="End"
                 Text="+"
+                Clicked="Button_Clicked"
                 FontFamily="{StaticResource MaterialDesignIcons}"
                 HorizontalOptions="End"
                 Command="{Binding AddSubscriptionCommand}" />
