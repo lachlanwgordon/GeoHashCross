@@ -56,37 +56,30 @@ namespace GeohashCross.Views
             {
                 Debug.WriteLine("Gettings permission 2");
 
-                //var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
-                //if (status != PermissionStatus.Granted)
-                //{
-                //    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                //    {
-                //        //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
-                //    }
+                if (status != PermissionStatus.Granted)
+                {
+                    var requestStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                    status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                }
 
-                //    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                //    if (results.ContainsKey(Permission.Location))
-                //        status = results[Permission.Location];
-                //}
+                if (status == PermissionStatus.Granted)
+                {
+                    Debug.WriteLine("Gettings permission 3");
+                    return true;
+                }
 
-                //if (status == PermissionStatus.Granted)
-                //{
-                //    Debug.WriteLine("Gettings permission 3");
-                //    return true;
-                //}
-
-                //else if (status != PermissionStatus.Unknown)
-                //{
-                //    await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
-                //}
+                else if (status != PermissionStatus.Unknown)
+                {
+                    await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
+                }
                 Debug.WriteLine("Gettings permission 3");
                 return false;
             });
             Debug.WriteLine("Gettings permission 4");
 
             return success;
-
         }
 
         void HelpClicked(object sender, EventArgs e)
@@ -94,7 +87,6 @@ namespace GeohashCross.Views
             onboarding = new OnBoardingView
             {
                 BindingContext = new OnBoardingViewModel(),
-
                 //Make the semi transparent background extendbehind the notch but keep the real content below it.
                 Margin = new Thickness(0,-45,0,0),
                 Padding = new Thickness(0,38,0,0)

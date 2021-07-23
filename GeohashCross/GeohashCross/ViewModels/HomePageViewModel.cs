@@ -392,10 +392,6 @@ namespace GeohashCross.ViewModels
 
 
         //Everything below here needs to be refactored into a direction calculating class
-
-
-
-
         //This is the difference between True north and magnetic north in degress
         public double Declination
         {
@@ -405,7 +401,7 @@ namespace GeohashCross.ViewModels
                     return 0;
                 var calc = new WmmGeomagnetismCalculator();
                 var declination = calc.TryCalculate(new Coordinate(CurrentLocation.Latitude, CurrentLocation.Longitude), DateTime.Now);
-                return declination.Declination;
+                return declination?.Declination ?? 0;
             }
         }
 
