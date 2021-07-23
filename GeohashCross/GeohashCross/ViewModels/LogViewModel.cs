@@ -19,7 +19,7 @@ namespace GeohashCross.ViewModels
         internal void UpdateLogDisplay()
         {
             OnPropertyChanged(nameof(Log));
-            var log = new Plugin.Jobs.JobLog();
+            //var log = new Plugin.Jobs.JobLog();
         }
     }
 }

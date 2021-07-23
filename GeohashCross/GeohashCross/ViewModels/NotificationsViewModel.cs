@@ -4,8 +4,6 @@ using GeohashCross.Models;
 using GeohashCross.Services;
 using Microsoft.AppCenter.Crashes;
 using MvvmHelpers;
-using Plugin.Jobs;
-using Plugin.LocalNotifications;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Collections.Generic;

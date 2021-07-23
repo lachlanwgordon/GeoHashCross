@@ -50,7 +50,7 @@ namespace GeohashCross.iOS
             }
 
 
-            Plugin.Jobs.CrossJobs.Init();
+            //Plugin.Jobs.CrossJobs.Init();
             LoadApplication(new App());
 
            
@@ -60,7 +60,7 @@ namespace GeohashCross.iOS
 
         public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
         {
-            Plugin.Jobs.CrossJobs.OnBackgroundFetch(completionHandler);
+            //Plugin.Jobs.CrossJobs.OnBackgroundFetch(completionHandler);
         }
 
 

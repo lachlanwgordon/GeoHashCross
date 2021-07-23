@@ -1,6 +1,4 @@
-﻿using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -58,30 +56,30 @@ namespace GeohashCross.Views
             {
                 Debug.WriteLine("Gettings permission 2");
 
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                //var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
 
-                if (status != PermissionStatus.Granted)
-                {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
-                    {
-                        //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
-                    }
+                //if (status != PermissionStatus.Granted)
+                //{
+                //    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
+                //    {
+                //        //await DisplayAlert("Allow access to location", "GeohashCross works much better with ", "OK");
+                //    }
 
-                    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
-                    if (results.ContainsKey(Permission.Location))
-                        status = results[Permission.Location];
-                }
+                //    var results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Location);
+                //    if (results.ContainsKey(Permission.Location))
+                //        status = results[Permission.Location];
+                //}
 
-                if (status == PermissionStatus.Granted)
-                {
-                    Debug.WriteLine("Gettings permission 3");
-                    return true;
-                }
+                //if (status == PermissionStatus.Granted)
+                //{
+                //    Debug.WriteLine("Gettings permission 3");
+                //    return true;
+                //}
 
-                else if (status != PermissionStatus.Unknown)
-                {
-                    await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
-                }
+                //else if (status != PermissionStatus.Unknown)
+                //{
+                //    await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
+                //}
                 Debug.WriteLine("Gettings permission 3");
                 return false;
             });

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GeohashCross.Models;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
-using Plugin.Jobs;
+//using Plugin.Jobs;
 using SQLite;
 
 namespace GeohashCross.Services
@@ -44,15 +44,15 @@ namespace GeohashCross.Services
                 return;
             }
 
-            var job = new JobInfo
-            {
-                Name = "Distance",
-                Type = typeof(LocationNotificationJob),
-                BatteryNotLow = false,
-                DeviceCharging = false,
-                RequiredNetwork = NetworkType.Any,
-            };
-            await CrossJobs.Current.Schedule(job);
+            //var job = new JobInfo
+            //{
+            //    Name = "Distance",
+            //    Type = typeof(LocationNotificationJob),
+            //    BatteryNotLow = false,
+            //    DeviceCharging = false,
+            //    RequiredNetwork = NetworkType.Any,
+            //};
+            //await CrossJobs.Current.Schedule(job);
             var subs = await Connection.Table<NotificationSubscription>().ToListAsync();
         }
     }
