@@ -43,11 +43,7 @@
                 x:TypeArguments="x:Double"
                 Phone="25"
                 Tablet="20" />
-            <OnIdiom
-                x:Key="Medium"
-                x:TypeArguments="x:Double"
-                Phone="14"
-                Tablet="18" />
+           
             <OnIdiom
                 x:Key="Small"
                 x:TypeArguments="x:Double"
@@ -64,10 +60,7 @@
                     Value="{StaticResource PrimaryText}" />
                 <Setter
                     Property="FontSize"
-                    Value="{StaticResource Large}" />
-                <Setter
-                    Property="Margin"
-                    Value="0,2" />
+                    Value="Large" />
             </Style>
             <Style
                 x:Key="MediumLabel"
@@ -80,10 +73,8 @@
                     Value="{StaticResource PrimaryText}" />
                 <Setter
                     Property="FontSize"
-                    Value="{StaticResource Medium}" />
-                <Setter
-                    Property="Margin"
-                    Value="0,2" />
+                    Value="Medium" />
+                
             </Style>
             <Style
                 x:Key="SmallLabel"
@@ -96,10 +87,9 @@
                     Value="{StaticResource SecondaryText}" />
                 <Setter
                     Property="FontSize"
-                    Value="{StaticResource Small}" />
-                <Setter
-                    Property="Margin"
-                    Value="0,2" />
+                    Value="Small" />
+                
+                <Setter Property="BackgroundColor" Value="Red"/>
             </Style>
             <Style
                 TargetType="Label"
@@ -130,9 +120,7 @@
                 <Setter
                     Property="BackgroundColor"
                     Value="{StaticResource Accent}" />
-                 <Setter
-                    Property="Margin"
-                    Value="4" />
+                 
             </Style>
             
             <Style

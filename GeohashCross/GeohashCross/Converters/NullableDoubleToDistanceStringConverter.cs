@@ -13,13 +13,13 @@ namespace GeohashCross.Converters
         {
             if (value is double? == false)
             {
-                return default(object);
+                return "Loading...";
             }
 
             var distance = (double?)value;
 
             if (!distance.HasValue)
-                return "Calculating...";
+                return "Loading...";
             if (distance < 1)
                 return (distance.Value * 1000).ToString("N2") + "m";
             else

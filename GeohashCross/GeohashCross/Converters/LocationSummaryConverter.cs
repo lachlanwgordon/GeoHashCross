@@ -13,7 +13,7 @@ namespace GeohashCross.Converters
         {
             var loc = value as Location;
 
-            return loc == null ? "Loading..." : $"{loc.Latitude.ToString("N4")}, {loc.Longitude.ToString("N4")}";
+            return loc == null ? "Loading..." : $"{loc.Latitude.ToString("N3")}, {loc.Longitude.ToString("N3")}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

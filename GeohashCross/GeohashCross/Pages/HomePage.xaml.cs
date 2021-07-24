@@ -95,8 +95,6 @@ namespace GeohashCross.Views
             TheGrid.Children.Add(onboarding,0,7,0,6);
         }
 
-
-
         async void TheMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
         {
 
