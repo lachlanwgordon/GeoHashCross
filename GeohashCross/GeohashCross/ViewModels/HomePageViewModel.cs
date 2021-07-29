@@ -263,8 +263,6 @@ namespace GeohashCross.ViewModels
             LocationServiceShouldContinue = false;
         }
 
-
-
         bool TimerInitiatedUpdateLocation()
         {
             Task.Run(async () =>
@@ -284,7 +282,6 @@ namespace GeohashCross.ViewModels
 
             return LocationServiceShouldContinue;
         }
-
 
         public async Task<HashLocation> LoadHashLocation()
         {
@@ -319,11 +316,6 @@ namespace GeohashCross.ViewModels
             return hashData.Data;
         }
 
-
-
-
-
-
         private async Task ExecuteMapTappedCommand(object obj)
         {
             var loc = obj as Location;
@@ -347,7 +339,6 @@ namespace GeohashCross.ViewModels
                 Crashes.TrackError(ex);
             }
         }
-
 
         public void ExecuteToggleDarkNavCommand()
         {
@@ -375,22 +366,6 @@ namespace GeohashCross.ViewModels
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //Everything below here needs to be refactored into a direction calculating class
         //This is the difference between True north and magnetic north in degress
         public double Declination
@@ -404,7 +379,6 @@ namespace GeohashCross.ViewModels
                 return declination?.Declination ?? 0;
             }
         }
-
 
         public double TrueNorthNeedleDirection
         {
@@ -427,9 +401,6 @@ namespace GeohashCross.ViewModels
                 return magNeedleDirection;
             }
         }
-
-
-
 
         public double Bearing
         {

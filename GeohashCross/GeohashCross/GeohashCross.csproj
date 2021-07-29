@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="1.12.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
     <PackageReference Include="Xamarin.Forms.DebugRainbows" Version="1.1.4" />
-    <PackageReference Include="Geo" Version="0.14.1" />
+    <PackageReference Include="Geo" Version="1.0.0" />
     <PackageReference Include="Xamarin.Forms.GoogleMaps.v2" Version="3.4.5" />
   </ItemGroup>
 
