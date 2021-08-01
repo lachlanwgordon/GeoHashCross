@@ -7,6 +7,8 @@ using Android.Widget;
 using Android.OS;
 //using Android.Gms.Ads;
 using Xamarin.Forms;
+using Shiny;
+using Xamarin.Essentials;
 
 namespace GeohashCross.Droid
 {
@@ -21,16 +23,16 @@ namespace GeohashCross.Droid
 
             base.OnCreate(bundle);
             Forms.SetFlags(new[] { "CollectionView_Experimental", "Shell_Experimental", "Visual_Experimental" });
-            //Plugin.Jobs.CrossJobs.Init(this, bundle); // activity
-            global::Xamarin.Forms.Forms.Init(this, bundle);
-            //Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, bundle);
             Xamarin.FormsGoogleMaps.Init(this, bundle); // initialize for Xamarin.Forms.GoogleMaps
             LoadApplication(new App());
         }
 
+        
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
-            //PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }

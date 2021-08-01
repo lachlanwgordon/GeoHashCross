@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
 using GeohashCross.Resources;
+using Shiny;
 using UIKit;
 using UserNotifications;
 using Xamarin.Forms;
@@ -32,7 +33,7 @@ namespace GeohashCross.iOS
 #endif
 
             //Xamarin.Calabash.Start();
-
+            iOSShinyHost.Init(new GeohashCrossStartup());
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();
 
@@ -58,11 +59,11 @@ namespace GeohashCross.iOS
             return base.FinishedLaunching(app, options);
         }
 
+        
         public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
         {
-            //Plugin.Jobs.CrossJobs.OnBackgroundFetch(completionHandler);
+            Shiny.Jobs.JobManager.OnBackgroundFetch(completionHandler);
         }
-
 
     }
 }

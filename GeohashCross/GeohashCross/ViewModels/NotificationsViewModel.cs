@@ -14,22 +14,14 @@ namespace GeohashCross.ViewModels
 {
     public class NotificationsViewModel : BaseViewModel
     {
-        public bool ShowEmptyView
-        {
-            get
-            {
-                return Subscriptions.Count == 0;
-            }
-        }
+        public bool ShowEmptyView => !Subscriptions.Any();
 
 
         public NotificationsViewModel()
         {
-            if(!DesignMode.IsDesignModeEnabled)
-                Init();
         }
 
-        private async void Init()
+        public async Task Init()
         {
             await DB.Initialize();
             var subs = DB.Connection.Table<NotificationSubscription>();
